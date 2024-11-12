@@ -1,0 +1,105 @@
+#alias {开始工作} {
+    #ticker {打工} {#echo hp;hp;#echo work;work} {15}
+}
+
+#action {令和走了过来。} {
+    give highlander silver;
+    give highlander coin;
+    give highlander thousand-cash;
+    give highlander tenthousand-cash;
+} {5}
+
+#action {你给令和一些} {
+    #undelay {防错重置};
+    quit;
+} {5}
+
+#action {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
+    y;
+}
+
+#action {重新连线完毕。} {
+    开始工作;
+} {5}
+
+#gag {请等两刻钟再来吧。}
+#gag {只能给你这点工钱。}
+#gag {卸下一袋袋面粉，扛进粮仓。}
+#gag {只能给你这么多了。}
+#gag {帮着镖局里的伙计一起装卸货物。}
+
+#delay {防错重置} {
+    #echo quit;
+    quit;
+} {3600}
+
+
+#alias {龙门客栈-洛阳打工} {
+    龙门客栈-开封+;
+    #delay {walk} {
+        开封+-洛阳+;
+        #2 s;
+        e;
+    } {5}; 
+}
+
+
+#alias {龙门客栈-开封打工} {
+    龙门客栈-开封+;
+    #delay {walk} {
+        #3 w;#3 n;e;#2 n;e
+    } {5}; 
+}
+
+
+#alias {龙门客栈-大理打工} {
+    龙门客栈-大理+;
+    #delay {walk} {
+        #4 s;#2 e;s
+    } {5}; 
+}
+
+#alias {洛阳打工} {
+    初生点-食物屋;
+    #8 drink tong;
+    #2 eat pig;
+    食物屋-龙门客栈;
+    #delay {离开新手村} {
+        龙门客栈-洛阳打工;
+        开始工作;
+    } {5}
+}
+
+#alias {开封打工} {
+    初生点-食物屋;
+    #8 drink tong;
+    #2 eat pig;
+    食物屋-龙门客栈;
+    #delay {离开新手村} {
+        龙门客栈-开封打工;
+        开始工作;
+    } {5}
+}
+
+#alias {大理打工} {
+    初生点-食物屋;
+    #8 drink tong;
+    #2 eat pig;
+    食物屋-龙门客栈;
+    #delay {离开新手村} {
+        龙门客栈-大理打工;
+        开始工作;
+    } {5}
+}
+
+#ALIAS {洛阳-打工-银行} {
+    w;#2 n;e;s;
+} {5};
+
+#ALIAS {开封-打工-银行} {
+    w;#2 s;w;#3 s;#3 e;s;w;
+} {5};
+
+#ALIAS {大理-打工-银行} {
+    n;#2 w;#4 n;#2 e;n;
+} {5};

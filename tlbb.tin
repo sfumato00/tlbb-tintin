@@ -1,66 +1,43 @@
 #config charset GBK1TOUTF8
-#split
+#config scrollback 2000
+#config history 200
 
 #alias {connect} {#ses $username 103.10.85.133 8888 }
 #event {SESSION DISCONNECTED} {
-    #gts connect;
+    #gts connect;    
 }
 
-// login
+#EVENT {SESSION CONNECTED} {
+    #split
+};
+
+#nop {login}
 
 #action {Please input gb or big5:} {gb}
 
 #action {您的英文名字(新人登录请输入new)：} {
-    $username;$password;y;look;start_working
+    $username;$password;
 }
 
-// common
+#nop {common}
 
-#action {丢下一叠一万两银票。} {#log log.txt;get tenthousand-cash;#delay {log_delay} {#log} {5}}
-#action {丢下一叠一千两银票。} {#log log.txt;get thousand-cash;#delay {log_delay} {#log} {5}}
-#action {丢下一些金子。} {#log log.txt;get gold;#delay {log_delay} {#log} {5}}
+#action {丢下一叠一万两银票。} {get tenthousand-cash;#log {APPEND} {log.txt};#delay {log_delay} {#log {OFF}} {5}}
+#action {丢下一叠一千两银票。} {get thousand-cash;#log APPEND log.txt;#delay {log_delay} {#log OFF} {5}}
+#action {丢下一些金子。} {get gold;#log APPEND log.txt;#delay {log_delay} {#log OFF} {5}}
 #action {丢下一些银子。} {get silver}
 #action {丢下一些钱。} {get coin}
 
-// work
-
-#alias {start_working} {
-    #ticker {dagong} {hp;work} {15}
-}
-
-#action {令和走了过来。} {
-    give highlander silver;
-    give highlander coin;
-    give highlander thousand-cash;
-    give highlander tenthousand-cash;
-}
-
-#action {你给令和一些} {quit}
-
-#gag {请等两刻钟再来吧。}
-#gag {只能给你这点工钱。}
-#gag {卸下一袋袋面粉，扛进粮仓。}
-#gag {只能给你这么多了。}
-#gag {帮着镖局里的伙计一起装卸货物。}
-
-
-// paths
+#nop {paths}
 
 #alias {ly2wx} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n}
-
-#alias {tl2eat} {#5 s;#11 drink tong;#3 eat pig}
-
-#alias {tl2kf+} {d;w;#5 n}
-#alias {tl2dl+} {d;w;#5 s;sw;#9 s}
-
-#alias {tl2ly_dg} {tl2kf+;#16 w;#2 s;e}
-#alias {tl2kf_dg} {tl2kf+;#3 w;#3 n;e;#2 n;e}
-#alias {tl2dl_dg} {tl2dl+;#4 s;#2 e;s}
-
-#alias {tl_eat2ly_dg} {tl2eat;#delay {walking_stop} {#6 s;tl2ly_dg} {10}}
-#alias {tl_eat2kf_dg} {tl2eat;#delay {walking_stop} {#6 s;tl2kf_dg} {10}}
-#alias {tl_eat2dl_dg} {tl2eat;#delay {walking_stop} {#6 s;tl2dl_dg} {10}}
 
 #alias {dl2kf} {#9 n;ne;#9 n}
 #alias {kf2dl} {#9 s;sw;#9 s}
 
+#alias {初生点-食物屋} {#5 s}
+#alias {食物屋-龙门客栈} {#6 s;d}
+
+#alias {龙门客栈-开封+} {w;#5 n}
+#alias {龙门客栈-大理+} {w;#5 s;sw;#9 s}
+
+#alias {开封+-洛阳+} {#16 w}
