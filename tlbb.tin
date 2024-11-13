@@ -2,7 +2,7 @@
 #config scrollback 2000
 #config history 200
 
-#alias {connect} {#ses $username 103.10.85.133 8888 }
+#ALIAS {connect} {#ses $username 103.10.85.133 8888 }
 #event {SESSION DISCONNECTED} {
     #gts connect;    
 }
@@ -13,31 +13,38 @@
 
 #nop {login}
 
-#action {Please input gb or big5:} {gb}
+#ACTION {Please input gb or big5:} {gb}
 
-#action {您的英文名字(新人登录请输入new)：} {
+#ACTION {您的英文名字(新人登录请输入new)：} {
     $username;$password;
 }
 
 #nop {common}
 
-#action {丢下一叠一万两银票。} {get tenthousand-cash;#log {APPEND} {log.txt};#delay {log_delay} {#log {OFF}} {5}}
-#action {丢下一叠一千两银票。} {get thousand-cash;#log APPEND log.txt;#delay {log_delay} {#log OFF} {5}}
-#action {丢下一些金子。} {get gold;#log APPEND log.txt;#delay {log_delay} {#log OFF} {5}}
-#action {丢下一些银子。} {get silver}
-#action {丢下一些钱。} {get coin}
+#ACTION {丢下一叠一万两银票。} {get tenthousand-cash;log free_money.txt 3}
+#ACTION {丢下一叠一千两银票。} {get thousand-cash;log free_money.txt 3}
+#ACTION {丢下一些金子。} {get gold;log free_money.txt 3}
+#ACTION {丢下一些银子。} {get silver}
+#ACTION {丢下一些钱。} {get coin}
 
 #nop {paths}
 
-#alias {ly2wx} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n}
+#ALIAS {ly2wx} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n}
 
-#alias {dl2kf} {#9 n;ne;#9 n}
-#alias {kf2dl} {#9 s;sw;#9 s}
+#ALIAS {dl2kf} {#9 n;ne;#9 n}
+#ALIAS {kf2dl} {#9 s;sw;#9 s}
 
-#alias {初生点-食物屋} {#5 s}
-#alias {食物屋-龙门客栈} {#6 s;d}
+#ALIAS {初生点-食物屋} {#5 s}
+#ALIAS {食物屋-龙门客栈} {#6 s;d}
 
-#alias {龙门客栈-开封+} {w;#5 n}
-#alias {龙门客栈-大理+} {w;#5 s;sw;#9 s}
+#ALIAS {龙门客栈-开封+} {w;#5 n}
+#ALIAS {龙门客栈-大理+} {w;#5 s;sw;#9 s}
 
-#alias {开封+-洛阳+} {#16 w}
+#ALIAS {开封+-洛阳+} {#16 w}
+
+#ALIAS {log} {
+    #LOG APPEND %1;
+    #DELAY {%2} {
+        #LOG OFF
+    } {5};
+}

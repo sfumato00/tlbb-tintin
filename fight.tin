@@ -5,61 +5,71 @@
 
 #TICKER {ticker_feedback_loop} {hp} {15};
 
-#alias {feedback_loop} {
+#ALIAS {feedback_loop} {
     say $npc_list;
-    #IF {$vitals[饮水] < $vitals[饮水_max]} {#showme {drink tong};drink tong};
-    #local {hp_percentage} {0};
-    #math {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
+    #IF {$vitals[饮水] < $vitals[饮水_max]} {#ECHO {drink tong};drink tong};
+    #LOCAL {hp_percentage} {0};
+    #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
     #IF {$hp_percentage >= 50} {
         #FOREACH {$npc_list[%*]} {npc} {
-            #showme {fight $npc};
+            #ECHO {fight $npc};
             fight $npc
         };
     } {
         #IF {$hp_percentage < 20} {
-            #showme {surrender};
+            #ECHO {surrender};
             surrender;
         };
     };
 
     #IF {$fight_stats[start_epoch]} {
-        #format {epoch} {%T};
+        #FORMAT {epoch} {%T};
         #MATH {fight_stats[duration]} {$epoch - $fight_stats[start_epoch]};
         #MATH {fight_stats[经验_delta]} {$vitals[经验] - $fight_stats[经验0]};
         #MATH {fight_stats[潜能_delta]} {$vitals[潜能] - $fight_stats[潜能0]};
         #MATH {fight_stats[经验/min]} {$fight_stats[经验_delta] * 60 / $fight_stats[duration]};
         #MATH {fight_stats[潜能/min]} {$fight_stats[潜能_delta] * 60 / $fight_stats[duration]};
     } {
-        #format {fight_stats[start_epoch]} {%T};
+        init_fight;
+        #FORMAT {fight_stats[start_epoch]} {%T};
         #VARIABLE {fight_stats[character]} {$username};
         #VARIABLE {fight_stats[经验0]} {$vitals[经验]};
         #VARIABLE {fight_stats[潜能0]} {$vitals[潜能]};
     };
-
-    
+    #LOCAL {duration_in_min} {0};
+    #MATH {duration_in_min} {$fight_stats[duration] / 60};
+    #FORMAT {msg} {经验: %d (+%d), 潜能: %d (+%d), 时长: %d分钟} {$vitals[经验]} {$fight_stats[经验/min]} {$vitals[潜能]} {$fight_stats[潜能/min]} {$duration_in_min};
+    #ECHO {$msg};
 }
 
-#action {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
+#ALIAS {init_fight} {
+    #ECHO {initialize fight};
+    remove all;
+    drop all;
+    set no_give 1;
+    set no_msg 1;
+    set mute;
+}
+
+#ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
     #DELAY {5} {
         y;
     }
 }
 
-#action {重新连线完毕。} {
+#ACTION {重新连线完毕。} {
     hp;
     l;
 }
 
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
     surrender;
-    #DELAY {3} {
-        #echo shuicmd;shuicmd
-    }
+    #NOP #DELAY {3} { #echo shuicmd;shuicmd; }
 }
 
 #ACTION {慢慢睁开眼睛，清醒了过来。} {
-    surrender
+    surrender;
 }
 
 #ACTION {^%s气血：%s%d/%s%d%s(%d%)%s内力：%s%d%s/%s%d%s(%*)} {
@@ -68,7 +78,7 @@
     #VAR {vitals[气血%]}{%7};
     #VAR {vitals[内力]}{%10};
     #VAR {vitals[内力_max]}{%13};
-    #VAR {vitals[内力%]}{%15}
+    #VAR {vitals[内力%]}{%15};
 }
 
 #ACTION {^%s精神：%s%d/%s%d%s(%d%)%s潜力：%s%d%s/%s%d%s(%*)} {
@@ -77,28 +87,28 @@
     #VAR {vitals[精神%]}{%7};
     #VAR {vitals[潜力]}{%10};
     #VAR {vitals[潜力_max]}{%13};
-    #VAR {vitals[潜力%]}{%15}
+    #VAR {vitals[潜力%]}{%15};
 }
 
 #ACTION {^%s食物：%s%d/%s%d%s潜能：%.%d} {
     #VAR {vitals[食物]}{%3};
     #VAR {vitals[食物_max]}{%5};
-    #VAR {vitals[潜能]}{%8}
+    #VAR {vitals[潜能]}{%8};
 }
 
 #ACTION {^%s饮水：%s%d/%s%d%s经验：%.%d} {
     #VAR {vitals[饮水]}{%3};
     #VAR {vitals[饮水_max]}{%5};
-    #VAR {vitals[经验]}{%8}
-}
+    #VAR {vitals[经验]}{%8};
 
-#EVENT {VARIABLE UPDATED vitals[经验]} {
-    #showme feedback_loop;
-    feedback_loop;
-};
+    #DELAY {1} {
+        #ECHO feedback_loop;
+        feedback_loop;
+    }
+}
 
 
         #NOP #format {log_file} {%s} {argument1} ...;
         #NOP #LOG APPEND {fight.log};
-        #NOP #SHOWME {$fight_stats};
+        #NOP #ECHO {$fight_stats};
         #NOP #LOG OFF;
