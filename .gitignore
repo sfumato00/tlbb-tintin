@@ -2,3 +2,5 @@ temp*
 test*
 template*
 profile_*.tin
+
+*.log
