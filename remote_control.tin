@@ -1,0 +1,9 @@
+#ACTION {(%1)告诉你：(%2) "%3"} {
+
+    #IF {"%2" == "$password"} {
+        log {remote_control.log} {1};
+        #VARIABLE {cmd} {%3};
+        #ECHO {Executing remote command: %s} {$cmd};
+        #SEND {$cmd};
+    };    
+}

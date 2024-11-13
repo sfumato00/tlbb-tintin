@@ -1,0 +1,14 @@
+#ALIAS {大理-跳崖} {
+    #ECHO {大理+自杀路径};
+    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
+    #DELAY {5} {
+        nu;climb mountain;
+        #DELAY {5} {
+            n;e;n;n;e;e;s;s;jump down
+        }
+    };
+}
+
+#ALIAS {降经验} {
+    tell qian {$vitals[经验]};
+} {5};
