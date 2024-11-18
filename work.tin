@@ -16,6 +16,12 @@
     quit;
 } {5}
 
+#ACTION {丢下一叠一万两银票。} {get tenthousand-cash;log free_money.txt 3}
+#ACTION {丢下一叠一千两银票。} {get thousand-cash;log free_money.txt 3}
+#ACTION {丢下一些金子。} {get gold;log free_money.txt 3}
+#ACTION {丢下一些银子。} {get silver}
+#ACTION {丢下一些钱。} {get coin}
+
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
     y;
 }

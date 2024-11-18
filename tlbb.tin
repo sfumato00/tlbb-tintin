@@ -4,7 +4,7 @@
 
 #ALIAS {connect} {#ses $username 103.10.85.133 8888 }
 #event {SESSION DISCONNECTED} {
-    #gts connect;    
+    #gts connect;
 }
 
 #EVENT {SESSION CONNECTED} {
@@ -18,14 +18,6 @@
 #ACTION {您的英文名字(新人登录请输入new)：} {
     $username;$password;
 }
-
-#nop {common}
-
-#ACTION {丢下一叠一万两银票。} {get tenthousand-cash;log free_money.txt 3}
-#ACTION {丢下一叠一千两银票。} {get thousand-cash;log free_money.txt 3}
-#ACTION {丢下一些金子。} {get gold;log free_money.txt 3}
-#ACTION {丢下一些银子。} {get silver}
-#ACTION {丢下一些钱。} {get coin}
 
 #nop {paths}
 
