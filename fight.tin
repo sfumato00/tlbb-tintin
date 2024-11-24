@@ -54,7 +54,11 @@
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
     #DELAY {5} {
-        y;
+        #IF {"$control[disable_takeover]" == "y"} {
+            n;
+        } {
+            y;
+        };
     }
 }
 

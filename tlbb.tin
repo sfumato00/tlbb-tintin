@@ -4,7 +4,12 @@
 
 #ALIAS {connect} {#ses $username 103.10.85.133 8888 }
 #event {SESSION DISCONNECTED} {
-    #gts connect;
+    #IF {"$control[disable_reconnect]" == "y"} {
+        #ECHO {'reconnect' is disabled.;};
+        #DELAY {60};
+    } {
+        #gts connect;
+    }
 }
 
 #EVENT {SESSION CONNECTED} {
@@ -18,6 +23,10 @@
 #ACTION {您的英文名字(新人登录请输入new)：} {
     $username;$password;
 }
+
+#nop {common}
+
+
 
 #nop {paths}
 
