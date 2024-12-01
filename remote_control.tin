@@ -5,6 +5,7 @@
         #VARIABLE {cmd} {%3};
         #ECHO {Executing remote command: %s} {$cmd};
         #SEND {$cmd};
+        #SEND {tell }
     };
 }
 
