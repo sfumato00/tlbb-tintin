@@ -33,7 +33,8 @@
     #IF {"%2" == "$password"} {
         log {remote_control.log} {1};
         #ECHO {Suspend 'reconnection'};
-        #VARIABLE {control[disable_takeover]} {y;};
+        #VARIABLE {control[disable_takeover]} {y};
+        #WRITE {./sessions/session_$username};
         tell %1 {停止重连};
     };
 } {1}
