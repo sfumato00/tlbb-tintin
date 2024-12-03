@@ -1,14 +1,31 @@
+#ACTION {^城隍庙 - $} {
+    #DELAY {15} {
+        #SHOWME {返回战斗地点};
+        back_to_fight_location;
+        #DELAY {12} {
+            #CLASS fight read {./fight.tin};
+        };
+    };
+} {5};
+
 #ALIAS {大理-跳崖} {
     #ECHO {大理+自杀路径};
     #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
     #DELAY {5} {
         nu;climb mountain;
         #DELAY {5} {
-            n;e;n;n;e;e;s;s;jump down
+            n;e;n;n;e;e;s;s;jump down;
         };
     };
 };
 
 #ALIAS {降经验} {
-    tell qian {$vitals[经验]};
+    #LOCAL {exp_to_down} {0};
+    #IF {$downexp[target_exp]} {} {
+        #VARIABLE downexp[target_exp] {1000};
+    }
+    #MATH {exp_to_down} {$vitals[经验] - $downexp[target_exp]};
+    tell qian {$exp_to_down};
+    #2 w;
+    ask $username about 回家;
 } {5};

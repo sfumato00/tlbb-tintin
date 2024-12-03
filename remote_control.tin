@@ -1,3 +1,5 @@
+#NOP remote control module
+
 #ACTION {(%1)告诉你：(%2) "%3"} {
 
     #IF {"%2" == "$password"} {

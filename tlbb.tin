@@ -1,9 +1,10 @@
-#config charset GBK1TOUTF8
-#config scrollback 2000
-#config history 200
+#CONFIG charset GBK1TOUTF8;
+#CONFIG scrollback 2000;
+#CONFIG history 200;
 
-#ALIAS {connect} {#ses $username 103.10.85.133 8888 }
-#event {SESSION DISCONNECTED} {
+#ALIAS {connect} {#ses $username 103.10.85.133 8888 };
+
+#EVENT {SESSION DISCONNECTED} {
     #IF {"$control[disable_reconnect]" == "y"} {
         #ECHO {'reconnect' is disabled.;};
         #DELAY {60};
@@ -18,31 +19,13 @@
 
 #nop {login}
 
-#ACTION {Please input gb or big5:} {gb}
+#ACTION {^Please input gb or big5:} {gb}
 
-#ACTION {您的英文名字(新人登录请输入new)：} {
+#ACTION {^您的英文名字(新人登录请输入new)：} {
     $username;$password;
 }
 
 #nop {common}
-
-
-
-#nop {paths}
-
-#ALIAS {ly2wx} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n}
-
-#ALIAS {dl2kf} {#9 n;ne;#9 n}
-#ALIAS {kf2dl} {#9 s;sw;#9 s}
-
-#ALIAS {初生点-食物屋} {#5 s}
-#ALIAS {食物屋-龙门客栈} {#6 s;d}
-
-#ALIAS {龙门客栈-开封+} {w;#5 n}
-#ALIAS {龙门客栈-大理+} {w;#5 s;sw;#9 s}
-
-#ALIAS {开封+-洛阳+} {#16 w}
-
 #ALIAS {log} {
     #LOG APPEND %1;
     #DELAY {%2} {
@@ -81,4 +64,59 @@
     #VAR {vitals[经验]}{%8};
 }
 
-#ACTION {^%s%S%s(%1)%s-%s%S%s(%d)/} {#VAR {skills[%1]} {%2}}
+#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%.%d} {
+    #VAR {skills[%4]} {%9};
+}
+
+
+#nop fight
+#ALIAS {start_fight} {
+    #CLASS fight kill;
+    #CLASS fight read {./fight.tin};
+    #TICKER {ticker_feedback_loop} {hp} {15};
+    hp;
+    l;
+} {5};
+
+
+#ALIAS {stop_fight} {
+    #CLASS fight kill;
+    #TICKER {ticker_feedback_loop} {hp} {15};
+    surrender;
+} {5};
+
+
+#NOP 传功
+#ALIAS {start_chuangong} {
+    #CLASS chuangong kill;
+    #CLASS chuangong read {./chuangong.tin};
+    score;
+    skills;
+    hp;
+    #DELAY {3} {
+
+        #TICKER {ticker_feedback_loop} {
+            feedback_loop;
+        } {1};
+    };
+} {5};
+
+
+#ALIAS {stop_chuangong} {
+    #CLASS chuangong kill;
+    #TICKER {ticker_feedback_loop} {hp} {15};
+} {5};
+
+
+#ALIAS {start_xunhuan} {
+    #CLASS xunhuan kill;
+    #CLASS xunhuan read {./xunhuan.tin};
+    cal_params;
+    #TICKER {ticker_feedback_loop} {hp;feedback_loop;} {8};
+} {5};
+
+
+#ALIAS {stop_xunhuan} {
+    #CLASS xunhuan kill;
+    #TICKER {ticker_feedback_loop} {hp} {15};
+} {5};

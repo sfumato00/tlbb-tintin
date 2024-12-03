@@ -1,0 +1,9 @@
+#nop {paths}
+#ALIAS {ly2wx} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n}
+#ALIAS {dl2kf} {#9 n;ne;#9 n}
+#ALIAS {kf2dl} {#9 s;sw;#9 s}
+#ALIAS {初生点-食物屋} {#5 s}
+#ALIAS {食物屋-龙门客栈} {#6 s;d}
+#ALIAS {龙门客栈-开封+} {w;#5 n}
+#ALIAS {龙门客栈-大理+} {w;#5 s;sw;#9 s}
+#ALIAS {开封+-洛阳+} {#16 w}

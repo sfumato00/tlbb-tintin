@@ -4,18 +4,24 @@
 #GAG {看起来可能有些累了。 )}
 #GAG {看起来充满活力，一点也不累。 )}
 
-#TICKER {ticker_feedback_loop} {hp} {15};
+TICKER {ticker_feedback_loop} {hp} {15};
 
 #ALIAS {feedback_loop} {
-    say $npc_list;
-    #IF {$vitals[饮水] < $vitals[饮水_max]} {#ECHO {drink tong};drink tong};
+    #VARIABLE {npcs} {$npc_list};
+    #LIST {npcs} {collapse} {, };
+    say $npcs;
+    #IF {$vitals[饮水] < $vitals[饮水_max]} {
+        #ECHO {drink tong};
+        drink tong
+    };
+
     #LOCAL {hp_percentage} {0};
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
     #IF {$hp_percentage >= 50} {
         #FOREACH {$npc_list[%*]} {npc} {
             #ECHO {fight $npc};
-            fight $npc
+            fight $npc;
         };
     } {
         #IF {$hp_percentage < 20} {
@@ -41,7 +47,7 @@
     #LOCAL {duration_in_min} {0};
     #MATH {duration_in_min} {$fight_stats[duration] / 60};
     #FORMAT {msg} {经验: %d (+%d), 潜能: %d (+%d), 时长: %d分钟} {$vitals[经验]} {$fight_stats[经验/min]} {$vitals[潜能]} {$fight_stats[潜能/min]} {$duration_in_min};
-    #ECHO {$msg};
+    #SHOWME {$msg};
 }
 
 #ALIAS {init_fight} {
@@ -56,7 +62,7 @@
 }
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
-    #DELAY {5} {
+    #DELAY {3} {
         #IF {"$control[disable_takeover]" == "y"} {
             n;
         } {
@@ -65,10 +71,7 @@
     }
 }
 
-#ACTION {重新连线完毕。} {
-    hp;
-    l;
-}
+
 
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
     surrender;
@@ -77,15 +80,12 @@
 
 #ACTION {慢慢睁开眼睛，清醒了过来。} {
     surrender;
+    #DELAY {3.1} {
+        feedback_loop;
+    };
 }
 
-#ACTION {^%s饮水：%s%d/%s%d%s经验：%.%d} {
-    #VAR {vitals[饮水]}{%3};
-    #VAR {vitals[饮水_max]}{%5};
-    #VAR {vitals[经验]}{%8};
-
-    #DELAY {1} {
-        #ECHO feedback_loop;
-        feedback_loop;
-    }
+#EVENT {VARIABLE UPDATED vitals[经验]} {
+    // #ECHO feedback_loop;
+    feedback_loop;
 }

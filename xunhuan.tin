@@ -1,0 +1,57 @@
+#NOP 循环
+
+#ALIAS {cal_params} {
+    #IF {$xunhuan[min_restore] && $xunhuan[max_neili_gain]} {
+        #LOCAL {restore_multiple_xiqi} {0};
+        #LOCAL {restore_multiple_yunqi} {0};
+        #LOCAL {restore_amount} {0};
+
+        #MATH {restore_multiple_xiqi} {$vitals[精神_max] / $xunhuan[min_restore]};
+        #MATH {restore_amount} {$restore_multiple_xiqi * $xunhuan[min_restore]};
+        #IF {$restore_amount < $vitals[精神_max]} {
+            #MATH {xunhuan[xiqi]} {($restore_multiple_xiqi + 1) * 20};
+        } {
+            #MATH {xunhuan[xiqi]} {$restore_multiple_xiqi * 20};
+        };
+
+        #MATH {restore_multiple_yunqi} {$vitals[气血_max] / $xunhuan[min_restore]};
+
+        #MATH {restore_amount} {$restore_multiple_yunqi * $xunhuan[min_restore]};
+        #IF {$restore_amount < $vitals[气血_max]} {
+            #MATH {xunhuan[yunqi]} {($restore_multiple_yunqi + 1) * 20};
+        } {
+            #MATH {xunhuan[yunqi]} {$restore_multiple_yunqi * 20};
+        };
+    } {
+        #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
+    }
+};
+
+#ALIAS {feedback_loop} {
+
+    #IF {$xunhuan[min_restore]
+        && $xunhuan[max_neili_gain]
+        && $xunhuan[xiqi]
+        && $xunhuan[yunqi]
+        } {
+        #LOCAL {action_multiple} {0};
+
+        #IF {$vitals[内力] > $vitals[内力_max]} {
+            #MATH {action_multiple} {($xunhuan[max_neili_gain] - $xunhuan[yunqi])/$xunhuan[xiqi] + 1};
+            #IF {$action_multiple < 0} {
+                #LOCAL {action_multiple} {0};
+            };
+        };
+        #SHOWME {action_multiple: $action_multiple};
+        #ECHO {yunqi $xunhuan[yunqi]};
+        yunqi $xunhuan[yunqi];
+        #$action_multiple {
+            tuna $vitals[精神_max];
+            xiqi $xunhuan[xiqi];
+        };
+        #ECHO {dazuo $vitals[气血_max]};
+        dazuo $vitals[气血_max];
+    } {
+        #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
+    }
+} {5};
