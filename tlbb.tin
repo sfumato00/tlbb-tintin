@@ -69,6 +69,40 @@
 }
 
 
+#ALIAS {cal_xh_params} {
+    #VARIABLE {xunhuan[xiqi]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+    #VARIABLE {xunhuan[yunqi]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
+};
+
+
+#FUNCTION Restore {
+    #LOCAL curr {%1};
+    #LOCAL max {%2};
+    #LOCAL min_restore {%3};
+    #MATH ret {($max - $curr) / $min_restore * 20};
+    #RETURN $ret;
+};
+
+
+#FUNCTION RestoreFull {
+    #LOCAL curr {%1};
+    #LOCAL max {%2};
+    #LOCAL min_restore {%3};
+
+    #LOCAL diff {0};
+    #LOCAL multiple {0};
+
+    #MATH {diff} {$max - $curr};
+    #MATH multiple {$diff / $min_restore};
+    #IF {$multiple * $min_restore < $diff} {
+        #MATH multiple {$multiple + 1};
+    };
+
+    #MATH ret {$multiple * 20};
+    #RETURN $ret;
+};
+
+
 #nop fight
 #ALIAS {start_fight} {
     #CLASS fight kill;
@@ -87,9 +121,9 @@
 
 
 #NOP 传功
-#ALIAS {start_chuangong} {
-    #CLASS chuangong kill;
-    #CLASS chuangong read {./chuangong.tin};
+#ALIAS {start_chuangong_learn} {
+    #CLASS chuangong_learn kill;
+    #CLASS chuangong_learn read {./chuangong_learn.tin};
     score;
     skills;
     hp;
@@ -102,17 +136,28 @@
 } {5};
 
 
-#ALIAS {stop_chuangong} {
-    #CLASS chuangong kill;
+#ALIAS {stop_chuangong_learn} {
+    #CLASS chuangong_learn kill;
     #TICKER {ticker_feedback_loop} {hp} {15};
 } {5};
 
 
-#ALIAS {start_xunhuan} {
+#ALIAS {start_xunhuan_master} {
     #CLASS xunhuan kill;
     #CLASS xunhuan read {./xunhuan.tin};
-    cal_params;
-    #TICKER {ticker_feedback_loop} {hp;feedback_loop;} {8};
+    hp;
+    #DELAY {2} {
+        cal_xh_params;
+        #EVENT {VARIABLE UPDATED vitals[气血]} {feedback_loop_master};
+        #TICKER {ticker_feedback_loop} {hp} {1.6};
+    };
+} {5};
+
+#ALIAS {start_xunhuan_learn} {
+    #CLASS xunhuan kill;
+    #CLASS xunhuan read {./xunhuan.tin};
+    #EVENT {VARIABLE UPDATED vitals[内力]} {feedback_loop_learn;};
+    #TICKER {ticker_feedback_loop} {hp} {2};
 } {5};
 
 
@@ -120,3 +165,25 @@
     #CLASS xunhuan kill;
     #TICKER {ticker_feedback_loop} {hp} {15};
 } {5};
+
+
+#ALIAS {start_chuangong} {
+    #IF {$xunhuan[min_restore] && $xunhuan[max_neili_gain]} {
+        #VARIABLE {chuangong[target]} {%1};
+        #CLASS chuangong kill;
+        #CLASS chuangong read {./chuangong.tin};
+
+        #EVENT {VARIABLE UPDATED vitals[气血]} {feedback_loop_event};
+        #TICKER {ticker_feedback_loop} {hp;} {1};
+    } {
+        #ECHO {Must set xunhuan[min_restore] and xunhuan[max_neili_gain] to use 传功};
+    };
+}
+
+
+#ALIAS {stop_chuangong} {
+    #CLASS chuangong kill;
+    #TICKER {ticker_feedback_loop} {hp;} {15};
+}
+
+

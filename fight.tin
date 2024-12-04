@@ -4,7 +4,7 @@
 #GAG {看起来可能有些累了。 )}
 #GAG {看起来充满活力，一点也不累。 )}
 
-TICKER {ticker_feedback_loop} {hp} {15};
+#TICKER {ticker_feedback_loop} {hp} {15};
 
 #ALIAS {feedback_loop} {
     #VARIABLE {npcs} {$npc_list};
@@ -52,6 +52,7 @@ TICKER {ticker_feedback_loop} {hp} {15};
 
 #ALIAS {init_fight} {
     #ECHO {initialize fight};
+    #UNVARIABLE {fight_stats[start_epoch]};
     remove all;
     drop all;
     wear cloth;

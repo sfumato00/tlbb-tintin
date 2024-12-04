@@ -6,4 +6,17 @@
 #ALIAS {食物屋-龙门客栈} {#6 s;d}
 #ALIAS {龙门客栈-开封+} {w;#5 n}
 #ALIAS {龙门客栈-大理+} {w;#5 s;sw;#9 s}
-#ALIAS {开封+-洛阳+} {#16 w}
+#ALIAS {开封+-洛阳+} {#16 w;}
+#ALIAS {洛阳+-无锡+} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
+#ALIAS {无锡+-洛阳+} {#3 s;e;s;sw;s;sw;se;sd;se;#4 s;#4 e;n;w;#7 n} {5};
+#ALIAS {无锡+-npc副本} {#2 n;enter door;} {5};
+#ALIAS {npc副本-无锡+} {#3 s;} {5};
+#ALIAS {天水关-西夏} {#2 w;wu;wd;#3 w;s;n;w;#6 n;
+    #DELAY {10} {
+        #5 {w;s};
+        #DELAY {3} {
+            #4 n;
+        }
+    }
+} {5};
+#ALIAS {西夏-天水} {#4 s;e;#5 {e;s};sw;n;e;e;e;eu;ed;} {5};
