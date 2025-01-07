@@ -1,7 +1,7 @@
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {y;}
 
 #ACTION {^你的「%u」进步了！$} {skills;}
-// #SHOW {你的「读书识字」进步了！}
+#NOP #SHOW {你的「读书识字」进步了！}
 
 #EVENT {VARIABLE UPDATED skills[$learn[skill]]} {
     update_learn_skill;

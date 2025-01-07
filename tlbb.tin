@@ -1,5 +1,4 @@
 #CONFIG charset GBK1TOUTF8;
-#CONFIG scrollback 2000;
 #CONFIG history 200;
 
 #ALIAS {connect} {#ses $username 103.10.85.133 8888 };
@@ -25,6 +24,8 @@
     $username;$password;
 }
 
+#ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？(y/n)} {#DELAY 30 {n;}};
+
 #nop {common}
 #ALIAS {log} {
     #LOG APPEND %1;
@@ -34,22 +35,22 @@
 }
 
 
-#ACTION {^%s气血：%s%d/%s%d%s(%d%)%s内力：%s%d%s/%s%d%s(%*)} {
+#ACTION {^%s气血：%s%d/%s%d%s(%s%d%)%s内力：%s%d%s/%s%d%s(%*)} {
     #VAR {vitals[气血]}{%3};
     #VAR {vitals[气血_max]}{%5};
-    #VAR {vitals[气血%]}{%7};
-    #VAR {vitals[内力]}{%10};
-    #VAR {vitals[内力_max]}{%13};
-    #VAR {vitals[内力%]}{%15};
-}
+    #VAR {vitals[气血%]}{%8};
+    #VAR {vitals[内力]}{%11};
+    #VAR {vitals[内力_max]}{%14};
+    #VAR {vitals[内力%]}{%16};
+};
 
-#ACTION {^%s精神：%s%d/%s%d%s(%d%)%s潜力：%s%d%s/%s%d%s(%*)} {
+#ACTION {^%s精神：%s%d/%s%d%s(%s%d%)%s潜力：%s%d%s/%s%d%s(%*)} {
     #VAR {vitals[精神]}{%3};
     #VAR {vitals[精神_max]}{%5};
-    #VAR {vitals[精神%]}{%7};
-    #VAR {vitals[潜力]}{%10};
-    #VAR {vitals[潜力_max]}{%13};
-    #VAR {vitals[潜力%]}{%15};
+    #VAR {vitals[精神%]}{%8};
+    #VAR {vitals[潜力]}{%11};
+    #VAR {vitals[潜力_max]}{%14};
+    #VAR {vitals[潜力%]}{%16};
 }
 
 #ACTION {^%s食物：%s%d/%s%d%s潜能：%.%d} {
@@ -67,6 +68,8 @@
 #ACTION {^%s%S%s(%S)%s-%s%S%s%d/%.%d} {
     #VAR {skills[%4]} {%9};
 }
+
+#ACTION {^你的「%u」进步了！$} {skills;}
 
 
 #ALIAS {cal_xh_params} {
@@ -144,7 +147,7 @@
 
 #ALIAS {start_xunhuan_master} {
     #CLASS xunhuan kill;
-    #CLASS xunhuan read {./xunhuan.tin};
+    #CLASS xunhuan read {./pkg_xunhuan.tin};
     hp;
     #DELAY {2} {
         cal_xh_params;
@@ -155,14 +158,37 @@
 
 #ALIAS {start_xunhuan_learn} {
     #CLASS xunhuan kill;
-    #CLASS xunhuan read {./xunhuan.tin};
+    #CLASS xunhuan read {./pkg_xunhuan.tin};
     #EVENT {VARIABLE UPDATED vitals[内力]} {feedback_loop_learn;};
-    #TICKER {ticker_feedback_loop} {hp} {2};
+    #TICKER {ticker_feedback_loop} {hp} {1.6};
+    dazuo $vitals[内力];
+} {5};
+
+#ALIAS {start_xunhuan_tuna} {
+    #CLASS xunhuan kill;
+    #CLASS xunhuan read {./pkg_xunhuan.tin};
+    #EVENT {VARIABLE UPDATED vitals[内力]} {feedback_loop_tuna;};
+    #TICKER {ticker_feedback_loop} {hp} {1.6};
+    hp;
 } {5};
 
 
 #ALIAS {stop_xunhuan} {
     #CLASS xunhuan kill;
+    #UNEVENT {VARIABLE UPDATED vitals[内力]};
+    #TICKER {ticker_feedback_loop} {hp} {15};
+} {5};
+
+
+#ALIAS {start_dong_tuna} {
+    #CLASS dong kill;
+    #CLASS dong read {./pkg_dong.tin};
+    #TICKER {ticker_feedback_loop} {hp} {2};
+} {5};
+
+
+#ACTION {stop_dong} {
+    #CLASS dong kill;
     #TICKER {ticker_feedback_loop} {hp} {15};
 } {5};
 
@@ -173,8 +199,7 @@
         #CLASS chuangong kill;
         #CLASS chuangong read {./chuangong.tin};
 
-        #EVENT {VARIABLE UPDATED vitals[气血]} {feedback_loop_event};
-        #TICKER {ticker_feedback_loop} {hp;} {1};
+        #TICKER {ticker_feedback_loop} {hp;} {1.6};
     } {
         #ECHO {Must set xunhuan[min_restore] and xunhuan[max_neili_gain] to use 传功};
     };

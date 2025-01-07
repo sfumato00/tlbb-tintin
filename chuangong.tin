@@ -9,7 +9,7 @@
 }
 
 
-#ALIAS {feedback_loop_event} {
+#ALIAS {feedback_loop_chuangong} {
     #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
     #IF {$xiqi > 0} {
         #ECHO {xiqi $xiqi};
@@ -19,12 +19,20 @@
     #IF {$yunqi > 0} {
         #ECHO {yunqi $yunqi};
         yunqi $yunqi;
+    };
 
-        #IF {$vitals[内力] - $yunqi - $xiqi > $vitals[内力_max]} {
-            #7 exert transfer $chuangong[target];
-        };
+    #IF {$vitals[内力] - $yunqi - $xiqi > $vitals[内力_max]} {
+        #7 exert transfer $chuangong[target];
+    };
 
-        #ECHO {dazuo $vitals[气血_max]};
-        dazuo $vitals[气血_max];
+    #ECHO {dazuo $vitals[气血_max]};
+    dazuo $vitals[气血_max];
+
+    #UNTICKER {ticker_feedback_loop};
+    #DELAY {6} {
+        #TICKER {ticker_feedback_loop} {hp;} {1.6};
     };
 } {5};
+
+
+#EVENT {VARIABLE UPDATED vitals[气血]} {feedback_loop_chuangong};

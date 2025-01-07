@@ -12,7 +12,12 @@
     say $npcs;
     #IF {$vitals[饮水] < $vitals[饮水_max]} {
         #ECHO {drink tong};
-        drink tong
+        drink tong;
+    };
+
+    #IF {$vitals[食物] < $vitals[食物_max]} {
+        #ECHO {eat pig};
+        eat pig;
     };
 
     #LOCAL {hp_percentage} {0};
@@ -47,19 +52,20 @@
     #LOCAL {duration_in_min} {0};
     #MATH {duration_in_min} {$fight_stats[duration] / 60};
     #FORMAT {msg} {经验: %d (+%d), 潜能: %d (+%d), 时长: %d分钟} {$vitals[经验]} {$fight_stats[经验/min]} {$vitals[潜能]} {$fight_stats[潜能/min]} {$duration_in_min};
-    #SHOWME {$msg};
+    #DELAY {0.01} {#SHOWME {$msg};};
 }
 
 #ALIAS {init_fight} {
     #ECHO {initialize fight};
     #UNVARIABLE {fight_stats[start_epoch]};
     remove all;
-    drop all;
-    wear cloth;
+    #NOP drop all;
+    #NOP wear cloth;
     set no_give 1;
     set no_msg 1;
     set mute;
     enable dodge none;
+    enable move none;
 }
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
@@ -87,6 +93,6 @@
 }
 
 #EVENT {VARIABLE UPDATED vitals[经验]} {
-    // #ECHO feedback_loop;
+    #NOP #ECHO feedback_loop;
     feedback_loop;
 }

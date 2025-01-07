@@ -1,0 +1,108 @@
+#NOP 循环
+
+#ALIAS {feedback_loop_tuna} {
+
+    #IF {$xunhuan[min_restore]
+        && $xunhuan[max_neili_gain]
+        } {
+            #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+            #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+            #IF {$xiqi > 0} {
+                #ECHO {xiqi $xiqi};
+                xiqi $xiqi;
+            };
+
+            #IF {$yunqi > 0} {
+                #ECHO {yunqi $yunqi};
+                yunqi $yunqi;
+            };
+
+            #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+            #LOCAL multiple {0};
+            #MATH multiple {($vitals[内力] - $xiqi - $yunqi) / $full_xiqi - 1};
+            #IF {$multiple > 7} {
+                #LOCAL {multiple} {7};
+            };
+            #$multiple {
+                #ECHO {tuna $vitals[精神_max]};
+                tuna $vitals[精神_max];
+                #ECHO {xiqi $full_xiqi};
+                xiqi $full_xiqi;
+            };
+            #UNTICKER {ticker_feedback_loop};
+            #ECHO {dazuo $vitals[气血_max]};
+            dazuo $vitals[气血_max];
+            #DELAY {6} {
+                #TICKER {ticker_feedback_loop} {hp} {1.6};
+            }
+    } {
+        #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
+    }
+} {5};
+
+
+#ALIAS {feedback_loop_master} {
+    #IF {$xunhuan[min_restore]
+        && $xunhuan[max_neili_gain]
+        } {
+            #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+            #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+            #IF {$xiqi > 0} {
+                #ECHO {xiqi $xiqi};
+                xiqi $xiqi;
+            };
+
+            #IF {$yunqi > 0} {
+                #ECHO {yunqi $yunqi};
+                yunqi $yunqi;
+            };
+
+            #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+            #UNTICKER {ticker_feedback_loop};
+            #ECHO {dazuo $vitals[气血_max]};
+            dazuo $vitals[气血_max];
+            #DELAY {6} {
+                #TICKER {ticker_feedback_loop} {hp} {1.6};
+            }
+    } {
+        #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
+    }
+} {5};
+
+
+#ALIAS {feedback_loop_learn} {
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL full_yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+
+    #IF {$xiqi > 0} {
+        #ECHO {xiqi $xiqi};
+        xiqi $xiqi;
+    };
+
+    #IF {$vitals[内力] >= ($full_xiqi + $full_yunqi) * 2} {
+        #LOCAL multiple {4};
+
+        #$multiple {
+            udpate_learn_skill;
+            #ECHO {learn $learn[skill] from $learn[master] with $learn[times]};
+            learn $learn[skill] from $learn[master] with $learn[times];
+        };
+        udpate_learn_skill;
+        #ECHO {learn $learn[skill] from $learn[master] with 41};
+        learn $learn[skill] from $learn[master] with 41;
+        #ECHO {xiqi $full_xiqi};
+        xiqi $full_xiqi;
+    } {
+        #IF {$full_yunqi > 0} {
+            #ECHO {yunqi $full_yunqi};
+            yunqi $full_yunqi;
+        };
+        #UNTICKER {ticker_feedback_loop};
+        #ECHO {dazuo $vitals[气血_max]};
+        dazuo $vitals[气血_max];
+        #DELAY {4} {
+            #TICKER {ticker_feedback_loop} {hp} {1.6};
+        }
+   };
+} {5};

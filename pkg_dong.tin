@@ -1,0 +1,53 @@
+#NOP 仙人洞
+
+#ALIAS {feedback_loop_dong_tuna} {
+
+    #IF {$xunhuan[min_restore]
+        && $xunhuan[max_neili_gain]
+        } {
+            #LOCAL xiqi_needed {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+            #ECHO {xiqi_needed: $xiqi_needed};
+
+            #LOCAL multiple {0};
+            #MATH {multiple} {$vitals[内力] / $xiqi_needed};
+
+            #ECHO {multiple: $multiple};
+
+            #IF {$multiple > 6} {
+                #LOCAL multiple {6};
+            };
+
+            #IF {$vitals[内力] >= $xiqi_needed} {
+
+                #$multiple {
+                    #ECHO {tuna $vitals[精神_max]};
+                    tuna $vitals[精神];
+                    #ECHO {xiqi $xiqi_needed};
+                    xiqi $xiqi_needed;
+                };
+            } {
+                #UNTICKER {ticker_feedback_loop};
+                shui;
+            };
+
+    } {
+        #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
+    }
+} {5};
+
+
+#ALIAS {dl+-dong1} {
+    #4 s;#7 w;n;
+} {5};
+
+
+#EVENT {VARIABLE UPDATED vitals[内力]} {
+    feedback_loop_dong_tuna;
+};
+
+
+#ACTION {^你一觉醒来，觉得身体完全恢复了！$} {
+    #DELAY {1} {
+        #TICKER {ticker_feedback_loop} {hp} {2};
+    };
+} {5};

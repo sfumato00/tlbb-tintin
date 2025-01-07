@@ -1,5 +1,5 @@
-#nop {paths}
-#ALIAS {ly2wx} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n}
+#NOP Paths
+
 #ALIAS {dl2kf} {#9 n;ne;#9 n}
 #ALIAS {kf2dl} {#9 s;sw;#9 s}
 #ALIAS {初生点-食物屋} {#5 s}
@@ -11,7 +11,7 @@
 #ALIAS {无锡+-洛阳+} {#3 s;e;s;sw;s;sw;se;sd;se;#4 s;#4 e;n;w;#7 n} {5};
 #ALIAS {无锡+-npc副本} {#2 n;enter door;} {5};
 #ALIAS {npc副本-无锡+} {#3 s;} {5};
-#ALIAS {天水关-西夏} {#2 w;wu;wd;#3 w;s;n;w;#6 n;
+#ALIAS {天水-西夏} {#2 w;wu;wd;#3 w;s;n;w;#6 n;
     #DELAY {10} {
         #5 {w;s};
         #DELAY {3} {
@@ -20,3 +20,37 @@
     }
 } {5};
 #ALIAS {西夏-天水} {#4 s;e;#5 {e;s};sw;n;e;e;e;eu;ed;} {5};
+#ALIAS {龙门客栈-洛阳+} {龙门客栈-开封+;开封+-洛阳+;}
+#ALIAS {洛阳+-天水} {#8 w;}
+#ALIAS {天水-洛阳+} {#8 e;}
+#ALIAS {洛阳+-松鹤楼} {n;w;}
+#ALIAS {松鹤楼-洛阳+} {e;s;}
+
+#ALIAS {xxly} {
+    西夏-天水;eu;ed;#8 e;
+} {5};
+
+#alias {lyxx} {洛阳+-天水;天水-西夏;}
+
+#ALIAS {npc-go} {
+    松鹤楼-洛阳+;
+    洛阳+-无锡+;
+    无锡+-npc副本;
+}
+
+#ALIAS {npc-back} {
+    get sixhammer from guard;
+    get %1;
+    npc副本-无锡+;
+    无锡+-洛阳+;
+    洛阳+-松鹤楼;
+} {5};
+
+
+#ALIAS {大雄宝殿-老和尚} {
+    n;n;e;n;n;n;n;w;n;n;n;n;nw;nu;wd;wu;nu;nu;
+} {5};
+
+#ALIAS {老和尚-大雄宝殿} {
+    sd;sd;ed;eu;sd;se;#4 s;e;#4 s;w;s;s;
+} {5};

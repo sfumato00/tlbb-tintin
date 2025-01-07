@@ -1,0 +1,14 @@
+#NOP Room package
+
+#ACTION {^%u%s-%s$} {
+    #VARIABLE {env[room]} {%1};
+};
+
+#NOP #ACTION {^    这里%u的出口是 %*。} {#ECHO {exits: %2};};
+
+
+#ACTION {
+    {{south|north}{、}?}
+} {#ECHO {triggered: %1};};
+
+#NOP #SHOWME {south、north、};

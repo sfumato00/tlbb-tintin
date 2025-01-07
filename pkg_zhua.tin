@@ -1,0 +1,17 @@
+#ALIAS {doclaw} {
+    enable unarmed dragon-claw;
+    jiali 100;
+    fight %1;
+    perform claw;
+    jiali 0;
+    surrender;
+}
+
+#ALIAS {domohe} {
+    enable unarmed mohe-finger;
+    jiali 300;
+    fight %1;
+    perform strike;
+    jiali 0;
+    surrender;
+}
