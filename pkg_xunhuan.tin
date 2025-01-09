@@ -84,11 +84,9 @@
         #LOCAL multiple {4};
 
         #$multiple {
-            udpate_learn_skill;
             #ECHO {learn $learn[skill] from $learn[master] with $learn[times]};
             learn $learn[skill] from $learn[master] with $learn[times];
         };
-        udpate_learn_skill;
         #ECHO {learn $learn[skill] from $learn[master] with 41};
         learn $learn[skill] from $learn[master] with 41;
         #ECHO {xiqi $full_xiqi};
@@ -106,3 +104,37 @@
         }
    };
 } {5};
+
+#ALIAS {feedback_loop_xfer} {
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+
+    #IF {$xiqi > 0} {
+        #ECHO {xiqi $xiqi};
+        xiqi $xiqi;
+    };
+
+    #IF {$yunqi > 0} {
+        #ECHO {yunqi $yunqi};
+        yunqi $yunqi;
+    };
+
+    #IF {$vitals[内力] - $yunqi - $xiqi > $vitals[内力_max]} {
+        #7 exert transfer $chuangong[target];
+    };
+
+    #ECHO {dazuo $vitals[气血_max]};
+    dazuo $vitals[气血_max];
+
+    #UNTICKER {ticker_feedback_loop};
+    #DELAY {6} {
+        #TICKER {ticker_feedback_loop} {hp;} {1.6};
+    };
+} {5};
+
+
+#EVENT {VARIABLE UPDATED skills[$learn[skill]]} {
+    update_learn_skill;
+}
+
+#EVENT {VARIABLE UPDATED vitals[内力]} {feedback_loop};

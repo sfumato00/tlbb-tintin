@@ -92,7 +92,7 @@
     };
 }
 
-#EVENT {VARIABLE UPDATED vitals[经验]} {
+#EVENT {VARIABLE UPDATED vitals[潜能]} {
     #NOP #ECHO feedback_loop;
     feedback_loop;
 }
