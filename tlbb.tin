@@ -126,9 +126,9 @@
 };
 
 
-#nop fight
+#nop 练功模块 
 
-#ALIAS {fight} {
+#ALIAS {练功} {
     #SWITCH {"%1"} {
 
         #CASE {"on"} {
@@ -156,7 +156,7 @@
 
 
 #NOP 降经验
-#ALIAS {downexp} {
+#ALIAS {降经验} {
 
     #SWITCH {"%1"} {
 
@@ -271,3 +271,8 @@
     };
 } {5};
 
+
+#ALIAS {cmd} {
+    #ECHO {%1};
+    #send {%1};
+} {5};

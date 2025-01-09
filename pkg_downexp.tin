@@ -1,41 +1,59 @@
 #ACTION {^城隍庙 - $} {
-    #DELAY {15} {
+    #DELAY {delay_erase_exp} {
         #SHOWME {返回战斗地点};
-        back_to_fight_location;
-        #DELAY {12} {
-            fight on;
-        };
-    };
+        城隍庙-练功房间;
+        #DELAY {delay_erase_exp} {
+            init_task;
+        } {15};
+    } {15};
 } {5};
 
-#ALIAS {大理+-跳崖} {
-    #ECHO {大理+-跳崖};
-    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
-    #DELAY {5} {
-        nu;climb mountain;
-        #DELAY {5} {
-            n;e;n;n;e;e;s;s;jump down;
-        };
+#ACTION {^鬼门关 -} {
+    #LOCAL {exp_to_erase} {0};
+    #IF {$downexp[target_exp]} {
+        #MATH {exp_to_erase} {$vitals[经验] - $downexp[target_exp]};
     };
-};
-
-#ALIAS {降经验} {
-    #LOCAL {exp_to_down} {0};
-    #IF {$downexp[target_exp]} {} {
-        #VARIABLE downexp[target_exp] {1000};
-    };
-    #MATH {exp_to_down} {$vitals[经验] - $downexp[target_exp]};
-    tell qian {$exp_to_down};
+    
+    #ECHO {降 $exp_to_erase 经验};
+    鬼门关-黑店;
+    #ECHO {tell qian $exp_to_erase};
+    tell qian $exp_to_erase;
+    y;
     #2 w;
     ask $username about 回家;
 } {5};
 
-
 #EVENT {VARIABLE UPDATED vitals[经验]} {
     #NOP #ECHO feedback_loop;
-    #IF {$vitals[经验] < $downexp[target_exp]} {
-        #RETURN {};
-    };
 
-    #ECHO {当前经验 $vitals[经验], 大于【】};
+    #IF {$downexp[threshold_exp] && $downexp[threshold_exp] != 0} {
+        #IF {$vitals[经验] >= $downexp[threshold_exp]} {
+            #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
+            #UNEVENT {VARIABLE UPDATED vitals[经验]};
+            练功 off;
+            enable dodge duan-steps;
+            enable move duan-steps;
+            #DELAY {delay_erase_exp} {
+                练功房间-大理;
+                #DELAY {delay_erase_exp} {
+                    大理-跳崖;
+                } {12};
+            } {12};
+        };
+    } {
+        #ECHO {变量 "downexp[threshold_exp]" 没有设置导致降经验模块不生效。};
+    };
 }
+
+
+#ALIAS {大理-跳崖} {
+    #ECHO {大理-跳崖};
+    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
+
+    #DELAY {delay_erase_exp} {
+        nu;climb mountain;
+        #DELAY {delay_erase_exp} {
+            n;e;n;n;e;e;s;s;jump down;
+        } {6};
+    } {6};
+};
