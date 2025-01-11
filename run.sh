@@ -5,6 +5,7 @@ for file in profile_*.tin; do
         temp=${file#profile_}
         session_name=${temp%.tin}
 
+        screen -X -S $session_name "#zap" > /dev/null 2>&1
         screen -X -S $session_name quit > /dev/null 2>&1
         screen -dmS $session_name bash -c "tt++ $file; exec bash"
 

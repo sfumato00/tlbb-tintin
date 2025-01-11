@@ -32,9 +32,9 @@
             #UNTICKER {ticker_feedback_loop};
             #ECHO {dazuo $vitals[气血_max]};
             dazuo $vitals[气血_max];
-            #DELAY {6} {
-                #TICKER {ticker_feedback_loop} {hp} {1.6};
-            }
+            #DELAY {delay_feedback_loop} {
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
+            } {8.5};
     } {
         #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
     }
@@ -52,18 +52,22 @@
                 xiqi $xiqi;
             };
 
+            #IF {$vitals[内力] > $vitals[内力_max]} {
+                #RETURN {};
+            };
+
             #IF {$yunqi > 0} {
                 #ECHO {yunqi $yunqi};
                 yunqi $yunqi;
             };
-
+           
             #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
             #UNTICKER {ticker_feedback_loop};
             #ECHO {dazuo $vitals[气血_max]};
             dazuo $vitals[气血_max];
-            #DELAY {6} {
-                #TICKER {ticker_feedback_loop} {hp} {1.6};
-            }
+            #DELAY {delay_feedback_loop} {
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
+            } {8.5};
     } {
         #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
     }
@@ -72,7 +76,6 @@
 
 #ALIAS {feedback_loop_learn} {
     #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
-    #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
     #LOCAL full_yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
 
     #IF {$xiqi > 0} {
@@ -80,17 +83,23 @@
         xiqi $xiqi;
     };
 
-    #IF {$vitals[内力] >= ($full_xiqi + $full_yunqi) * 2} {
-        #LOCAL multiple {4};
+    #IF {$vitals[内力] >= $vitals[内力_max]} {
+        #LOCAL multiple {0};
+
+        #IF {"$xunhuan[js_per_learn]" == ""} {
+            #LOCAL multiple {1};
+        } {
+            #MATH multiple {$vitals[精神_max] / ($xunhuan[js_per_learn] * 50)};
+        };
+
+        #IF {$multiple > 6} {
+            #LOCAL {multiple} {6};
+        };
 
         #$multiple {
-            #ECHO {learn $learn[skill] from $learn[master] with $learn[times]};
-            learn $learn[skill] from $learn[master] with $learn[times];
+            #ECHO {learn $learn[skill] from $learn[master] with 50};
+            learn $learn[skill] from $learn[master] with 50;
         };
-        #ECHO {learn $learn[skill] from $learn[master] with 41};
-        learn $learn[skill] from $learn[master] with 41;
-        #ECHO {xiqi $full_xiqi};
-        xiqi $full_xiqi;
     } {
         #IF {$full_yunqi > 0} {
             #ECHO {yunqi $full_yunqi};
@@ -99,9 +108,9 @@
         #UNTICKER {ticker_feedback_loop};
         #ECHO {dazuo $vitals[气血_max]};
         dazuo $vitals[气血_max];
-        #DELAY {4} {
-            #TICKER {ticker_feedback_loop} {hp} {1.6};
-        }
+        #DELAY {delay_feedback_loop} {
+            #TICKER {ticker_feedback_loop} {hp} {1.5};
+        } {8.5};
    };
 } {5};
 
@@ -127,14 +136,26 @@
     dazuo $vitals[气血_max];
 
     #UNTICKER {ticker_feedback_loop};
-    #DELAY {6} {
-        #TICKER {ticker_feedback_loop} {hp;} {1.6};
-    };
+    #DELAY {delay_feedback_loop} {
+        #TICKER {ticker_feedback_loop} {hp} {1.5};
+    } {8.5};
 } {5};
 
 
-#EVENT {VARIABLE UPDATED skills[$learn[skill]]} {
-    update_learn_skill;
-}
+#EVENT {VARIABLE UPDATED vitals[内力]} {
+    #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    feedback_loop;
+};
 
-#EVENT {VARIABLE UPDATED vitals[内力]} {feedback_loop};
+#EVENT {VARIABLE UPDATED skills[zhemei-strike]} {
+    #ECHO {#EVENT {VARIABLE UPDATED}};
+    update_learn_skill;
+};
+
+
+#ACTION {^请不要一次输入太多的指令。$} {
+    #UNTICKER {ticker_feedback_loop};
+    #DELAY {delay_feedback_loop} {
+        #TICKER {ticker_feedback_loop} {hp} {1.5};
+    } {8.5};
+} {5};

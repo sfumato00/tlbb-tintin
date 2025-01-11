@@ -88,11 +88,11 @@
 #ACTION {慢慢睁开眼睛，清醒了过来。} {
     surrender;
     #DELAY {3.1} {
-        feedback_loop;
+        init_fight;
     };
 }
 
-#EVENT {VARIABLE UPDATED vitals[潜能]} {
+#EVENT {VARIABLE UPDATED vitals[经验]} {
     #NOP #ECHO feedback_loop;
     feedback_loop;
 }

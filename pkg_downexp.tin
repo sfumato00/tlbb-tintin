@@ -3,9 +3,9 @@
         #SHOWME {返回战斗地点};
         城隍庙-练功房间;
         #DELAY {delay_erase_exp} {
-            init_task;
+            init_task;            
         } {15};
-    } {15};
+    } {30};
 } {5};
 
 #ACTION {^鬼门关 -} {

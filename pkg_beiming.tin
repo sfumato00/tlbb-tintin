@@ -1,0 +1,67 @@
+#NOP 北冥模块
+
+#ACTION {^门开了，从里面走出来一名金衣剑客。$} {
+    #4 {
+        exert xi jia ding;
+    };
+} {5};
+
+
+#ACTION {^你要服用哪种药？$} {
+    #class beiming kill;
+} {5};
+
+
+#ACTION {不转睛地盯著%u的动作，寻找进攻的最佳时机。} {
+    surrender;
+} {5};
+
+#ACTION {一边注视著%u的行动，一边伺机出手。} {
+    surrender;
+} {5};
+
+#ACTION {缓缓地移动脚步，想要找出%u的破绽。} {
+    surrender;
+} {5};
+
+
+#ACTION {^金衣剑客转身走了进去。$} {
+    hp;
+    drink tong;
+} {5};
+
+
+#ACTION {^门又关上了。$} {
+    apply xiao-xingxue;
+    apply xiao-xingxue;
+    apply xiao-xingxue;
+    apply xiao-xingxue;
+} {5};
+
+
+#EVENT {VARIABLE UPDATED vitals[内力_max]} {
+    #ECHO {#EVENT {VARIABLE UPDATED vitals[内力_max]}};
+    
+    #IF {$vitals[气血%] < 100} {
+        apply xiao-xingxue;
+        apply xiao-xingxue;
+        apply xiao-xingxue;
+    } {
+        #IF {$vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
+            exert yun;
+        };
+    };
+    
+    #LOCAL {target} {0};
+    #LOCAL {diff} {0};
+    #MATH {target} {$score[根骨] * 150};
+    #math diff {$target - $vitals[内力_max]};
+
+    #IF {$diff == 0} {
+        #CLASS beiming kill;
+        #TICKER {ticker_feedback_loop} {hp;} {15};
+        #RETURN {};
+    };
+    #SHOWME {目标最大内力：$target};
+    say 还差$diff;
+};

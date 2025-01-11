@@ -32,6 +32,14 @@
     #split
 };
 
+#EVENT {VARIABLE UPDATED vitals[精神_max]} {
+    #VARIABLE {xunhuan[max_xiqi_full]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+}
+
+#EVENT {VARIABLE UPDATED vitals[气血_max]} {
+    #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
+}
+
 #nop {login}
 
 #ACTION {^Please input gb or big5:} {gb}
@@ -45,9 +53,7 @@
 #ACTION {重新连线完毕。} {
     l;
     score;
-    enable;
     hp;
-
     init_task;
 } {5}
 
@@ -55,9 +61,9 @@
 #NOP {common}
 #ALIAS {log} {
     #LOG APPEND %1;
-    #DELAY {%2} {
+    #DELAY {delay_log} {
         #LOG OFF;
-    } {5};
+    } {%2};
 };
 
 
@@ -95,6 +101,14 @@
     #VAR {skills[%4]} {%9};
 }
 
+#ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%d} {
+    #VARIABLE {score[根骨]} {%2};
+    #VARIABLE {score[胆识]} {%5};
+    #VARIABLE {score[悟性]} {%8};
+    #VARIABLE {score[膂力]} {%11};
+    #VARIABLE {score[容貌]} {%14};
+} {5};
+
 #ACTION {^你的「%u」进步了！$} {skills;}
 
 
@@ -126,13 +140,14 @@
 };
 
 
-#nop 练功模块 
+#nop 练功模块
 
 #ALIAS {练功} {
     #SWITCH {"%1"} {
 
         #CASE {"on"} {
             #ECHO {开启 fight 模块};
+            #UNVARIABLE fight_stats[start_epoch]
             #CLASS fight kill;
             #CLASS fight read {./pkg_fight.tin};
             #TICKER {ticker_feedback_loop} {hp} {15};
@@ -169,7 +184,6 @@
         #CASE {"off"} {
             #ECHO {关闭降经验模块};
             #CLASS downexp kill;
-            #CLASS downexp read {./pkg_downexp.tin};
         };
 
         #DEFAULT {
@@ -177,6 +191,31 @@
         };
     };
 } {5};
+
+
+#NOP 九阳
+#ALIAS {九阳} {
+
+    #SWITCH {"%1"} {
+
+        #CASE {"on"} {
+            #ECHO {开启九阳模块};
+            #CLASS jiuyang kill;
+            #CLASS jiuyang read {./pkg_jiuyang.tin};
+            exert powerup;
+        };
+
+        #CASE {"off"} {
+            #ECHO {关闭九阳模块};
+            #CLASS jiuyang kill;
+        };
+
+        #DEFAULT {
+            #ECHO {supported arguments are: on, off};
+        };
+    };
+} {5};
+
 
 
 #NOP 循环
@@ -200,7 +239,7 @@
             } {5};
 
             #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.6};
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
                 hp;
             } {3};
         };
@@ -209,6 +248,12 @@
             #IF {"%2" == ""} {
                 #ECHO {必须指定求教对象};
                 #RETURN {必须指定求教对象};
+            };
+
+            #IF {"%3" == ""} {
+                #VARIABLE {xunhuan[js_per_learn]} {350};
+            } {
+                #VARIABLE {xunhuan[js_per_learn]} {%3};
             };
 
             #ECHO {开启 循环 - 学习 模块};
@@ -222,9 +267,11 @@
             } {5};
 
             #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.6};
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
+                update_learn_skill;
                 hp;
             } {3};
+            skills;
         };
 
         #CASE {"吐纳"} {
@@ -238,7 +285,7 @@
             } {5};
 
             #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.6};
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
                 hp;
             } {3};
         };
@@ -260,7 +307,7 @@
             } {5};
 
             #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.6};
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
                 hp;
             } {3};
         };
@@ -272,7 +319,40 @@
 } {5};
 
 
+#ALIAS {北冥} {
+
+    #SWITCH {"%1"} {
+
+        #CASE {"on"} {
+            #ECHO {开启北冥模块};
+            #CLASS beiming kill;
+            #CLASS beiming read {./pkg_beiming.tin};
+        };
+
+        #CASE {"off"} {
+            #ECHO {关闭北冥模块};
+            #CLASS beiming kill;
+        };
+
+        #DEFAULT {
+            #ECHO {supported arguments are: on, off};
+        };
+    };
+} {5};
+
+
 #ALIAS {cmd} {
     #ECHO {%1};
     #send {%1};
+} {5};
+
+
+#ALIAS {dazuo_max} {
+    #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
+    #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+
+    #ECHO {yunqi $yunqi};
+    #IF {$yunqi > 0} {yunqi $yunqi;};
+    dazuo $vitals[气血_max];
+    hp;
 } {5};
