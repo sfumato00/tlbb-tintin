@@ -1,13 +1,11 @@
 #NOP remote control module
 
-#ACTION {(%1)告诉你：(%2) "%3"} {
+#ACTION {(%w)告诉你：(%a) "%a"} {
 
     #IF {"%2" == "$password"} {
         log {remote_control.log} {1};
-        #VARIABLE {cmd} {%3};
-        #ECHO {Executing remote command: %s} {$cmd};
-        #SEND {$cmd};
-        #SEND {tell }
+        cmd {%3};
+        cmd {tell %1 {已经执行: %3}};
     };
 }
 

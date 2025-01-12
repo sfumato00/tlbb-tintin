@@ -3,9 +3,9 @@
         #SHOWME {返回战斗地点};
         城隍庙-练功房间;
         #DELAY {delay_erase_exp} {
-            init_task;            
-        } {15};
-    } {30};
+            init_task;
+        } {12};
+    } {12};
 } {5};
 
 #ACTION {^鬼门关 -} {
@@ -13,7 +13,7 @@
     #IF {$downexp[target_exp]} {
         #MATH {exp_to_erase} {$vitals[经验] - $downexp[target_exp]};
     };
-    
+
     #ECHO {降 $exp_to_erase 经验};
     鬼门关-黑店;
     #ECHO {tell qian $exp_to_erase};
@@ -23,28 +23,29 @@
     ask $username about 回家;
 } {5};
 
-#EVENT {VARIABLE UPDATED vitals[经验]} {
-    #NOP #ECHO feedback_loop;
+#EVENT {VARIABLE UPDATED fight_stats[epoch][last]} {
+    #FORMAT {vitals[last_updated]} {#T};
 
-    #IF {$downexp[threshold_exp] && $downexp[threshold_exp] != 0} {
-        #IF {$vitals[经验] >= $downexp[threshold_exp]} {
-            #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
-            #UNEVENT {VARIABLE UPDATED vitals[经验]};
-            练功 off;
-            enable dodge duan-steps;
-            enable move duan-steps;
-            #DELAY {delay_erase_exp} {
-                练功房间-大理;
-                #DELAY {delay_erase_exp} {
-                    大理-跳崖;
-                } {12};
-            } {12};
-        };
-    } {
-        #ECHO {变量 "downexp[threshold_exp]" 没有设置导致降经验模块不生效。};
+    #NOP #ECHO {debug: #EVENT {VARIABLE UPDATED}};
+
+    #IF {$vitals[经验] >= $downexp[threshold_exp]} {
+        #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
+        去降经验;
     };
 }
 
+#alias {去降经验} {
+    #UNEVENT {VARIABLE UPDATE vitals[经验]};
+    练功 off;
+    enable dodge duan-steps;
+    enable move duan-steps;
+    #DELAY {delay_erase_exp} {
+        练功房间-大理;
+        #DELAY {delay_erase_exp} {
+            大理-跳崖;
+        } {12};
+    } {12};
+}
 
 #ALIAS {大理-跳崖} {
     #ECHO {大理-跳崖};

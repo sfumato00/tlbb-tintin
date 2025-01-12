@@ -6,18 +6,25 @@
 
 #TICKER {ticker_feedback_loop} {hp} {15};
 
+#VARIABLE {fight_stats} {
+    {epoch} {
+        {start} {0}
+    }
+};
+
+#VARIABLE {MIN_IN_SECOND} {60};
+#VARIABLE {MIN_IN_MICRO_SECOND} {60M};
+
 #ALIAS {feedback_loop} {
     #VARIABLE {npcs} {$npc_list};
     #LIST {npcs} {collapse} {, };
-    say $npcs;
+    cmd {say $npcs};
     #IF {$vitals[饮水] < $vitals[饮水_max]} {
-        #ECHO {drink tong};
-        drink tong;
+        cmd {drink tong};
     };
 
     #IF {$vitals[食物] < $vitals[食物_max]} {
-        #ECHO {eat pig};
-        eat pig;
+        cmd {eat pig};
     };
 
     #LOCAL {hp_percentage} {0};
@@ -25,8 +32,7 @@
 
     #IF {$hp_percentage >= 50} {
         #FOREACH {$npc_list[%*]} {npc} {
-            #ECHO {fight $npc};
-            fight $npc;
+            cmd {fight $npc};
         };
     } {
         #IF {$hp_percentage < 20} {
@@ -35,50 +41,102 @@
         };
     };
 
-    #IF {$fight_stats[start_epoch]} {
-        #FORMAT {epoch} {%T};
-        #MATH {fight_stats[duration]} {$epoch - $fight_stats[start_epoch]};
-        #MATH {fight_stats[经验_delta]} {$vitals[经验] - $fight_stats[经验0]};
-        #MATH {fight_stats[潜能_delta]} {$vitals[潜能] - $fight_stats[潜能0]};
-        #MATH {fight_stats[经验/min]} {$fight_stats[经验_delta] * 60 / $fight_stats[duration]};
-        #MATH {fight_stats[潜能/min]} {$fight_stats[潜能_delta] * 60 / $fight_stats[duration]};
-    } {
+    #FORMAT time {%U};
+
+    #LOCAL {t_total} {0};
+    #LOCAL {t_delta} {0};
+
+    #LOCAL {exp} {$vitals[经验]};
+    #LOCAL {qn} {$vitals[潜能]};
+
+    #LOCAL {exp_delta} {0};
+    #LOCAL {qn_delta} {0};
+
+    #LOCAL {exp_velocity} {0};
+    #LOCAL {qn_velocity} {0};
+
+    #LOCAL {exp_mean} {0};
+    #LOCAL {qn_mean} {0};
+
+    #IF {$fight_stats[epoch][start] == 0} {
         init_fight;
-        #FORMAT {fight_stats[start_epoch]} {%T};
         #VARIABLE {fight_stats[character]} {$username};
-        #VARIABLE {fight_stats[经验0]} {$vitals[经验]};
-        #VARIABLE {fight_stats[潜能0]} {$vitals[潜能]};
+
+        #VARIABLE {fight_stats[epoch]} {
+            {start} {$time}
+            {last} {$time}
+        };
+
+        #VARIABLE {fight_stats[经验]} {
+            {start} {$exp}
+            {last} {$exp}
+            {velocity} {
+                {max} {0}
+                {mean} {0}
+            }
+        };
+        #VARIABLE {fight_stats[潜能]} {
+            {start} {$qn}
+            {last} {$qn}
+            {velocity} {
+                {max} {0}
+                {mean} {0}
+            }
+        };
     };
+
+    #MATH {t_delta} {$time - $fight_stats[epoch][last]};
+    #MATH {t_total} {$time - $fight_stats[epoch][start]};
+
+    #MATH {exp_delta} {$exp - $fight_stats[经验][last]};
+    #MATH {qn_delta} {$qn - $fight_stats[潜能][last]};
+
+    #MATH {exp_velocity} {$exp_delta * $MIN_IN_MICRO_SECOND / $t_delta};
+    #MATH {qn_velocity} {$qn_delta * $MIN_IN_MICRO_SECOND / $t_delta};
+
+    #MATH {fight_stats[经验][velocity][mean]} {($exp - $fight_stats[经验][start]) * $MIN_IN_MICRO_SECOND / $t_total};
+    #MATH {fight_stats[潜能][velocity][mean]} {($qn - $fight_stats[潜能][start])  * $MIN_IN_MICRO_SECOND / $t_total};
+
+    #NOP #SHOWME {$time, $t_delta, $exp_delta, $exp_velocity, $fight_stats[经验][velocity][max], @Min{$fight_stats[经验][velocity][max];$exp_velocity}};
+
+    #VARIABLE {fight_stats[经验][velocity][max]} {@Max{$fight_stats[经验][velocity][max];$exp_velocity}};
+    #VARIABLE {fight_stats[潜能][velocity][max]} {@Max{$fight_stats[潜能][velocity][max];$qn_velocity}};
+
+    #VARIABLE {fight_stats[epoch][last]} {$time};
+    #VARIABLE {fight_stats[经验][last]} {$exp};
+    #VARIABLE {fight_stats[潜能][last]} {$qn};
+
+    #NOP generate message;
     #LOCAL {duration_in_min} {0};
-    #MATH {duration_in_min} {$fight_stats[duration] / 60};
-    #FORMAT {msg} {经验: %d (+%d), 潜能: %d (+%d), 时长: %d分钟} {$vitals[经验]} {$fight_stats[经验/min]} {$vitals[潜能]} {$fight_stats[潜能/min]} {$duration_in_min};
-    #DELAY {0.01} {#SHOWME {$msg};};
+    #MATH {duration_in_min} {$fight_stats[duration] / $MIN_IN_MICRO_SECOND};
+
+    #FORMAT {exp_msg} {经验增速: %d (最大 %d // 平均 %d)} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
+    #FORMAT {qn_msg} {潜能增速: %d  (最大 %d // 平均 %d)} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
+
+    #DELAY {0.1} {
+        #SHOWME {$exp_msg};
+        #SHOWME {$qn_msg};
+    };
 }
 
 #ALIAS {init_fight} {
-    #ECHO {initialize fight};
-    #UNVARIABLE {fight_stats[start_epoch]};
-    remove all;
-    #NOP drop all;
-    #NOP wear cloth;
+    #ECHO {开始练功};
+    remove cloth;
+    drop cloth;
+    wear cloth;
     set no_give 1;
     set no_msg 1;
-    set mute;
+    set mute2;
     enable dodge none;
     enable move none;
 }
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
-    #DELAY {3} {
-        #IF {"$control[disable_takeover]" == "y"} {
-            n;
-        } {
-            y;
-        };
-    }
+
+    #DELAY {15} {
+        no;
+    };
 }
-
-
 
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
     surrender;
@@ -90,9 +148,8 @@
     #DELAY {3.1} {
         init_fight;
     };
-}
+};
 
 #EVENT {VARIABLE UPDATED vitals[经验]} {
-    #NOP #ECHO feedback_loop;
     feedback_loop;
-}
+};

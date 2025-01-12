@@ -4,6 +4,7 @@
 #ALIAS {开封-洛阳} {#16 w;}
 
 #ALIAS {大理-开封} {#9 n;ne;#9 n}
+#alias {大理-洛阳} {#9 n;ne;#6 w;#3 n;#7 w;}
 
 #ALIAS {洛阳-天水} {#8 w;}
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
@@ -24,12 +25,8 @@
 #ALIAS {无锡-npc副本} {#2 n;enter door;} {5};
 #ALIAS {npc副本-无锡} {#3 s;} {5};
 #ALIAS {天水-西夏} {#2 w;wu;wd;#3 w;s;n;w;#6 n;
-    #DELAY {10} {
-        #5 {w;s};
-        #DELAY {3} {
-            #4 n;
-        }
-    }
+    #5 {w;s};
+    #delay 3 {#4 n;};
 } {5};
 #ALIAS {西夏-天水} {#4 s;e;#5 {e;s};sw;n;e;e;e;eu;ed;} {5};
 #ALIAS {龙门客栈-洛阳} {龙门客栈-开封;开封-洛阳;}

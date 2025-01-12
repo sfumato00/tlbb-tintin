@@ -7,11 +7,34 @@
     surrender;
 }
 
-#ALIAS {domohe} {
+#ALIAS {mh} {
     enable unarmed mohe-finger;
-    jiali 300;
+    #if {"%2" != ""} {
+        jiali %2;
+    } {
+        jiali 300;
+    };    
     fight %1;
     perform strike;
     jiali 0;
     surrender;
 }
+
+#ALIAS {rb} {
+    enable unarmed rainbow-strike;
+    #if {"%2" != ""} {
+        jiali %2;
+    } {
+        jiali 300;
+    };    
+    fight %1;
+    perform rainbow;
+    jiali 0;
+    surrender;
+}
+
+#ALIAS {gn} {
+    get blade from captain;
+    get captain;
+    give captain to yuantong;
+} {5};

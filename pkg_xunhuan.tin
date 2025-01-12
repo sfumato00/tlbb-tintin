@@ -20,8 +20,8 @@
             #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
             #LOCAL multiple {0};
             #MATH multiple {($vitals[内力] - $xiqi - $yunqi) / $full_xiqi - 1};
-            #IF {$multiple > 7} {
-                #LOCAL {multiple} {7};
+            #IF {$multiple > 6} {
+                #LOCAL {multiple} {6};
             };
             #$multiple {
                 #ECHO {tuna $vitals[精神_max]};
@@ -29,12 +29,11 @@
                 #ECHO {xiqi $full_xiqi};
                 xiqi $full_xiqi;
             };
-            #UNTICKER {ticker_feedback_loop};
-            #ECHO {dazuo $vitals[气血_max]};
-            dazuo $vitals[气血_max];
-            #DELAY {delay_feedback_loop} {
-                #TICKER {ticker_feedback_loop} {hp} {1.5};
-            } {8.5};
+
+            #IF {$vitals[内力] < $vitals[内力_max]} {
+                delay_feedback_loop 8.5;
+                cmd {dazuo $vitals[气血_max]};
+            };
     } {
         #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
     }
@@ -62,12 +61,8 @@
             };
            
             #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
-            #UNTICKER {ticker_feedback_loop};
-            #ECHO {dazuo $vitals[气血_max]};
-            dazuo $vitals[气血_max];
-            #DELAY {delay_feedback_loop} {
-                #TICKER {ticker_feedback_loop} {hp} {1.5};
-            } {8.5};
+            delay_feedback_loop 8.5;
+            cmd {dazuo $vitals[气血_max]};
     } {
         #SHOWME {清设置 xunhuan[min_restore] 和 xunhuan[max_neili_gain]};
     }
@@ -79,8 +74,7 @@
     #LOCAL full_yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
 
     #IF {$xiqi > 0} {
-        #ECHO {xiqi $xiqi};
-        xiqi $xiqi;
+        cmd {xiqi $xiqi};
     };
 
     #IF {$vitals[内力] >= $vitals[内力_max]} {
@@ -105,12 +99,9 @@
             #ECHO {yunqi $full_yunqi};
             yunqi $full_yunqi;
         };
-        #UNTICKER {ticker_feedback_loop};
-        #ECHO {dazuo $vitals[气血_max]};
-        dazuo $vitals[气血_max];
-        #DELAY {delay_feedback_loop} {
-            #TICKER {ticker_feedback_loop} {hp} {1.5};
-        } {8.5};
+        delay_feedback_loop 8.5;
+        cmd {dazuo $vitals[气血_max]};
+        #echo {===========================================> test};
    };
 } {5};
 
@@ -119,8 +110,7 @@
     #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
 
     #IF {$xiqi > 0} {
-        #ECHO {xiqi $xiqi};
-        xiqi $xiqi;
+        cmd {xiqi $xiqi};
     };
 
     #IF {$yunqi > 0} {
@@ -132,30 +122,35 @@
         #7 exert transfer $chuangong[target];
     };
 
-    #ECHO {dazuo $vitals[气血_max]};
-    dazuo $vitals[气血_max];
-
-    #UNTICKER {ticker_feedback_loop};
-    #DELAY {delay_feedback_loop} {
-        #TICKER {ticker_feedback_loop} {hp} {1.5};
-    } {8.5};
+    delay_feedback_loop 8.5;
+    cmd {dazuo $vitals[气血_max]};
 } {5};
 
 
 #EVENT {VARIABLE UPDATED vitals[内力]} {
-    #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
     feedback_loop;
 };
 
 #EVENT {VARIABLE UPDATED skills[zhemei-strike]} {
-    #ECHO {#EVENT {VARIABLE UPDATED}};
     update_learn_skill;
 };
 
 
 #ACTION {^请不要一次输入太多的指令。$} {
+    delay_feedback_loop;
+} {5};
+
+
+#ALIAS {delay_feedback_loop} {
+    #Echo {debug: delaying feedback_loop};
+    #LOCAL {delay} {%1};
+    #IF "$delay" == "" {
+        #LOCAL delay {6};
+    };
+    #UNDELAY {delay_feedback_loop};
     #UNTICKER {ticker_feedback_loop};
     #DELAY {delay_feedback_loop} {
         #TICKER {ticker_feedback_loop} {hp} {1.5};
-    } {8.5};
+    } {$delay};
 } {5};

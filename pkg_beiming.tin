@@ -1,7 +1,10 @@
 #NOP 北冥模块
 
+#VARIABLE {xi_count} {0};
+#VARIABLE {to_yun} {false};
+
 #ACTION {^门开了，从里面走出来一名金衣剑客。$} {
-    #4 {
+    #8 {
         exert xi jia ding;
     };
 } {5};
@@ -39,6 +42,21 @@
 } {5};
 
 
+#ACTION {^你运用北冥神功，将金衣剑客的内力吸了少许过来储藏于檀中气穴。$} {
+    #MATH {xi_count} {$xi_count + 1};
+
+    #IF {$xi_count >= 50} {
+        #VARIABLE {to_yun} {true};
+        #VARIABLE {xi_count} {0};
+    };
+} {5};
+
+
+#ACTION {^你全身放松，坐下来开始将储存在膻中的真气归入气海。$} {
+    #VARIABLE {to_yun} {false};
+} {5};
+
+
 #EVENT {VARIABLE UPDATED vitals[内力_max]} {
     #ECHO {#EVENT {VARIABLE UPDATED vitals[内力_max]}};
     
@@ -47,7 +65,7 @@
         apply xiao-xingxue;
         apply xiao-xingxue;
     } {
-        #IF {$vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
+        #IF {"$to_yun" == "true" && $vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
             exert yun;
         };
     };

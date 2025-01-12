@@ -1,31 +1,26 @@
 #CONFIG charset GBK1TOUTF8;
 #CONFIG history 200;
 
+#CLASS functions read {./pkg_functions.tin};
+
 #ALIAS {connect} {
     #SESSION {$username} {103.10.85.133} {8888};
 };
 
 #EVENT {SESSION DISCONNECTED} {
     #IF {"$control[disable_reconnect]" == "y"} {
-        #ECHO {'reconnect' is disabled.;};
-        #DELAY {60};
-        #DELAY {60} {
-            command
-        };
+        #ECHO {'reconnect' is disabled.};
     } {
         #gts connect;
-    }
+    };
 };
 
 #EVENT {SESSION TIMED OUT} {
     #IF {"$control[disable_reconnect]" == "y"} {
-        #ECHO {'reconnect' is disabled.;};
-        #DELAY {60} {
-            #gts connect;
-        };
+        #ECHO {'reconnect' is disabled.};
     } {
         #gts connect;
-    }
+    };
 };
 
 #EVENT {SESSION CONNECTED} {
@@ -51,9 +46,9 @@
 #ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？(y/n)} {#DELAY 30 {n;}};
 
 #ACTION {重新连线完毕。} {
-    l;
-    score;
-    hp;
+    cmd {look};
+    cmd {score};
+    cmd {hp};
     init_task;
 } {5}
 
@@ -68,37 +63,37 @@
 
 
 #ACTION {^%s气血：%s%d/%s%d%s(%s%d%)%s内力：%s%d%s/%s%d%s(%*)} {
-    #VAR {vitals[气血]}{%3};
-    #VAR {vitals[气血_max]}{%5};
-    #VAR {vitals[气血%]}{%8};
-    #VAR {vitals[内力]}{%11};
-    #VAR {vitals[内力_max]}{%14};
-    #VAR {vitals[内力%]}{%16};
+    #VARIABLE {vitals[气血]}{%3};
+    #VARIABLE {vitals[气血_max]}{%5};
+    #VARIABLE {vitals[气血%]}{%8};
+    #VARIABLE {vitals[内力]}{%11};
+    #VARIABLE {vitals[内力_max]}{%14};
+    #VARIABLE {vitals[内力%]}{%16};
 };
 
 #ACTION {^%s精神：%s%d/%s%d%s(%s%d%)%s潜力：%s%d%s/%s%d%s(%*)} {
-    #VAR {vitals[精神]}{%3};
-    #VAR {vitals[精神_max]}{%5};
-    #VAR {vitals[精神%]}{%8};
-    #VAR {vitals[潜力]}{%11};
-    #VAR {vitals[潜力_max]}{%14};
-    #VAR {vitals[潜力%]}{%16};
+    #VARIABLE {vitals[精神]}{%3};
+    #VARIABLE {vitals[精神_max]}{%5};
+    #VARIABLE {vitals[精神%]}{%8};
+    #VARIABLE {vitals[潜力]}{%11};
+    #VARIABLE {vitals[潜力_max]}{%14};
+    #VARIABLE {vitals[潜力%]}{%16};
 }
 
 #ACTION {^%s食物：%s%d/%s%d%s潜能：%.%d} {
-    #VAR {vitals[食物]}{%3};
-    #VAR {vitals[食物_max]}{%5};
-    #VAR {vitals[潜能]}{%8};
+    #VARIABLE {vitals[食物]}{%3};
+    #VARIABLE {vitals[食物_max]}{%5};
+    #VARIABLE {vitals[潜能]}{%8};
 }
 
 #ACTION {^%s饮水：%s%d/%s%d%s经验：%.%d} {
-    #VAR {vitals[饮水]}{%3};
-    #VAR {vitals[饮水_max]}{%5};
-    #VAR {vitals[经验]}{%8};
+    #VARIABLE {vitals[饮水]}{%3};
+    #VARIABLE {vitals[饮水_max]}{%5};
+    #VARIABLE {vitals[经验]}{%8};
 }
 
 #ACTION {^%s%S%s(%S)%s-%s%S%s%d/%.%d} {
-    #VAR {skills[%4]} {%9};
+    #VARIABLE {skills[%4]} {%9};
 }
 
 #ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%d} {
@@ -109,58 +104,30 @@
     #VARIABLE {score[容貌]} {%14};
 } {5};
 
-#ACTION {^你的「%u」进步了！$} {skills;}
-
-
-#FUNCTION Restore {
-    #LOCAL curr {%1};
-    #LOCAL max {%2};
-    #LOCAL min_restore {%3};
-    #MATH ret {($max - $curr) / $min_restore * 20};
-    #RETURN $ret;
-};
-
-
-#FUNCTION RestoreFull {
-    #LOCAL curr {%1};
-    #LOCAL max {%2};
-    #LOCAL min_restore {%3};
-
-    #LOCAL diff {0};
-    #LOCAL multiple {0};
-
-    #MATH {diff} {$max - $curr};
-    #MATH multiple {$diff / $min_restore};
-    #IF {$multiple * $min_restore < $diff} {
-        #MATH multiple {$multiple + 1};
-    };
-
-    #MATH ret {$multiple * 20};
-    #RETURN $ret;
-};
+#ACTION {^你的「%u」进步了！$} {cmd {skills};}
 
 
 #nop 练功模块
 
 #ALIAS {练功} {
+
     #SWITCH {"%1"} {
 
         #CASE {"on"} {
             #ECHO {开启 fight 模块};
-            #UNVARIABLE fight_stats[start_epoch]
             #CLASS fight kill;
             #CLASS fight read {./pkg_fight.tin};
-            #TICKER {ticker_feedback_loop} {hp} {15};
+            #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
             #DELAY {5} {
-                hp;
+                cmd {hp};
             };
         };
 
         #CASE {"off"} {
             #ECHO {关闭 fight 模块};
             #CLASS fight kill;
-            #TICKER {ticker_feedback_loop} {hp} {15};
-            surrender;
+            #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+            cmd {surrender};
         };
 
         #DEFAULT {
@@ -202,7 +169,7 @@
             #ECHO {开启九阳模块};
             #CLASS jiuyang kill;
             #CLASS jiuyang read {./pkg_jiuyang.tin};
-            exert powerup;
+            cmd {exert powerup};
         };
 
         #CASE {"off"} {
@@ -226,7 +193,7 @@
             #ECHO {关闭 循环 模块};
             #CLASS xunhuan kill;
             #UNALIAS {feedback_loop};
-            #TICKER {ticker_feedback_loop} {hp} {15};
+            #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
         };
 
         #CASE {"师父"} {
@@ -240,7 +207,7 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
-                hp;
+                cmd {hp};
             } {3};
         };
 
@@ -269,9 +236,9 @@
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
                 update_learn_skill;
-                hp;
+                cmd {hp};
             } {3};
-            skills;
+            cmd {skills};
         };
 
         #CASE {"吐纳"} {
@@ -286,7 +253,7 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
-                hp;
+                cmd {hp};
             } {3};
         };
 
@@ -308,7 +275,7 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
-                hp;
+                cmd {hp};
             } {3};
         };
 
@@ -343,7 +310,7 @@
 
 #ALIAS {cmd} {
     #ECHO {%1};
-    #send {%1};
+    #SEND {%1};
 } {5};
 
 
@@ -351,8 +318,7 @@
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
     #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
 
-    #ECHO {yunqi $yunqi};
-    #IF {$yunqi > 0} {yunqi $yunqi;};
-    dazuo $vitals[气血_max];
-    hp;
+    #IF {$yunqi > 0} {cmd {yunqi $yunqi};};
+    cmd {dazuo $vitals[气血_max]};
+    cmd {hp};
 } {5};
