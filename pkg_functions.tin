@@ -1,0 +1,37 @@
+#NOP functions
+
+#FUNCTION Restore {
+    #LOCAL curr {%1};
+    #LOCAL max {%2};
+    #LOCAL min_restore {%3};
+    #MATH ret {($max - $curr) / $min_restore * 20};
+    #RETURN $ret;
+};
+
+
+#FUNCTION RestoreFull {
+    #LOCAL curr {%1};
+    #LOCAL max {%2};
+    #LOCAL min_restore {%3};
+
+    #LOCAL diff {0};
+    #LOCAL multiple {0};
+
+    #MATH {diff} {$max - $curr};
+    #MATH multiple {$diff / $min_restore};
+    #IF {$multiple * $min_restore < $diff} {
+        #MATH multiple {$multiple + 1};
+    };
+
+    #MATH ret {$multiple * 20};
+    #RETURN $ret;
+};
+
+
+#FUNCTION Max {
+    #IF {%1 < %2} {#RETURN {%2};} {#RETURN {%1};};
+};
+
+#FUNCTION Min {
+    #IF {%1 > %2} {#RETURN {%2};} {#RETURN {%1};};
+};
