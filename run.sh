@@ -5,16 +5,20 @@ for file in profile_*.tin; do
         temp=${file#profile_}
         session_name=${temp%.tin}
 
-        screen -X -S $session_name "#zap" > /dev/null 2>&1
-        screen -X -S $session_name quit > /dev/null 2>&1
-        screen -dmS $session_name bash -c "tt++ $file; exec bash"
-
-        if screen -list | grep -q $session_name; then
-            echo "Screen session '$session_name' started successfully"
-        else
-            echo "Failed to start screen session"
-            exit 1
-        fi
+        screen -X -S $session_name "quit"
+        screen -dmS "$session_name" bash -c "tt++ main.tin"
+        screen -X -S "$session_name" -p 0 -X stuff "conn $session_name\n"
+        echo "Screen session '$session_name' created."
     fi
 done
 
+sleep 3
+
+for file in profile_*.tin; do
+    if [ -f "$file" ]; then
+        temp=${file#profile_}
+        session_name=${temp%.tin}
+
+        screen -X -S "$session_name" -p 0 -X stuff "y\n"
+    fi
+done
