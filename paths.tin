@@ -24,11 +24,8 @@
 #ALIAS {无锡-洛阳} {#3 s;e;s;sw;s;sw;se;sd;se;#4 s;#4 e;n;w;#7 n} {5};
 #ALIAS {无锡-npc副本} {#2 n;enter door;} {5};
 #ALIAS {npc副本-无锡} {#3 s;} {5};
-#ALIAS {天水-西夏} {#2 w;wu;wd;#3 w;s;n;w;#6 n;
-    #5 {w;s};
-    #delay 3 {#4 n;};
-} {5};
-#ALIAS {西夏-天水} {#4 s;e;#5 {e;s};sw;n;e;e;e;eu;ed;} {5};
+
+
 #ALIAS {龙门客栈-洛阳} {龙门客栈-开封;开封-洛阳;}
 
 #ALIAS {天水-洛阳} {#8 e;}
@@ -74,14 +71,66 @@
 } {5};
 
 
-#ALIAS {大理-跳崖} {
-    #ECHO {大理-跳崖};
-    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
+#ALIAS {天贶殿-神憩小舍} {
+    #3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu;
+} {5};
 
-    #DELAY {delay_erase_exp} {
-        nu;climb mountain;
-        #DELAY {delay_erase_exp} {
-            n;e;n;n;e;e;s;s;jump down;
-        } {6};
-    } {6};
-};
+
+#ALIAS {神憩小舍-天贶殿} {
+    sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;
+} {5};
+
+
+
+#ALIAS {天水-西夏} {
+    #2 w;wu;wd;#3 w;s;n;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[exits]" == " north 和 southwest" || "$env[exits]" == " south、north 和 west"}
+        {
+            cmd {n};
+        } {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #ECHO {debug: arrived.};
+        };
+    };
+    w;
+    #NOP #6 n;
+    #NOP #5 {w;s};
+    #NOP #delay 3 {#4 n;};
+} {5};
+
+
+
+#ALIAS {黑沼泽-西夏} {
+    #VARIABLE {env[odd]} {0};
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "大道"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #UNEVENT {env[odd]};
+            #4 n;
+        } {
+            #IF {$env[odd] == 0} {s} {w};
+            #MATH {env[odd]} {1 - $env[odd]};
+        }
+    };
+    cmd {w};
+} {5};
+
+#ALIAS {黑沼泽-天水} {
+
+} {5};
+
+
+#ALIAS {西夏-天水} {
+    #4 s;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[exits]" == " north 和 southwest" && "$env[room]" == "黑沼泽"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            sw;n;e;e;e;eu;ed;#2 e;
+        } {
+            #LOCAL dir {@Rnd{0;1}};
+            #IF {$dir == 0} {cmd {s}} {cmd {e}};
+        }
+    };
+    cmd {e};
+} {5};

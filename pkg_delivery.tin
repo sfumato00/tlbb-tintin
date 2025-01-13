@@ -1,18 +1,39 @@
 #ACTION {^目前权限：} {
-    天贶殿-神憩小舍;
+    $delivery[就位];
 } {5};
 
-#ALIAS {神憩小舍-天贶殿} {
-    sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;
-} {5};
 
-#ALIAS {天贶殿-神憩小舍} {
-    #3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu;
-} {5};
 
-#alias {天贶殿-黄土大道} {
-    #10 s;
+
+
+#alias {天贶殿-开封} {
+    #EVENT {VARIABLE UPDATED delivery[room]} {
+        #IF {"$delivery[room]" == "黄土大道"} {
+            #UNEVENT {VARIABLE UPDATED delivery[room]};
+            黄土大道-开封;
+        };
+    };
+    #9 s;
 };
+
+
+#ALIAS {黄土大道-开封} {
+    #EVENT {VARIABLE UPDATED delivery[room]} {
+        #IF {"$delivery[room]" == "东安门"} {
+            #ECHO {进入 东安门。目标已抵达。};
+            #UNEVENT {VARIABLE UPDATED delivery[room]};
+            #6 w;
+        } {
+            #IF {"$delivery[room]" == "黄土大道"} {
+                cmd {w};
+            } {
+                #ECHO {debug: unexpected room $delivery[room]. Abort.};
+                #UNEVENT {VARIABLE UPDATED delivery[room]};
+            };
+        };
+    };
+    cmd {w};
+} {5};
 
 
 #ACTION {^%u给你%u。$} {
@@ -26,7 +47,3 @@
 } {5};
 
 
-#ACTION {^%u - $} {
-    #var delivery[room] {%1};
-    #ECHO {进入房间 %1};
-} {5};

@@ -1,7 +1,9 @@
 #CONFIG charset GBK1TOUTF8;
 #CONFIG history 200;
 
+#CLASS paths read {./paths.tin};
 #CLASS functions read {./pkg_functions.tin};
+#CLASS room read {./pkg_room.tin};
 
 #ALIAS {connect} {
     #SESSION {$username} {103.10.85.133} {8888};
