@@ -8,7 +8,13 @@
 
 #ALIAS {洛阳-天水} {#8 w;}
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
-#alias {洛阳-西夏} {洛阳-天水;天水-西夏;}
+#alias {洛阳-西夏} {
+    洛阳-天水;
+    天水-黑沼泽;
+    #DELAY {6} {
+        黑沼泽-西夏;
+    };
+};
 #ALIAS {洛阳-开封} {#16 e;}
 #ALIAS {洛阳-登封} {#7 e;#3 s;} {5};
 #ALIAS {洛阳-大理} {洛阳-登封;登封-大理} {5};
@@ -80,57 +86,116 @@
     sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;
 } {5};
 
-
-
 #ALIAS {天水-西夏} {
-    #2 w;wu;wd;#3 w;s;n;
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[exits]" == " north 和 southwest" || "$env[exits]" == " south、north 和 west"}
-        {
-            cmd {n};
-        } {
-            #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            #ECHO {debug: arrived.};
-        };
-    };
-    w;
-    #NOP #6 n;
-    #NOP #5 {w;s};
-    #NOP #delay 3 {#4 n;};
+    天水-黑沼泽;
+    #DELAY {3} {
+        黑沼泽-西夏;
+    };    
 } {5};
 
-
+#ALIAS {天水-黑沼泽} {
+    #2 w;wu;wd;#3 w;s;n;w;
+} {5};
 
 #ALIAS {黑沼泽-西夏} {
+    #ALIAS {local_helper} {
+        #SWITCH {"$env[room]"} {
+            #CASE {"黑沼泽"} {
+                
+                #EVENT {VARIABLE UPDATED env[room_updated]} {
+                    local_helper;
+                };
+                #SWITCH {"$env[exits]"} {
+                    #CASE {" north 和 southwest"} {
+                        cmd {n};
+                    };
+    
+                    #CASE {" south、north 和 west"} {
+                        cmd {n};
+                    };
+    
+                    #CASE {" south、north、east 和 west"} {
+                        #IF {$env[odd] == 0} {cmd {w};} {cmd {s};};
+                        #MATH {env[odd]} {1 - $env[odd]};
+                    };
+    
+                    #DEFAULT {
+                        #ECHO {debug: **** 错误的房间。停止。***};
+                        #UNVARIABLE {env[odd]};
+                        #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                    };
+                };
+            };
+            #CASE {"大道"} {
+                #UNVARIABLE {env[odd]};
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #4 {cmd {n}};
+            };
+            #DEFAULT {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            }
+        };
+    } {5};
+
     #VARIABLE {env[odd]} {0};
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[room]" == "大道"} {
-            #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            #UNEVENT {env[odd]};
-            #4 n;
-        } {
-            #IF {$env[odd] == 0} {s} {w};
-            #MATH {env[odd]} {1 - $env[odd]};
-        }
-    };
-    cmd {w};
-} {5};
-
-#ALIAS {黑沼泽-天水} {
-
+    local_helper;
 } {5};
 
 
-#ALIAS {西夏-天水} {
-    #4 s;
+
+#ALIAS {西夏-天水大道} {
     #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[exits]" == " north 和 southwest" && "$env[room]" == "黑沼泽"} {
+        #IF {"$env[room]" == "黑沼泽"} {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            sw;n;e;e;e;eu;ed;#2 e;
-        } {
-            #LOCAL dir {@Rnd{0;1}};
-            #IF {$dir == 0} {cmd {s}} {cmd {e}};
-        }
+            黑沼泽-天水大道 %1;
+        };
     };
-    cmd {e};
+    西夏-黑沼泽;
+} {5};
+
+#ALIAS {西夏-黑沼泽} {#4 s;e;} {5};
+
+#ALIAS {黑沼泽-天水大道} {
+    #ALIAS {local_helper} {
+        #IF {"$env[room]" == "黑沼泽"} {
+            #EVENT {VARIABLE UPDATED env[room_updated]} {
+                local_helper;
+            };
+            #SWITCH {"$env[exits]"} {
+                #CASE {" north 和 southwest"} {
+                    #UNVARIABLE {env[odd]};
+                    #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                    sw;n;e;e;eu;ed;
+
+                    #IF {"%1" != ""} {%1};
+                };
+
+                #CASE {" south、north 和 west"} {
+                    cmd {s};
+                };
+
+                #CASE {" south、north、east 和 west"} {
+                    #IF {$env[odd] == 0} {
+                        cmd {e};
+                    } {
+                        cmd {s};
+                    };
+                    #MATH {env[odd]} {1 - $env[odd]};
+                };
+
+                #DEFAULT {
+                    #ECHO {debug: **** 错误的房间。停止。***};
+                    #UNVARIABLE {env[odd]};
+                    #UNEVENT {VARIABLE UPDATED env[room_updated]};                        
+                };
+            };
+        } {
+            #ECHO {debug: **** 错误的房间。停止。***};
+            #UNVARIABLE {env[odd]};
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+        }
+    } {5};
+
+    #VARIABLE {env[odd]} {0};
+    local_helper;
 } {5};

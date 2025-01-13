@@ -18,6 +18,4 @@
     #gts conn $profile;
 };
 
-#EVENT {SESSION CONNECTED} {
-    #split;
-};
+#split;

@@ -1,4 +1,5 @@
 #CONFIG charset GBK1TOUTF8;
+#CONFIG {REPEAT ENTER} {ON};
 #CONFIG history 2000;
 
 #CLASS paths read {./paths.tin};
