@@ -1,4 +1,5 @@
 #NOP 北冥模块
+#NOP 这个是适合比较高级的账号在中门站撸。
 
 #VARIABLE {xi_count} {0};
 #VARIABLE {to_yun} {false};
@@ -59,7 +60,7 @@
 
 #EVENT {VARIABLE UPDATED vitals[内力_max]} {
     #ECHO {#EVENT {VARIABLE UPDATED vitals[内力_max]}};
-    
+
     #IF {$vitals[气血%] < 100} {
         apply xiao-xingxue;
         apply xiao-xingxue;
@@ -69,7 +70,7 @@
             exert yun;
         };
     };
-    
+
     #LOCAL {target} {0};
     #LOCAL {diff} {0};
     #MATH {target} {$score[根骨] * 150};

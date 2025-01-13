@@ -140,7 +140,6 @@
 
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
     surrender;
-    #NOP #DELAY {3} { #echo shuicmd;shuicmd; }
 }
 
 #ACTION {慢慢睁开眼睛，清醒了过来。} {

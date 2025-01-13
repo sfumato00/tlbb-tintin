@@ -6,7 +6,7 @@
 } {5};
 
 #ACTION {这里%u的出口是%*。$} {
-    #ECHO {Exits: %2};
+    #NOP #ECHO {debug: Exits: %2};
     #VARIABLE {env[exits]} {%2};
     #FORMAT {env[room_updated]} {%T};
 }

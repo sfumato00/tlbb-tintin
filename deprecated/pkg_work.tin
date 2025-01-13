@@ -1,3 +1,5 @@
+#NOP deprecated
+
 #ALIAS {开始工作} {
     #ticker {打工} {#echo hp;hp;#echo work;work} {15}
 }
