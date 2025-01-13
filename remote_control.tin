@@ -4,7 +4,8 @@
 
     #IF {"%2" == "$password"} {
         log {remote_control.log} {1};
-        cmd {%3};
+        #ECHO {%3};
+        %3;
         cmd {tell %1 {已经执行: %3}};
     };
 }
@@ -28,13 +29,17 @@
     };
 } {1}
 
-#ACTION {(%1)告诉你：(%2) disable_takeover} {
 
-    #IF {"%2" == "$password"} {
-        log {remote_control.log} {1};
-        #ECHO {Suspend 'reconnection'};
-        #VARIABLE {control[disable_takeover]} {y};
-        #WRITE {./sessions/session_$username};
-        tell %1 {停止重连};
-    };
-} {1}
+#ACTION {(%1)告诉你：tellmeexpqn} {
+    #LOCAL msg {};
+    #LOCAL key {};
+
+    #CAT {msg} {【精神】: $vitals[精神] / $vitals[精神_max] ($vitals[精神%]%) 【潜力】: $vitals[潜力] / $vitals[潜力_max]};
+    #CAT {msg} {【气血】: $vitals[气血] / $vitals[气血_max] ($vitals[气血%]%) 【内力】: $vitals[内力] / $vitals[内力_max]};
+
+    #CAT {msg} {【饮水】: $vitals[饮水] / $vitals[饮水_max] 【食物】: $vitals[食物] / $vitals[食物_max]};
+
+    #CAT {msg} {【经验获取】平均 $fight_stats[经验][velocity][mean], 最大 $fight_stats[经验][velocity][max], };
+    #CAT {msg} {【潜能获取】平均 $fight_stats[潜能][velocity][mean], 最大 $fight_stats[潜能][velocity][max]};
+    reply $msg;
+}
