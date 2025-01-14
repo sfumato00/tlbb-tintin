@@ -236,6 +236,22 @@
             } {3};
         };
 
+        #CASE {"读书"} {
+            #ECHO {开启 循环 - 读书 模块};
+
+            #CLASS xunhuan kill;
+            #CLASS xunhuan read {./pkg_xunhuan.tin};
+            #VARIABLE {dushu[book]} {%2};
+            #ALIAS {feedback_loop} {
+                feedback_loop_dushu;
+            } {5};
+
+            #DELAY {init} {
+                #TICKER {ticker_feedback_loop} {hp} {1.5};
+                cmd {hp};
+            } {3};
+        };
+
         #CASE {"传功"} {
             #IF {"%2" == ""} {
                 #ECHO {必须指定传功对象};

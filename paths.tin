@@ -199,3 +199,59 @@
     #VARIABLE {env[odd]} {0};
     local_helper;
 } {5};
+
+
+#ALIAS {城隍庙-神憩小舍} {
+    n;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "东安门"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            黄土大道-神憩小舍;
+        };
+    };
+    e;
+} {5};
+
+
+#alias {黄土大道-神憩小舍} {
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[exits]" == " east 和 west"} {
+            #DELAY 0.1 {
+                cmd {e};
+            };
+        } {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #DELAY 12 {
+                se;e;#13 n;
+                #3 n;#2 nw;nu;#3 {nu;n};nu;ne;nu;
+                init_task;              
+            };            
+        };
+    };
+    cmd {e};
+};
+
+
+#ALIAS {大理-跳崖} {
+    #ECHO {大理-跳崖-async};
+    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+
+        #SWITCH {"$env[room]"} {
+            #CASE {"山路"} {
+                #IF {"$env[exits]" == " southdown 和 northup"} {
+                    nu;
+                } {
+                    climb mountain;
+                };
+            };
+            #CASE {"山顶"} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                n;e;n;n;e;e;s;s;jump down;
+            };
+        };
+    };
+    #delay {0.2} {
+        climb mountain;
+    };
+} {1};

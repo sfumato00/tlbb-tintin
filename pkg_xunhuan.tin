@@ -105,6 +105,28 @@
    };
 } {5};
 
+
+#alias (feedback_loop_dushu) {
+    #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+    #IF {$xiqi > 0} {
+        #ECHO {xiqi $xiqi};
+        xiqi $xiqi;
+    };
+
+    #IF {$vitals[内力] >= $vitals[内力_max]} {
+        cmd {du $dushu[book] $vitals[精神_max]};
+    } {
+        #IF {$full_yunqi > 0} {
+            #ECHO {yunqi $full_yunqi};
+            yunqi $full_yunqi;
+        };
+        delay_feedback_loop 9;
+        cmd {dazuo $vitals[气血_max]};
+        #echo {===========================================> test};
+   };
+}
+
 #ALIAS {feedback_loop_xfer} {
     #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
     #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};

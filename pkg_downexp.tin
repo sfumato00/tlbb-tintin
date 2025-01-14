@@ -1,8 +1,14 @@
 #ALIAS {返回战斗地点} {
     #ECHO {返回战斗地点};
-    #DELAY {24} {
-        城隍庙-练功房间;
-        init_task;
+    #DELAY {6} {
+        #ECHO {距离返回战斗地点还有 18 秒};
+        #DELAY {6} {
+            #ECHO {距离返回战斗地点还有 12 秒};
+            #DELAY {6} {
+                #ECHO {距离返回战斗地点还有 6 秒};
+                城隍庙-练功房间;
+            };
+        };
     };
 } {5};
 
@@ -29,18 +35,6 @@
     quit;
 }
 
-#ALIAS {大理-跳崖} {
-    #ECHO {大理-跳崖};
-    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
-
-    #DELAY {delay_erase_exp} {
-        nu;climb mountain;
-        #DELAY {delay_erase_exp} {
-            n;e;n;n;e;e;s;s;jump down;
-        } {6};
-    } {6};
-};
-
 #EVENT {VARIABLE UPDATED fight_stats[epoch][last]} {
     #FORMAT {vitals[last_updated]} {#T};
     #IF {$vitals[经验] >= $downexp[threshold_exp]} {
@@ -48,13 +42,6 @@
         去降经验;
     };
 }
-
-#EVENT {VARIABLE UPDATED env[room]} {
-    #SWITCH {"$env[room]"} {
-        #CASE {"鬼门关"} {你死了;};
-        #CASE {"城隍庙"} {返回战斗地点;};
-    };
-};
 
 #EVENT {VARIABLE UPDATED env[init_login]} {
     #ECHO {debug: init_login updated};
@@ -67,4 +54,63 @@
 #ACTION {^你必须连线十秒后才能离开游戏。$} {
     
     #delay 2 {quit};
+} {1};
+
+#ACTION {^你正忙着呢，暂时无法离开游戏。$} {
+    #delay 2 {quit};
+} {5};
+
+
+#TICKER {stuck_check} {
+
+    #IF {"$downexp[room]" == "" || "$downexp[room]" == "$env[room]"} {
+        #RETURN {};
+    };
+
+    #LOCAL timestamp %T;
+    #LOCAL time_in_one_room {};
+    #MATH time_in_one_room {($timestamp - $env[room_updated])};
+    #ECHO {在当前房间时间: $time_in_one_room 秒。};
+    #IF {$time_in_one_room > 3600} {
+        #NOP got stuck in a room for too long;
+        quit;
+    };
+} {};
+
+
+#ALIAS {大理-跳崖} {
+    #ECHO {大理-跳崖-async};
+    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nw;wu;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #SWITCH {"$env[room]"} {
+            #CASE {"山路"} {
+                #SWITCH {"$env[exits]"} {
+                    #CASE {" southdown 和 northup"} {cmd {nu}};
+                    #CASE {" northeast 和 southdown"} {cmd {climb mountain}};
+                    #CASE {" north 和 southdown"} {cmd {climb mountain}};
+                };                
+            };
+            #CASE {"山顶"} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                n;e;n;n;e;e;s;s;
+                #EVENT {VARIABLE UPDATED env[room_updated]} {
+                    #SWITCH {"$env[room]"} {
+                        #CASE {"鬼门关"} {
+                            你死了;
+                        };
+                        #CASE {"城隍庙"} {
+                            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                            返回战斗地点;
+                        };
+                    };                    
+                };
+                #delay {0.2} {
+                    jump down;
+                };
+            };                        
+        };
+    };
+    #delay {0.2} {
+        nu;wu;
+    };
 } {1};
