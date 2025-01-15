@@ -71,11 +71,15 @@
     #VARIABLE {vitals[经验]}{%8};
 } {5};
 
-#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%.%d} {
+#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%*} {
     #VARIABLE {skills[%4]} {%9};
-} {5};
+    #VARIABLE {profs[%4]} {%10};
+    #IF {"%4" == "zhemei-strike"} {
+        #format {skills[last_update]} {%T};
+    };
+} {1};
 
-#ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%d} {
+#ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%*} {
     #VARIABLE {score[根骨]} {%2};
     #VARIABLE {score[胆识]} {%5};
     #VARIABLE {score[悟性]} {%8};
@@ -114,30 +118,6 @@
         };
     };
 } {5};
-
-
-#NOP 降经验
-#ALIAS {降经验} {
-
-    #SWITCH {"%1"} {
-
-        #CASE {"on"} {
-            #ECHO {开启降经验模块};
-            #CLASS downexp kill;
-            #CLASS downexp read {./pkg_downexp.tin};
-        };
-
-        #CASE {"off"} {
-            #ECHO {关闭降经验模块};
-            #CLASS downexp kill;
-        };
-
-        #DEFAULT {
-            #ECHO {supported arguments are: on, off};
-        };
-    };
-} {5};
-
 
 #NOP 九阳
 #ALIAS {九阳} {
@@ -270,6 +250,28 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
+                cmd {hp};
+            } {3};
+        };
+
+        #CASE {"研究"} {
+            #ECHO {开启 循环 - 研究 模块};
+
+            #IF {"%2" == ""} {
+                #ECHO {必须指定 res 的潜能数};
+                #RETURN {必须指定传功对象};
+            };
+
+            #VARIABLE {xunhuan[res]} {%2};
+            #CLASS xunhuan kill;
+            #CLASS xunhuan read {./pkg_xunhuan.tin};
+
+            #ALIAS {feedback_loop} {
+                feedback_loop_res;
+            } {5};
+
+            #DELAY {init} {
+                #TICKER {ticker_feedback_loop} {hp} {1};
                 cmd {hp};
             } {3};
         };

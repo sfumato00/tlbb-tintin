@@ -251,9 +251,3 @@
         climb mountain;
     };
 } {1};
-
-
-#ALIAS {RunCallback} {
-    #FOREACH $callback {cmd} {cmd {$cmd}};
-    #UNVARIABLE {callback};
-} {5};g

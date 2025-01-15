@@ -91,8 +91,7 @@
         };
 
         #$multiple {
-            #ECHO {learn $learn[skill] from $learn[master] with 50};
-            learn $learn[skill] from $learn[master] with 50;
+            cmd {learn $learn[skill] from $learn[master] with 50};
         };
     } {
         #IF {$full_yunqi > 0} {
@@ -101,7 +100,6 @@
         };
         delay_feedback_loop 8.5;
         cmd {dazuo $vitals[气血_max]};
-        #echo {===========================================> test};
    };
 } {5};
 
@@ -123,7 +121,6 @@
         };
         delay_feedback_loop 9;
         cmd {dazuo $vitals[气血_max]};
-        #echo {===========================================> test};
    };
 }
 
@@ -147,6 +144,27 @@
     delay_feedback_loop 8.5;
     cmd {dazuo $vitals[气血_max]};
 } {5};
+
+
+#alias {feedback_loop_res} {
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+
+    #IF {$xiqi > 0} {
+        cmd {xiqi $xiqi};
+    };
+        
+    #IF {$vitals[内力] < $vitals[内力_max]} {
+        #IF {$yunqi > 0} {
+            cmd {yunqi $yunqi};
+        };
+        delay_feedback_loop 8.5;
+        cmd {dazuo $vitals[气血_max]};
+    } {
+        update_learn_skill;
+        cmd {research $learn[skill] $xunhuan[res]};
+    };
+}
 
 
 #EVENT {VARIABLE UPDATED vitals[内力]} {

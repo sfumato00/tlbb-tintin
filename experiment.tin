@@ -1,0 +1,19 @@
+#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%d} {
+    #VARIABLE {skills[%4]} {%9};
+    #VARIABLE {profs[%4]} {%11};
+
+    #IF {"%4" == "zhemei-strike"} {
+        #format {skills[last_update]} {%T};
+    };
+} {1};
+
+
+#EVENT {VARIABLE UPDATED skills[last_update]} {
+
+}
+
+#FOREACH {*prof[%*]} {pro} {
+    #ECHO {$prof[$pro]};
+};
+
+#foreach {*friends[%*]} {i} {#show $friends[$i]}
