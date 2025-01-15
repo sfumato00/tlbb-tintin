@@ -38,11 +38,6 @@
 #ALIAS {洛阳-松鹤楼} {n;w;}
 #ALIAS {松鹤楼-洛阳} {e;s;}
 
-#ALIAS {西夏-洛阳} {
-    西夏-天水;eu;ed;#8 e;
-} {5};
-
-
 
 #ALIAS {npc-go} {
     松鹤楼-洛阳;
@@ -141,19 +136,21 @@
     local_helper;
 } {5};
 
-
-
 #ALIAS {西夏-天水大道} {
+    #2 s;兴庆城城门-天水大道
+} {5};
+
+#ALIAS {兴庆城城门-天水大道} {
     #EVENT {VARIABLE UPDATED env[room_updated]} {
         #IF {"$env[room]" == "黑沼泽"} {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            黑沼泽-天水大道 %1;
+            黑沼泽-天水大道;
         };
     };
-    西夏-黑沼泽;
+    兴庆城城门-黑沼泽;
 } {5};
 
-#ALIAS {西夏-黑沼泽} {#4 s;e;} {5};
+#ALIAS {兴庆城城门-黑沼泽} {#2 s;e;} {5};
 
 #ALIAS {黑沼泽-天水大道} {
     #ALIAS {local_helper} {
@@ -166,8 +163,7 @@
                     #UNVARIABLE {env[odd]};
                     #UNEVENT {VARIABLE UPDATED env[room_updated]};
                     sw;n;e;e;eu;ed;
-
-                    #IF {"%1" != ""} {%1};
+                    RunCallback;
                 };
 
                 #CASE {" south、north 和 west"} {
@@ -255,3 +251,9 @@
         climb mountain;
     };
 } {1};
+
+
+#ALIAS {RunCallback} {
+    #FOREACH $callback {cmd} {cmd {$cmd}};
+    #UNVARIABLE {callback};
+} {5};g
