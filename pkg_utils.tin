@@ -1,0 +1,53 @@
+#NOP utilities
+
+#ALIAS {cmd} {
+    #VARIABLE {_cmds} {%1};
+    #FOREACH {$_cmds} {_last_cmd} {
+        #ECHO {输入指令: $_last_cmd};
+        #SEND {$_last_cmd};
+    };
+} {5};
+
+#FUNCTION ParseFlakyNumber {
+    #LOCAL res {0};
+    #PARSE {%1} {x} {
+        #MATH res {$res * 10 + $x};
+    };
+    #RETURN {$res};
+};
+
+#FUNCTION Max {
+    #IF {%1 < %2} {#RETURN {%2};} {#RETURN {%1};};
+};
+
+#FUNCTION Min {
+    #IF {%1 > %2} {#RETURN {%2};} {#RETURN {%1};};
+};
+
+#FUNCTION {Rnd} {#math {result} {1 d (%2 - %1 + 1) + %1 - 1}};
+
+#FUNCTION Restore {
+    #LOCAL curr {%1};
+    #LOCAL max {%2};
+    #LOCAL min_restore {%3};
+    #MATH ret {($max - $curr) / $min_restore * 20};
+    #RETURN $ret;
+};
+
+#FUNCTION RestoreFull {
+    #LOCAL curr {%1};
+    #LOCAL max {%2};
+    #LOCAL min_restore {%3};
+
+    #LOCAL diff {0};
+    #LOCAL multiple {0};
+
+    #MATH {diff} {$max - $curr};
+    #MATH multiple {$diff / $min_restore};
+    #IF {$multiple * $min_restore < $diff} {
+        #MATH multiple {$multiple + 1};
+    };
+
+    #MATH ret {$multiple * 20};
+    #RETURN $ret;
+};

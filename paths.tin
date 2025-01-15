@@ -251,3 +251,9 @@
         climb mountain;
     };
 } {1};
+
+#alias RunCallback {
+    #IF {"$callback" != ""} {
+        cmd {$callback};
+    };    
+}

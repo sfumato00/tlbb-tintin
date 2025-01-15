@@ -1,10 +1,10 @@
-#CONFIG charset GBK1TOUTF8;
-#CONFIG {REPEAT ENTER} {ON};
-#CONFIG history 2000;
+#NOP TLBB main module
 
+#CLASS config read {./pkg_config.tin};
 #CLASS paths read {./paths.tin};
-#CLASS functions read {./pkg_functions.tin};
 #CLASS room read {./pkg_room.tin};
+#CLASS login read {./pkg_login.tin};
+#CLASS utils read {./pkg_utils.tin};
 
 #EVENT {VARIABLE UPDATED vitals[精神_max]} {
     #VARIABLE {xunhuan[max_xiqi_full]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
@@ -14,22 +14,7 @@
     #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
 }
 
-#nop {login}
 
-#ACTION {^Please input gb or big5:} {gb} {1};
-
-#ACTION {^您的英文名字(新人登录请输入new)：} {
-    $username;$password;
-} {1};
-
-#ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？(y/n)} {#DELAY 30 {n;}};
-
-#ACTION {重新连线完毕。} {
-    cmd {look};
-    cmd {score};
-    cmd {hp};
-    init_task;
-} {5};
 
 
 #NOP {common}
@@ -71,16 +56,18 @@
     #VARIABLE {vitals[经验]}{%8};
 } {5};
 
-#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%*} {
-    #VARIABLE {skills[%4]} {%9};
-    #VARIABLE {profs[%4]} {%10};
-    #IF {"%4" == "zhemei-strike"} {
-        #format {skills[last_update]} {%T};
+#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%*} {
+
+    #VARIABLE {skills[%4]} {
+        {lv} {%9}
+        {prof} {@ParseFlakyNumber{%11}}
     };
+    #NOP #ECHO {debug: %9, %10, %11};
+    #NOP #VARIABLE {profs[%4]} {@ParseFlakyNumber{%11}};
 } {1};
 
 #ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%*} {
-    #VARIABLE {score[根骨]} {%2};
+    #VARIABLE {score[根骨]} {@ParseFlakyNumber{%2}};
     #VARIABLE {score[胆识]} {%5};
     #VARIABLE {score[悟性]} {%8};
     #VARIABLE {score[膂力]} {%11};
@@ -177,7 +164,7 @@
             };
 
             #IF {"%3" == ""} {
-                #VARIABLE {xunhuan[js_per_learn]} {350};
+                #VARIABLE {xunhuan[js_per_learn]} {11};
             } {
                 #VARIABLE {xunhuan[js_per_learn]} {%3};
             };
@@ -194,10 +181,10 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
-                update_learn_skill;
                 cmd {hp};
             } {3};
             cmd {skills};
+            research literate 1;
         };
 
         #CASE {"吐纳"} {
@@ -305,11 +292,6 @@
 } {5};
 
 
-#ALIAS {cmd} {
-    #ECHO {%1};
-    #SEND {%1};
-} {5};
-
 
 #ALIAS {dazuo_max} {
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
@@ -325,7 +307,10 @@
 #NOP 核心触发
 
 #ACTION {^目前权限：} {
-    
     #FORMAT {env[init_login]} {%T};
 } {1};
 
+#ACTION {^你目前至少要用 %1 点潜能。$} {
+    #VARIABLE {xunhuan[qn_per_res]} {@ParseFlakyNumber{%1}};
+    #UNACTION {^你目前至少要用 %1 点潜能。$};
+} {5};

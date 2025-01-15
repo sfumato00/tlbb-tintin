@@ -16,9 +16,7 @@
 #VARIABLE {MIN_IN_MICRO_SECOND} {60M};
 
 #ALIAS {feedback_loop} {
-    #VARIABLE {npcs} {$npc_list};
-    #LIST {npcs} {collapse} {, };
-    cmd {say $npcs};
+    cmd {say @CalNpcMsg{}};
     #IF {$vitals[饮水] < $vitals[饮水_max]} {
         cmd {drink tong};
     };
@@ -31,13 +29,10 @@
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
     #IF {$hp_percentage >= 50} {
-        #FOREACH {$npc_list[%*]} {npc} {
-            cmd {fight $npc};
-        };
+        fight_npcs;
     } {
         #IF {$hp_percentage < 20} {
-            #ECHO {surrender};
-            surrender;
+            cmd {surrender};
         };
     };
 
@@ -119,6 +114,14 @@
     };
 }
 
+#ALIAS {fight_npcs} {
+    #FOREACH {*npc_list[%*]} {x} {
+        #FOREACH {*npc_list[$x][%*]} {i} {
+            cmd {fight $x $npc_list[$x][$i]};
+        };
+    };
+} {5};
+
 #ALIAS {init_fight} {
     #ECHO {开始练功};
     remove cloth;
@@ -132,18 +135,17 @@
 }
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
-
     #DELAY {15} {
-        no;
+        cmd {no};
     };
 }
 
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
-    surrender;
+    cmd {surrender};
 }
 
 #ACTION {慢慢睁开眼睛，清醒了过来。} {
-    surrender;
+    cmd {surrender};
     #DELAY {3.1} {
         init_fight;
     };
@@ -152,3 +154,17 @@
 #EVENT {VARIABLE UPDATED vitals[经验]} {
     feedback_loop;
 };
+
+
+#FUNCTION CalNpcMsg {
+    #LOCAL {msg} {};
+    #FOREACH {*npc_list[%*]} {x} {
+        
+        #LOCAL indices {$npc_list[$x]};
+        #LIST indices COLLAPSE {;};
+        #LOCAL m {$x: $indices};
+        #LIST msg ADD $m;
+    };
+    #LIST msg COLLAPSE {, };
+    #RETURN {$msg};
+}
