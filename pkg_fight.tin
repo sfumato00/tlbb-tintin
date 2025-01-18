@@ -159,7 +159,7 @@
 #FUNCTION CalNpcMsg {
     #LOCAL {msg} {};
     #FOREACH {*npc_list[%*]} {x} {
-        #LOCAL m {$x: *npc_list[$x][+1]-*npc_list[$x][-1]};
+        #LOCAL m {$x: $npc_list[$x][+1]-$npc_list[$x][-1]};
         #LIST msg ADD $m;
     };
     #LIST msg COLLAPSE {, };
