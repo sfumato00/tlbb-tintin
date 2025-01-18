@@ -145,6 +145,8 @@
 
         #CASE {"师父"} {
             #ECHO {开启 循环 - 师父 模块};
+
+            #VARIABLE {xunhuan[xfer_target]} {%2};
             #CLASS xunhuan kill;
             #CLASS xunhuan read {./pkg_xunhuan.tin};
 
@@ -214,7 +216,7 @@
             #VARIABLE {xunhuan[js_per_learn]} {%2};
         };
         #DELAY {init} {
-            #TICKER {ticker_feedback_loop} {check_busy} {1.2};
+            #TICKER {ticker_feedback_loop} {check_busy} {2};
             #CLASS learn kill;
             #CLASS learn read {./pkg_learn.tin};
         } {5};

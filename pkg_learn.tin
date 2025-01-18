@@ -43,11 +43,12 @@
         #RETURN {};
     };
 
-    #$params[multiple] {
-        cmd {learn $sk from $learn[master] with 50};
+    #IF {$params[multiple] > 0} {
+        #$params[multiple] {
+            cmd {learn $sk from $learn[master] with 50};
+        };
     };
-
-    #IF {$params[qn] > 0} {
+    #ELSEIF {$params[qn] > 0} {
         cmd {learn $sk from $learn[master] with $params[qn]};
     };
 } {5};
@@ -92,7 +93,7 @@
         #return {$ret};
     };
     
-    #MATH max_learn_times {$js_max / $js_per_learn };
+    #MATH max_learn_times {($js_max - 1) / $js_per_learn };
     #LOCAL learn_times {@Min{$max_learn_times;$min_qn_before_level}};
 
     #MATH multiple {$learn_times / 50};

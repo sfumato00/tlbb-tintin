@@ -15,7 +15,7 @@
         cmd {xiqi $xiqi};
     };
     
-    #IF {$vitals[内力] < $vitals[内力_max]} {
+    #IF {$vitals[内力] < $vitals[内力_max] + 1000} {
                 
         #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
         
