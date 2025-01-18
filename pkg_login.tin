@@ -1,10 +1,6 @@
 #nop {login}
 
-#ACTION {^Please input gb or big5:} {gb} {1};
-
-#ACTION {^您的英文名字(新人登录请输入new)：$} {
-    $username;$password;
-} {1};
+#ACTION {^Please input gb or big5:} {gb;$username;$password;} {1};
 
 #ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？(y/n)} {#DELAY 30 {n;}};
 

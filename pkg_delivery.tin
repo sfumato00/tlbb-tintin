@@ -1,45 +1,50 @@
+#NOP delivery
 
-
-
-
-
-
-#alias {天贶殿-开封} {
-    #EVENT {VARIABLE UPDATED delivery[room]} {
-        #IF {"$delivery[room]" == "黄土大道"} {
-            #UNEVENT {VARIABLE UPDATED delivery[room]};
-            黄土大道-开封;
-        };
+#ACTION {给你一位%u。$} {
+    #ECHO {收到%1};
+    log {./log/$username.log} {12};
+    #SWITCH {"%1"}
+    {
+        #CASE {"举子"} {#VAR {npc} {student};送快递;};
+        #CASE {"戏迷"} {#VAR {npc} {viewer};送快递;};
+        #CASE {"禁军"} {#VAR {npc} {garrison};送快递;};
+        #CASE {"白衣武士"} {#VAR {npc} {fighter};送快递;};
+        #CASE {"村民"} {#VAR {npc} {cunmin};送快递;};
+        #CASE {"守卫"} {#VAR {npc} {guard};送快递;};
+        #CASE {"校尉"} {#VAR {npc} {captain};送快递;};
+        #CASE {"叶二娘"} {#VAR {npc} {ye};送快递;};
+        #CASE {"段延庆"} {#VAR {npc} {duan};送快递;};
+        #CASE {"鸠摩智"} {#VAR {npc} {jiumozhi};送快递;};
+        #CASE {"金衣剑客"} {#VAR {npc} {sword man};送快递;};
+        #CASE {"神州刀客"} {#VAR {npc} {blademan};送快递;};
+        #CASE {"石人武士"} {#VAR {npc} {shi};送快递;};
     };
-    #9 s;
-};
+} {5};
+
+#ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？} {
+    y;
+} {5};
+
+#ACTION {^你必须连线十秒后才能离开游戏。$} {#DELAY {1} {quit}}
+
+#ACTION {%*慢慢睁开眼睛，清醒了过来。} {quit}
+
+#ACTION {^你给%*一位%*。} {quit}
 
 
-#ALIAS {黄土大道-开封} {
-    #EVENT {VARIABLE UPDATED delivery[room]} {
-        #IF {"$delivery[room]" == "东安门"} {
-            #ECHO {进入 东安门。目标已抵达。};
-            #UNEVENT {VARIABLE UPDATED delivery[room]};
-            #6 w;
-        } {
-            #IF {"$delivery[room]" == "黄土大道"} {
-                cmd {w};
-            } {
-                #ECHO {debug: unexpected room $delivery[room]. Abort.};
-                #UNEVENT {VARIABLE UPDATED delivery[room]};
-            };
-        };
+
+#TICKER {发呆} {i;} {120};
+
+
+#ALIAS {test} {
+    #SHOW {
+        某人给你一位神州刀客。
     };
-    cmd {w};
 } {5};
 
 
-#ACTION {^%u给你%u。$} {
-    神憩小舍-天贶殿;
-    天贶殿-黄土大道;
-    #25 w;
-};
-
-#ACTION {^你必须连线十秒后才能离开游戏。$} {
-    #delay 5 {quit};
+#ALIAS {test2} {
+    #SHOW {
+        某人给你一位校尉。
+    };
 } {5};

@@ -1,0 +1,22 @@
+#FUNCTION UpdateDB {
+    #LOCAL database {%1};
+    #LOCAL tlbb_id {%2};
+    #LOCAL env {%3};
+    #LOCAL vitals {%4};
+    #LOCAL fight_status {%5};
+
+    #LOCAL sql {{INSERT INTO users ( tlbb_id, env, vitals, fight_stats ) VALUES ( $tlbb_id, $env, $vitals, $fight_status ) ON CONFLICT(tlbb_id) DO UPDATE SET name = excluded.name, vitals = excluded.vitals, fight_stats = excluded.fight_stats; " };};
+
+    #SCRIPT {script_output} {sqlite3 $database $sql};
+};
+
+
+#FUNCTION GetSQL {
+    #LOCAL database {%1};
+    #LOCAL db_tlbb_id {%2};
+    #LOCAL db_env {%3};
+    #LOCAL db_vitals {%4};
+    #LOCAL db_fight_status {%5};
+
+    #RETURN {{INSERT INTO users ( tlbb_id, env, vitals, fight_stats ) VALUES ( $db_tlbb_id, $db_env, $db_vitals, $fight_status ) ON CONFLICT(tlbb_id) DO UPDATE SET name = excluded.name, vitals = excluded.vitals, fight_stats = excluded.fight_stats; " };};
+};

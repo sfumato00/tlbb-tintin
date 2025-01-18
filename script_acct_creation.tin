@@ -1,0 +1,53 @@
+#NOP {Account creation}
+#CONFIG charset GBK1TOUTF8;
+
+#VARIABLE {char_prefix} {dhl};
+#VARIABLE {password} {Ld831218};
+
+#VARIABLE {i} {0};
+#VARIABLE {max} {0};
+#VARIABLE {character_list} {};
+#parse {defghijklmnopqrstuvwxyz} {ch} {
+    #VARIABLE character_list[$i] {$char_prefix$ch};
+    #MATH i {$i + 1};
+};
+
+#VARIABLE {n} {$i};
+#VARIABLE {i} {0};
+
+
+#ACTION {^Please input gb or big5:} {gb} {1};
+
+#ACTION {^您的英文名字(新人登录请输入new)：} {
+    new;
+    $character_list[$i];
+    y;
+    德邦快递;
+    $password;
+    $password;
+    a@a.a;
+    m;
+    25 15 20 25 15;
+    quit;
+} {1};
+
+#action {^你必须连线十秒后才能离开游戏。$} {
+    #DELAY {1} {
+        quit;
+    };
+}
+
+#ACTION {^对不起，这个名字已经有人使用了，请另外再起一个。$} {
+    #zap;
+} {5};
+
+#EVENT {SESSION DISCONNECTED} {
+    #gts;
+    #Math i {$i + 1};
+    #ECHO {current index: $i};
+    #IF {$i < $n} {
+        #SESSION {$character_list[$i]} {103.10.85.133} {8888};
+    };
+}
+
+#SESSION {$character_list[$i]} {103.10.85.133} {8888};
