@@ -1,0 +1,63 @@
+#NOP ------------------------ Alias ----------------------------------
+
+#ALIAS {feedback_loop_tuna} {
+    #LOCAL time {};
+    #FORMAT time {%T};
+    #NOP #ECHO {[Debug] assert_not_busy: busy until $busy[until], current timestamp: $time};
+    #IF {$time < $busy[until]} {
+        #RETURN {};
+    };
+
+    #IF {$vitals[内力] < $vitals[内力_max]} {
+                
+        #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+        #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+        #IF {$xiqi > 0} {
+            cmd {xiqi $xiqi};
+        };
+        
+        #IF {$yunqi > 0} {
+            cmd {yunqi $yunqi};
+        };
+        busy_dazuo $vitals[气血_max];
+        #RETURN {};
+    } {
+        #LOCAL full_yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+        #LOCAL max_full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+        #LOCAL full_xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+        
+        #LOCAL multiple {0};
+        #MATH multiple {($vitals[内力] - $full_yunqi - $full_xiqi) / $max_full_xiqi - 2};
+        #IF {$multiple > 6} {
+            #LOCAL {multiple} {6};
+        };
+
+        #IF {$full_xiqi > 0} {
+            cmd {xiqi $full_xiqi};
+        };
+        
+        #IF {$full_yunqi > 0} {
+            cmd {yunqi $full_yunqi};
+        };
+
+        #$multiple {
+            cmd {tuna $vitals[精神_max]};
+            cmd {xiqi $max_full_xiqi};
+        };
+    };
+} {5};
+
+#EVENT {VARIABLE UPDATED vitals[经验]} {
+    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    feedback_loop_tuna;
+};
+
+#EVENT {VARIABLE UPDATED busy[updated]} {
+    cmd {hp};
+};
+
+#ALIAS {stop} {
+    #ECHO {关闭 吐纳 模块};
+    feedback_loop_idle;
+    #CLASS tuna kill;
+} {5};

@@ -1,0 +1,81 @@
+#NOP CHinese number
+
+#VARIABLE {dict} {
+    {零} {0}
+    {一} {1}
+    {二} {2}
+    {三} {3}
+    {四} {4}
+    {五} {5}
+    {六} {6}
+    {七} {7}
+    {八} {8}
+    {九} {9}
+    {十} {10}
+    {百} {100}
+    {千} {1000}
+    {万} {10000}
+    {亿} {100M}
+};
+
+#FUNCTION Reverse {
+    #LIST {lst} {create};
+
+    #PARSE {%1} {ch} {
+        #ECHO {$ch};
+        #LIST {lst} {add} {$ch};
+        #ECHO {$lst};
+    };
+    #ECHO {$lst};
+    #LIST {lst} {reverse};
+    #VARIABLE {ret} {
+        {lst} {$lst}
+        {len} {0}
+    };
+    
+    #LIST {lst} {size} {ret[len]};
+    
+    #RETURN {$ret};
+}
+
+#FUNCTION CnToInt {
+    #VARIABLE total {0};
+    #VARIABLE r {1};
+
+    #VARIABLE {cn_lst} {@Reverse{%1}};
+
+    #PARSE {%1} {cn_lst} {
+        #LOCAL {val} {$dict[$ch]};
+        #ECHO {$ch: $val};
+        #MATH i {$i + 1};
+
+        #IF {$val >= 10 && $i == $len} {
+            #IF {$val > $r} {
+                #VARIABLE {r} {$val};
+                #MATH {total} {$total +$val};
+            } {
+                #MATH {r} {$r * $val};
+            };
+            #CONTINUE;
+        };
+
+        #IF {$val >= 10} {
+            #IF {$val > $r} {
+                #VARIABLE {r} {$val};
+            } {
+                #MATH {r} {$r * $val};
+            };
+            #CONTINUE;
+        };
+        #MATH total {$total + $r *$val};
+    };
+
+    #RETURN $total;
+};
+
+#ECHO {@Reverse{五十九}};
+#NOP #ECHO {@CnToInt{五万零五十九}};
+#NOP #ECHO {@CnToInt{二十五万零五十九}};
+#NOP ECHO {@CnToInt{三十五万零五十九}};
+#NOP #ECHO {@CnToInt{九百三十五万零五十九}};
+#NOP #ECHO {@CnToInt{一百万}};

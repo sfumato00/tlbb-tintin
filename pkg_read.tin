@@ -1,0 +1,46 @@
+#NOP ------------------------ Alias ----------------------------------
+
+#ALIAS {feedback_loop_read} {
+    #LOCAL time {};
+    #FORMAT time {%T};
+    #NOP #ECHO {[Debug] assert_not_busy: busy until $busy[until], current timestamp: $time};
+    #IF {$time < $busy[until]} {
+        #RETURN {};
+    };
+
+    #IF {$vitals[内力] < $vitals[内力_max]} {
+                
+        #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+        #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+        #IF {$xiqi > 0} {
+            cmd {xiqi $xiqi};
+        };
+        
+        #IF {$yunqi > 0} {
+            cmd {yunqi $yunqi};
+        };
+        busy_dazuo $vitals[气血_max];
+        #RETURN {};
+    } {
+        #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+        #IF {$full_xiqi > 0} {
+            cmd {xiqi $full_xiqi};
+        };
+        busy_du $read[book] $vitals[精神_max];
+    };
+} {5};
+
+#EVENT {VARIABLE UPDATED vitals[经验]} {
+    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    feedback_loop_read;
+};
+
+#EVENT {VARIABLE UPDATED busy[updated]} {
+    cmd {hp};
+};
+
+#ALIAS {stop} {
+    #ECHO {关闭 读书 模块};
+    feedback_loop_idle;
+    #CLASS read kill;
+} {5};

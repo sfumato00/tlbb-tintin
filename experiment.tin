@@ -1,41 +1,16 @@
 #NOP exp
 #ECHO {====================================================};
-#VARIABLE {npc_list} {
-    {captain} {
-        {1} {1}
-        {2} {2}
-        {3} {3}
-        {4} {4}
-    }
+
+#CLASS tlbb kill;
+#CLASS tlbb read {./tlbb.tin};
+
+#alias test {
+    #ECHO {test p1: %1};
+    #LOCAL ts {};
+    #FORMAT ts {%T};
+    #LOCAL ts2 {0};
+    #MATH ts2 {$ts + %1};
+    #ECHO {ts: $ts, ts2: $ts2};
 };
 
-#ALIAS {test} {
-    #ECHO {[message]: @CalNpcMsg{}};
-
-    fight_npcs;
-} {5};
-
-
-#FUNCTION CalNpcMsg {
-    #LOCAL {msg} {};
-    #FOREACH {*npc_list[%*]} {x} {
-        #LOCAL indices {$npc_list[$x]};
-        #ECHO {$indices};
-        #LIST indices COLLAPSE {;};
-        #LOCAL m {$x: $indices};
-        #LIST msg ADD $m;
-    };
-    #LIST msg COLLAPSE {, };
-    #RETURN {$msg};
-};
-
-#ALIAS {fight_npcs} {
-    #FOREACH {*npc_list[%*]} {x} {
-        #FOREACH {*npc_list[$x][%*]} {i} {
-            cmd {fight $x $npc_list[$x][$i]};
-        };
-    };
-} {5};
-
-test;
-
+#NOP #class num read {./pkg_chinese_number.tin};

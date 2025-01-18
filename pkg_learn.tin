@@ -1,0 +1,132 @@
+#NOP learn
+
+#ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
+    score;
+};
+
+#ALIAS {feedback_loop_learn} {
+    #LOCAL time {};
+    #FORMAT time {%T};
+    #NOP #ECHO {[Debug] assert_not_busy: busy until $busy[until], current timestamp: $time};
+    #IF {$time < $busy[until]} {
+        #RETURN {};
+    };
+    #IF {$vitals[内力] < $vitals[内力_max]} {
+        #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+        #IF {$xiqi > 0} {
+            cmd {xiqi $xiqi};
+        };
+        #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+        #IF {$yunqi > 0} {
+            cmd {yunqi $yunqi};
+        };
+        busy_dazuo $vitals[气血_max];
+        #RETURN {};
+    };
+
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    
+    #IF {$xiqi > 0} {
+        cmd {xiqi $xiqi};
+    };
+    #LOCAL sk {@getSkillToLearn{}};
+
+    #LOCAL params {@CalLearnParam{$skills[$sk][lv];$skills[$sk][prof];$score[悟性];$vitals[精神_max];$xunhuan[js_per_learn]}};
+    #ECHO {***** DEBUG *****: multiple: $params[multiple], qn: $params[qn], %T};
+    
+    #IF {$skills[$sk][prof] >= 100 && $params[qn] == 0 && $params[multiple] == 0} {
+        #IF {$xunhuan[qn_per_res] > 5 || "$xunhuan[qn_per_res]" == ""} {
+            #NOP Re-calibrate
+            cmd {research $sk 1};
+        };
+        busy_research $sk $xunhuan[qn_per_res];
+        #RETURN {};
+    };
+
+    #$params[multiple] {
+        cmd {learn $sk from $learn[master] with 50};
+    };
+
+    #IF {$params[qn] > 0} {
+        cmd {learn $sk from $learn[master] with $params[qn]};
+    };
+} {5};
+
+#ALIAS {stop} {
+    #ECHO {关闭 学习 模块};
+    feedback_loop_idle;
+    #CLASS learn kill;
+} {5};
+
+#EVENT {VARIABLE UPDATED busy[updated]} {
+    cmd {skills};
+    cmd {hp};
+};
+
+#EVENT {VARIABLE UPDATED vitals[经验]} {
+    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    feedback_loop_learn;
+};
+
+#FUNCTION CalLearnParam {
+    #LOCAL level %1;
+    #LOCAL curr_pro %2;
+    #LOCAL wx %3;
+    #LOCAL js_max %4;
+    #LOCAL js_per_learn %5;
+
+    #ECHO {[DEBUG]: 技能等级: $level, 熟练: $curr_pro, 悟性: $wx, 精神: $js_max, 精神-cost-per-qn: $js_per_learn};
+
+    #LOCAL max_learn_times {0};
+    #LOCAL multiple {0};
+    #LOCAL min_qn_before_level {0};
+
+    #VARIABLE {min_qn_before_level} {@GetMinQnToLevel{$level;$curr_pro;$wx}};
+    #ECHO {[debug] min_qn_before_level: $min_qn_before_level};
+    
+    #IF {$min_qn_before_level === 0} {
+        #LOCAL ret {
+            {multiple} {0}
+            {qn} {0}
+        };
+        #return {$ret};
+    };
+    
+    #MATH max_learn_times {$js_max / $js_per_learn };
+    #LOCAL learn_times {@Min{$max_learn_times;$min_qn_before_level}};
+
+    #MATH multiple {$learn_times / 50};
+    #MATH qn {$learn_times % 50};
+
+    #IF {$multiple > 5} {
+        #LOCAL {multiple} {5};
+    };
+
+    #NOP #IF {$level < 100} {#MATH {qn} {$qn + 1};};
+
+    #LOCAL ret {
+        {multiple} {$multiple}
+        {qn} {$qn}
+    };
+    #return {$ret};
+};
+
+#FUNCTION GetMinQnToLevel {
+    #LOCAL level %1;
+    #LOCAL curr_pro %2;
+    #LOCAL wx %3;
+
+    #LOCAL next_level {$level};
+    #LOCAL diff {0};
+    
+    #MATH next_level {$next_level + 1};
+    #MATH max_pro {$next_level * $next_level + 1};
+    #MATH diff {$max_pro - $curr_pro};
+
+    #MATH max_pro_per_qn {$wx * 3 / 4 + 2};
+    #MATH res {$diff / $max_pro_per_qn};
+
+    #RETURN $res;
+};
+
+

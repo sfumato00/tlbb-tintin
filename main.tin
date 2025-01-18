@@ -11,11 +11,13 @@
 };
 
 #EVENT {SESSION DISCONNECTED} {
-    #gts conn $profile;
+    #gts #DELAY {3} {
+        conn $profile;
+    };
 }
 
 #EVENT {SESSION TIMED OUT} {
-    #gts conn $profile;
+    #gts #DELAY {3} {
+        conn $profile;
+    };
 };
-
-#split;

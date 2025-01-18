@@ -1,0 +1,11 @@
+#NOP 少林 模块
+
+#class 名气 open;
+
+
+#action {^你的名气增加了：%1点。$} {
+    cmd {ask master about 名气};
+};
+
+#class 名气 close;
+

@@ -5,6 +5,7 @@
 #CLASS room read {./pkg_room.tin};
 #CLASS login read {./pkg_login.tin};
 #CLASS utils read {./pkg_utils.tin};
+#CLASS busy read {./pkg_busy.tin};
 
 #EVENT {VARIABLE UPDATED vitals[精神_max]} {
     #VARIABLE {xunhuan[max_xiqi_full]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
@@ -157,68 +158,6 @@
             } {3};
         };
 
-        #CASE {"学习"} {
-            #IF {"%2" == ""} {
-                #ECHO {必须指定求教对象};
-                #RETURN {必须指定求教对象};
-            };
-
-            #IF {"%3" == ""} {
-                #VARIABLE {xunhuan[js_per_learn]} {11};
-            } {
-                #VARIABLE {xunhuan[js_per_learn]} {%3};
-            };
-
-            #ECHO {开启 循环 - 学习 模块};
-            #VARIABLE {learn[master]} {%2};
-
-            #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg_xunhuan.tin};
-
-            #ALIAS {feedback_loop} {
-                feedback_loop_learn;
-            } {5};
-
-            #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.5};
-                cmd {hp};
-            } {3};
-            cmd {skills};
-            research literate 1;
-        };
-
-        #CASE {"吐纳"} {
-            #ECHO {开启 循环 - 吐纳 模块};
-
-            #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg_xunhuan.tin};
-
-            #ALIAS {feedback_loop} {
-                feedback_loop_tuna;
-            } {5};
-
-            #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.5};
-                cmd {hp};
-            } {3};
-        };
-
-        #CASE {"读书"} {
-            #ECHO {开启 循环 - 读书 模块};
-
-            #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg_xunhuan.tin};
-            #VARIABLE {dushu[book]} {%2};
-            #ALIAS {feedback_loop} {
-                feedback_loop_dushu;
-            } {5};
-
-            #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.5};
-                cmd {hp};
-            } {3};
-        };
-
         #CASE {"传功"} {
             #IF {"%2" == ""} {
                 #ECHO {必须指定传功对象};
@@ -236,37 +175,50 @@
             } {5};
 
             #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1.5};
+                #TICKER {ticker_feedback_loop} {dazuo 1} {1};
                 cmd {hp};
             } {3};
-        };
-
-        #CASE {"研究"} {
-            #ECHO {开启 循环 - 研究 模块};
-
-            #IF {"%2" == ""} {
-                #ECHO {必须指定 res 的潜能数};
-                #RETURN {必须指定传功对象};
-            };
-
-            #VARIABLE {xunhuan[res]} {%2};
-            #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg_xunhuan.tin};
-
-            #ALIAS {feedback_loop} {
-                feedback_loop_res;
-            } {5};
-
-            #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {hp} {1};
-                cmd {hp};
-            } {3};
-        };
-
-        #DEFAULT {
-            #ECHO {unsupported argument.};
         };
     };
+} {5};
+
+
+#ALIAS {吐纳} {
+    #ECHO {开启 吐纳 模块};
+    
+    #DELAY {init} {
+        #TICKER {ticker_feedback_loop} {check_busy} {1.2};
+        #CLASS tuna kill;
+        #CLASS tuna read {./pkg_tuna.tin};
+    } {3};
+}
+
+#ALIAS {读书} {
+    #ECHO {开启 吐纳 模块};
+
+    #VARIABLE {read[book]} {%1};
+    
+    #DELAY {init} {
+        #TICKER {ticker_feedback_loop} {check_busy} {1.2};
+        #CLASS read kill;
+        #CLASS read read {./pkg_tuna.tin};
+    } {3};
+}
+
+#ALIAS {学习} {
+    #ECHO {开启 学习 模块};
+        #VARIABLE {learn[master]} {%1};
+        #IF {"%2" == ""} {
+            #VARIABLE {xunhuan[js_per_learn]} {11};
+        } {
+            #VARIABLE {xunhuan[js_per_learn]} {%2};
+        };
+        #DELAY {init} {
+            #TICKER {ticker_feedback_loop} {check_busy} {1.2};
+            #CLASS learn kill;
+            #CLASS learn read {./pkg_learn.tin};
+        } {5};
+        research literate 1;
 } {5};
 
 
@@ -302,7 +254,9 @@
     cmd {hp};
 } {5};
 
-
+#ALIAS {feedback_loop_idle} {
+    #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+};
 
 #NOP 核心触发
 
@@ -310,7 +264,10 @@
     #FORMAT {env[init_login]} {%T};
 } {1};
 
+
 #ACTION {^你目前至少要用 %1 点潜能。$} {
     #VARIABLE {xunhuan[qn_per_res]} {@ParseFlakyNumber{%1}};
-    #UNACTION {^你目前至少要用 %1 点潜能。$};
 } {5};
+
+
+
