@@ -6,18 +6,28 @@
     #VARIABLE {env} {
         {profile} {./profile_%1.tin}
     };
-    #CLASS $profile read {$env[profile]};
+    #CLASS profile read {$env[profile]};
     #SESSION {$username} {103.10.85.133} {8888};
 };
 
 #EVENT {SESSION DISCONNECTED} {
     #gts #DELAY {3} {
-        conn $profile;
+        conn $username;
     };
 }
 
 #EVENT {SESSION TIMED OUT} {
-    #gts #DELAY {3} {
-        conn $profile;
+    #LOCAL delay {@Ran{10}};
+    #ECHO {Delay $delay seconds before reconnecting...};
+    #gts #DELAY {$delay} {
+        conn $username;
     };
+};
+
+#FUNCTION Ran {
+    #LOCAL random_number {};
+    #LOCAL ret {};
+    #MATH random_number 1d%1;
+    #MATH ret {($random_number + 1.1) / 10};
+    #RETURN {$ret};
 };
