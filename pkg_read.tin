@@ -36,6 +36,7 @@
 };
 
 #EVENT {VARIABLE UPDATED busy[updated]} {
+    cmd {skills};
     cmd {hp};
 };
 
@@ -44,3 +45,42 @@
     feedback_loop_idle;
     #CLASS read kill;
 } {5};
+
+
+#ACTIOn {你的%u功力不足，无法继续练%u。} {
+    cmd {put $read[book] in bag 3};
+}
+
+#ACTION {你发现上面所说的对你而言都太浅了，没有学到任何东西。} {
+    cmd {put $read[book] in bag};
+}
+
+#ACTION {^你要读什麽？$} {
+    get book from bag 2;
+} {5};
+
+#FUNCTION CalReadParam {
+    #LOCAL {prof_per_read} {%1};
+    #LOCAL {max_js} {%2};
+    #LOCAL {curr_level} {%3};
+    #LOCAL {curr_prof} {%4};
+    #LOCAL {js_per_read} {5};
+    #IF {"$jx_per_read" != ""} {
+        #LOCAL {js_per_read} {%5};
+    };
+    
+    #LOCAL next_level {0};
+    #MATH next_level {$curr_level + 1};
+    #MATH max_prof {$next_level * $next_level + 1};
+
+    #LOCAL diff {0};
+    #MATH diff {$max_prof - $curr_prof};
+    #ECHO {[Debug]: diff: $diff};
+    #LOCAL times {};
+    #MATH times {$diff / $prof_per_read + 1};
+    #ECHO {[Debug]: times: $times};
+    #LOCAL needjs {};
+    #MATH {need_js} {$times * $js_per_read};
+    #ECHO {[Debug]: need_js: $need_js, times: $times};
+    #RETURN {@Min{$max_js;$need_js}};
+}

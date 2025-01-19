@@ -134,6 +134,13 @@
     enable move none;
 }
 
+#ALIAS {stop} {
+    #ECHO {关闭 fight 模块};
+    #CLASS fight kill;
+    #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+    cmd {surrender};
+} {5};
+
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
     #DELAY {15} {
         cmd {no};
@@ -165,3 +172,4 @@
     #LIST msg COLLAPSE {, };
     #RETURN {$msg};
 }
+

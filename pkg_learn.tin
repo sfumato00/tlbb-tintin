@@ -34,9 +34,8 @@
     #LOCAL params {@CalLearnParam{$skills[$sk][lv];$skills[$sk][prof];$score[悟性];$vitals[精神_max];$xunhuan[js_per_learn]}};
     #ECHO {***** DEBUG *****: multiple: $params[multiple], qn: $params[qn], %T};
     
-    #IF {$skills[$sk][prof] >= 100 && $params[qn] == 0 && $params[multiple] == 0} {
+    #IF {$skills[$sk][lv] >= 100 && $params[qn] == 0 && $params[multiple] == 0} {
         #IF {$xunhuan[qn_per_res] > 5 || "$xunhuan[qn_per_res]" == ""} {
-            #NOP Re-calibrate
             cmd {research $sk 1};
         };
         busy_research $sk $xunhuan[qn_per_res];
@@ -50,6 +49,10 @@
     };
     #ELSEIF {$params[qn] > 0} {
         cmd {learn $sk from $learn[master] with $params[qn]};
+    };
+
+    #IF {$skills[$sk][lv] < 100} {
+        cmd {learn $sk from $learn[master] with 50};
     };
 } {5};
 
@@ -99,8 +102,8 @@
     #MATH multiple {$learn_times / 50};
     #MATH qn {$learn_times % 50};
 
-    #IF {$multiple > 5} {
-        #LOCAL {multiple} {5};
+    #IF {$multiple > 6} {
+        #LOCAL {multiple} {6};
     };
 
     #NOP #IF {$level < 100} {#MATH {qn} {$qn + 1};};

@@ -82,28 +82,12 @@
 
 #ALIAS {练功} {
 
-    #SWITCH {"%1"} {
-
-        #CASE {"on"} {
-            #ECHO {开启 fight 模块};
-            #CLASS fight kill;
-            #CLASS fight read {./pkg_fight.tin};
-            #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
-            #DELAY {5} {
-                cmd {hp};
-            };
-        };
-
-        #CASE {"off"} {
-            #ECHO {关闭 fight 模块};
-            #CLASS fight kill;
-            #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
-            cmd {surrender};
-        };
-
-        #DEFAULT {
-            #ECHO {supported arguments are: on, off};
-        };
+    #ECHO {开启 fight 模块};
+    #CLASS fight kill;
+    #CLASS fight read {./pkg_fight.tin};
+    #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
+    #DELAY {5} {
+        cmd {hp};
     };
 } {5};
 
@@ -196,14 +180,14 @@
 }
 
 #ALIAS {读书} {
-    #ECHO {开启 吐纳 模块};
+    #ECHO {开启 读书 模块};
 
     #VARIABLE {read[book]} {%1};
     
     #DELAY {init} {
-        #TICKER {ticker_feedback_loop} {check_busy} {1.2};
+        #TICKER {ticker_feedback_loop} {check_busy} {2};
         #CLASS read kill;
-        #CLASS read read {./pkg_tuna.tin};
+        #CLASS read read {./pkg_read.tin};
     } {3};
 }
 
