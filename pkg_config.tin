@@ -1,5 +1,4 @@
 #CONFIG charset GBK1TOUTF8;
-#NOP #CONFIG {REPEAT ENTER} {ON};
-#CONFIG history 2000;
+#CONFIG history 9999;
 
-#SPLIT;
+#SPLIT 2 2;

@@ -51,22 +51,22 @@
     #LOCAL until {0};
     #MATH until {$time + %1};
 
-    #ECHO {[Debug] check_busy: previous busy until $busy[until], current timestamp: $time, next until: $until};
+    #ECHO {[Debug] check_busy: previous busy until @GetTimeAsString{$busy[until]}, current timestamp: @GetTimeAsString{$time}, next until: @GetTimeAsString{$until}};
     #IF {$until > $busy[until]} {
         #VARIABLE {busy[until]} {$until};
-    };   
-    #ECHO {[Debug] check_busy: busy until $busy[until]};  
-}
+    };
+    #ECHO {[Debug] check_busy: busy until @GetTimeAsString{$busy[until]}};
+};
 
 #ALIAS {update_check_time} {
     #LOCAL time {};
     #FORMAT time {%T};
-    #ECHO {[Debug] update_check_time: busy[updated]: $busy[updated], time: $time};
+    #ECHO {[Debug] update_check_time: busy[updated]: @GetTimeAsString{$busy[updated]}, current time: @GetTimeAsString{$time}};
     
     #IF {$time > $busy[updated]} {
         #VARIABLE {busy[updated]} {$time};
     };
-}
+};
 
 #ALIAS {busy_dazuo} {
     update_busy_until 8;

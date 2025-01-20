@@ -24,14 +24,13 @@
     } {%2};
 };
 
-
 #ACTION {^%s气血：%s%d/%s%d%s(%s%d%)%s内力：%s%d%s/%s%d%s(%*)} {
     #VARIABLE {vitals[气血]}{%3};
     #VARIABLE {vitals[气血_max]}{%5};
     #VARIABLE {vitals[气血%]}{%8};
     #VARIABLE {vitals[内力]}{%11};
     #VARIABLE {vitals[内力_max]}{%14};
-    #VARIABLE {vitals[内力%]}{%16};
+    #VARIABLE {vitals[内力+]}{%16};
 } {5};
 
 #ACTION {^%s精神：%s%d/%s%d%s(%s%d%)%s潜力：%s%d%s/%s%d%s(%*)} {
@@ -61,17 +60,30 @@
         {lv} {%9}
         {prof} {@ParseFlakyNumber{%11}}
     };
-    #NOP #ECHO {debug: %9, %10, %11};
-    #NOP #VARIABLE {profs[%4]} {@ParseFlakyNumber{%11}};
 } {1};
 
 #ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%*} {
-    #VARIABLE {score[根骨]} {@ParseFlakyNumber{%2}};
+    #VARIABLE {score[根骨]} {%2};
     #VARIABLE {score[胆识]} {%5};
     #VARIABLE {score[悟性]} {%8};
     #VARIABLE {score[膂力]} {%11};
-    #VARIABLE {score[容貌]} {%14};
+    #VARIABLE {score[容貌]} {@ParseFlakyNumber{%14}};
+
+    #SHOW {角色: $env[name]($username), $env[sex], 现年: $env[age], 根骨: $score[根骨], 胆识: $score[胆识], 悟性: $score[悟性], 膂力: $score[膂力], 容貌: $score[容貌]} 1 5;
 } {5};
+
+#ACTION {^  %u (%w)%s：%*有效等级：%s%*$} {
+    #VARIABLE {enables[%2]} {@ParseFlakyNumber{%6}};
+};
+
+#ACTION {^ 姓名：%s%u ($username)。%s别号：%*。$} {
+    #VARIABLE {env[name]} {%2};
+};
+
+#ACTION {^ %u性，二千零%u时生人，现年%u，$} {
+    #VARIABLE {env[sex]} {%1};
+    #VARIABLE {env[age]} {%3};
+};
 
 #ACTION {^你的「%u」进步了！$} {cmd {skills};}
 
@@ -150,7 +162,7 @@
 
             #ECHO {开启 循环 - 传功 模块};
 
-            #VARIABLE {chuangong[target]} {%2};
+            #VARIABLE {xunhuan[xfer_target]} {%2};
             #CLASS xunhuan kill;
             #CLASS xunhuan read {./pkg_xunhuan.tin};
 
@@ -193,16 +205,26 @@
     #ECHO {开启 学习 模块};
         #VARIABLE {learn[master]} {%1};
         #IF {"%2" == ""} {
-            #VARIABLE {xunhuan[js_per_learn]} {11};
+            #VARIABLE {xunhuan[js_per_qn]} {11};
         } {
-            #VARIABLE {xunhuan[js_per_learn]} {%2};
+            #VARIABLE {xunhuan[js_per_qn]} {%2};
         };
         #DELAY {init} {
             #TICKER {ticker_feedback_loop} {check_busy} {2};
             #CLASS learn kill;
             #CLASS learn read {./pkg_learn.tin};
-        } {5};
+        } {4};
         research literate 1;
+} {5};
+
+#ALIAS {研究} {
+    #ECHO {开启 研究 模块};
+        
+        #DELAY {init} {
+            #TICKER {ticker_feedback_loop} {check_busy} {2};
+            #CLASS research kill;
+            #CLASS research read {./pkg_research.tin};
+        } {4};
 } {5};
 
 

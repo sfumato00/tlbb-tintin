@@ -1,5 +1,7 @@
 #NOP ------------------------ Alias ----------------------------------
 
+#CLASS tuna OPEN;
+
 #ALIAS {feedback_loop_tuna} {
     #LOCAL time {};
     #FORMAT time {%T};
@@ -49,6 +51,15 @@
 
 #EVENT {VARIABLE UPDATED vitals[经验]} {
     #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+
+    #IF {$skills[literate][lv] > 0} {
+        #MATH {tuna[潜力_max]} {$skills[literate][lv] * 10};
+    };
+
+    #IF {$enables[literate] > 0} {
+        #MATH {tuna[潜力_max]} {$tuna[潜力_max] + $enables[literate] * 2};
+    };
+
     feedback_loop_tuna;
 };
 
@@ -61,3 +72,5 @@
     feedback_loop_idle;
     #CLASS tuna kill;
 } {5};
+
+#CLASS tuna CLOSE;

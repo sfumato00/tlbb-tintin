@@ -1,0 +1,38 @@
+#NOP 校准
+
+#CLASS calibrate open;
+
+#ALIAS {cali_min_restore} {
+
+    #IF {"$vitals" == ""} {
+        #ECHO {请初始化 vitals!!};
+        #RETURN {};
+    };
+
+    #IF {$vitals[内力] < ($vitals[内力_max] * 0.1)} {
+        #ECHO {内力值过低。停止校准。};
+        #RETURN {};
+    };
+
+    #VARIABLE {i} {0};
+    #EVENT {VARIABLE UPDATED vitals[内力+]} {
+        
+        #IF {$i == 0} {
+            #LOCAL yunqi @Cal
+            #MATH {i} {$i + 1};
+            #VARIABLE {calibrate[js]} {$vitals[精神]};
+            tuna $vitals[精神];
+            xiqi 20;
+            cmd {hp};
+        };
+        #ELSE {
+            #MATH {xunhuan[min_restore]} {$vitals[精神] - $calibrate[js]};
+            #UNVARIABLE {i};
+            #UNVARIABLE {calibrate};
+            #UNEVENT {VARIABLE UPDATED vitals[内力+]} ;
+        };
+    };
+    cmd {hp};
+}
+
+#CLASS calibrate close;

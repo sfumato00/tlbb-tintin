@@ -4,5 +4,7 @@ template*
 profile_*
 _profile_*
 sessions/
+dev_*
+backup_*
 
 *.log

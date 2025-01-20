@@ -100,10 +100,16 @@
             drop coin;
             check;
             #DELAY 5 {
-                e;#3 n;drink tong;give highlander silver;give highlander coin;enter door;start;
+                e;#3 n;drink tong;give highlander silver;give highlander coin;enter door;
+                dazuo 100;
+                #DELAY 10 {
+                    start;
+                };                
             };
         };        
     };
 } {5};
+
+#PROMPT {你在银行中存了%u。} {存款: %1} 0, 1;
 
 #CLASS fb_wx close;

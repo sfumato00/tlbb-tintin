@@ -8,6 +8,23 @@
     };
 } {5};
 
+
+#ALIAS {info} {
+    #ECHO {[INFO] %1};
+}
+
+#ALIAS {debug} {
+    #ECHO {[DEBUG] %1};
+}
+
+#ALIAS {warn} {
+    #ECHO {[WARN] %1};
+}
+
+#ALIAS {error} {
+    #ECHO {[ERROR] %1};
+}
+
 #FUNCTION ParseFlakyNumber {
     #LOCAL res {0};
     #PARSE {%1} {x} {
@@ -50,4 +67,11 @@
 
     #MATH ret {$multiple * 20};
     #RETURN $ret;
+};
+
+#FUNCTION GetTimeAsString {
+    #LOCAL ts %1;
+    #LOCAL time_str {};
+    #format {time_str} {%t} {{%H:%M:%S}{$ts}};
+    #RETURN {$time_str};
 };

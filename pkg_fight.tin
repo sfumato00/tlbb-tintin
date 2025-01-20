@@ -139,6 +139,7 @@
     #CLASS fight kill;
     #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
     cmd {surrender};
+    unset no_give;
 } {5};
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {

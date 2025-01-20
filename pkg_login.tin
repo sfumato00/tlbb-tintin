@@ -5,6 +5,6 @@
 #ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？(y/n)} {#DELAY 30 {n;}};
 
 #ACTION {^重新连线完毕。$} {
-    cmd {hp;score;skills;look};
+    cmd {hp;score;skills;enable;look};
     init_task;
 } {5};

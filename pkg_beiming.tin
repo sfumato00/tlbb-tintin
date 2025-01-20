@@ -10,6 +10,12 @@
     };
 } {5};
 
+#ACTION {^门开了，从里面走出来一名红衣武士。$} {
+    #5 {
+        exert xi wu shi;
+    };
+} {5};
+
 
 #ACTION {^你要服用哪种药？$} {
     #class beiming kill;
@@ -35,6 +41,12 @@
 } {5};
 
 
+#ACTION {^红衣武士转身走进门去。$} {
+    hp;
+    drink tong;
+} {5};
+
+
 #ACTION {^门又关上了。$} {
     apply xiao-xingxue;
     apply xiao-xingxue;
@@ -43,7 +55,7 @@
 } {5};
 
 
-#ACTION {^你运用北冥神功，将金衣剑客的内力吸了少许过来储藏于檀中气穴。$} {
+#ACTION {^你运用北冥神功，将%u的内力吸了少许过来储藏于檀中气穴。$} {
     #MATH {xi_count} {$xi_count + 1};
 
     #IF {$xi_count >= 50} {
@@ -51,7 +63,6 @@
         #VARIABLE {xi_count} {0};
     };
 } {5};
-
 
 #ACTION {^你全身放松，坐下来开始将储存在膻中的真气归入气海。$} {
     #VARIABLE {to_yun} {false};

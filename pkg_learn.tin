@@ -1,16 +1,39 @@
-#NOP learn
+#CLASS learn OPEN;
+
+#VARIABLE THROTTLE {8};
 
 #ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
     score;
 };
 
 #ALIAS {feedback_loop_learn} {
+    
+} {5};
+
+#ALIAS {stop} {
+     {关闭 学习 模块};
+    feedback_loop_idle;
+    #CLASS learn kill;
+} {5};
+
+#EVENT {VARIABLE UPDATED busy[updated]} {
+    cmd {skills};
+    cmd {hp};
+};
+
+#EVENT {VARIABLE UPDATED vitals[经验]} {
+    #NOP  {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    feedback_loop_learn;
+};
+
+#ALIAS {feedback_loop_learn} {
     #LOCAL time {};
     #FORMAT time {%T};
-    #NOP #ECHO {[Debug] assert_not_busy: busy until $busy[until], current timestamp: $time};
+    #NOP  {[Debug] assert_not_busy: busy until $busy[until], current timestamp: $time};
     #IF {$time < $busy[until]} {
         #RETURN {};
     };
+
     #IF {$vitals[内力] < $vitals[内力_max]} {
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
         #IF {$xiqi > 0} {
@@ -24,100 +47,130 @@
         #RETURN {};
     };
 
+    #LOCAL n_cmd {0};
     #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
     
     #IF {$xiqi > 0} {
         cmd {xiqi $xiqi};
+        #MATH {n_cmd} {$n_cmd + 1};
     };
-    #LOCAL sk {@getSkillToLearn{}};
 
-    #LOCAL params {@CalLearnParam{$skills[$sk][lv];$skills[$sk][prof];$score[悟性];$vitals[精神_max];$xunhuan[js_per_learn]}};
-    #ECHO {***** DEBUG *****: multiple: $params[multiple], qn: $params[qn], %T};
-    
-    #IF {$skills[$sk][lv] >= 100 && $params[qn] == 0 && $params[multiple] == 0} {
-        #IF {$xunhuan[qn_per_res] > 5 || "$xunhuan[qn_per_res]" == ""} {
-            cmd {research $sk 1};
-        };
-        busy_research $sk $xunhuan[qn_per_res];
+    #VARIABLE skill_to_learn {@GetSkillToLearn{}};
+
+    #LOCAL {sk} {*skill_to_learn[+1]};
+    #LOCAL {target_lv} {$skill_to_learn[+1]};
+    #LOCAL {curr_lv} {$skills[$sk][lv]};
+    #LOCAL {curr_prof} {$skills[$sk][prof]};
+
+    #IF {"$sk" == "" ||  "$target_lv" == "" || "$skills[$sk]" == ""} {
+        debug {sk: $sk, target_lv: $target_lv, skill: $skills[$sk]};
+        error {=================== please make skill variables are set correctly!!!!!!!!!!!!! ===================};
         #RETURN {};
     };
 
-    #IF {$params[multiple] > 0} {
-        #$params[multiple] {
+    #IF {"$curr_lv" == ""} {
+        #LOCAL {$curr_lv} {0};
+    };
+
+    #IF {"$curr_prof" == ""} {
+        #LOCAL {$curr_prof} {0};
+    };
+
+    #LOCAL full_xiqi_params {@GetFullXiqiParams{$vitals[精神_max];$xunhuan[js_per_qn];$xunhuan[min_restore]}};
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$curr_lv;$curr_prof;$score[悟性]};
+    #LOCAL available_neili {};
+    #MATH available_neili {$vitals[内力] - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - $xiqi};
+
+    debug {qn_before_level: $qn_before_level};
+    debug {$full_xiqi_params};
+    debug {可供使用内力: $available_neili};   
+    
+    #WHILE {$available_neili >= $full_xiqi_params[xiqi_full] 
+        && ($qn_before_level >= $full_xiqi_params[qn_per_full_xiqi] 
+            || $curr_lv + 5 < 100
+            || ($xunhuan[qn_per_res] == 5 && $curr_lv + 2 < $target_lv)
+            || ($curr_lv + 2 < $target_lv && "$sk" == "jiuyang-shengong"))
+        } {
+        #$full_xiqi_params[full_learn_multiple] {
             cmd {learn $sk from $learn[master] with 50};
         };
-    };
-    #ELSEIF {$params[qn] > 0} {
-        cmd {learn $sk from $learn[master] with $params[qn]};
-    };
+        cmd {xiqi $full_xiqi_params[xiqi_full]};
 
-    #IF {$skills[$sk][lv] < 100} {
-        cmd {learn $sk from $learn[master] with 50};
-    };
-} {5};
+        #MATH {available_neili} {$available_neili - $full_xiqi_params[xiqi_full]};
+        #MATH {qn_before_level} {$qn_before_level - $full_xiqi_params[qn_per_full_xiqi]};
 
-#ALIAS {stop} {
-    #ECHO {关闭 学习 模块};
-    feedback_loop_idle;
-    #CLASS learn kill;
-} {5};
+        #MATH n_cmd {$n_cmd + $full_xiqi_params[full_learn_multiple] + 1};
 
-#EVENT {VARIABLE UPDATED busy[updated]} {
-    cmd {skills};
-    cmd {hp};
-};
-
-#EVENT {VARIABLE UPDATED vitals[经验]} {
-    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
-    feedback_loop_learn;
-};
-
-#FUNCTION CalLearnParam {
-    #LOCAL level %1;
-    #LOCAL curr_pro %2;
-    #LOCAL wx %3;
-    #LOCAL js_max %4;
-    #LOCAL js_per_learn %5;
-
-    #ECHO {[DEBUG]: 技能等级: $level, 熟练: $curr_pro, 悟性: $wx, 精神: $js_max, 精神-cost-per-qn: $js_per_learn};
-
-    #LOCAL max_learn_times {0};
-    #LOCAL multiple {0};
-    #LOCAL min_qn_before_level {0};
-
-    #VARIABLE {min_qn_before_level} {@GetMinQnToLevel{$level;$curr_pro;$wx}};
-    #ECHO {[debug] min_qn_before_level: $min_qn_before_level};
-    
-    #IF {$min_qn_before_level === 0} {
-        #LOCAL ret {
-            {multiple} {0}
-            {qn} {0}
+        debug {available_neili: $available_neili, qn_before_level: $qn_before_level};
+        #IF {$n_cmd >= $THROTTLE} {
+            #RETURN {};
         };
-        #return {$ret};
-    };
-    
-    #MATH max_learn_times {($js_max - 1) / $js_per_learn };
-    #LOCAL learn_times {@Min{$max_learn_times;$min_qn_before_level}};
-
-    #MATH multiple {$learn_times / 50};
-    #MATH qn {$learn_times % 50};
-
-    #IF {$multiple > 6} {
-        #LOCAL {multiple} {6};
     };
 
-    #NOP #IF {$level < 100} {#MATH {qn} {$qn + 1};};
+    #LOCAL js_remain {$vitals[精神_max]};
+    #LOCAL js_per_full_learn {};
+    #MATH js_per_full_learn {$js_per_qn * 50};
+    #WHILE {$js_remain > $js_per_full_learn && $qn_before_level >= 50} {
+        cmd {learn $sk from $learn[master] with 50};
+
+        #MATH {qn_before_level} {$qn_before_level - 50};
+        #MATH {js_remain} {$js_remain - $js_per_full_learn};
+        #MATH n_cmd {$n_cmd + 1};
+        debug {available_neili: $available_neili, js_remain: $js_remain, qn_before_level: $qn_before_level};
+        #IF {$n_cmd >= $THROTTLE} {
+            #RETURN {};
+        };
+    };
+
+    #LOCAL x {0};
+    #MATH x {$js_remain / $xunhuan[js_per_qn]};
+    debug {js_remain: $js_remain, $xunhuan[js_per_qn]: $xunhuan[js_per_qn], x: $x};
+    #IF {$curr_lv < 100 || $xunhuan[qn_per_res] == 5 || "$sk" == "jiuyang-shengong"} {
+         #MATH qn_before_level {$qn_before_level + 1};
+    };
+    #LOCAL qn {@Min{$qn_before_level;$x}};
+    debug {qn_before_level: $qn_before_level, x: $x, qn: $qn};
+    #IF {$qn > 0} {
+        cmd {learn $sk from $learn[master] with $qn};
+    };
+    #ELSEIF {"$sk" != "jiuyang-shengong" && $xunhuan[qn_per_res] > 5} {
+        cmd {research literate 1};
+        cmd {research $sk $xunhuan[qn_per_res]};
+    };
+};
+
+
+#FUNCTION GetFullXiqiParams {
+
+    #LOCAL js_max {%1};
+    #LOCAL js_per_qn {%2};
+    #LOCAL min_restore {%3};
+
+    #LOCAL js_per_full_learn {};
+    #MATH js_per_full_learn {$js_per_qn * 50};
+
+    #LOCAL full_learn_multiple {};
+    #MATH full_learn_multiple {$js_max / $js_per_full_learn};
+
+    #LOCAL qn_per_full_xiqi {};
+    #MATH qn_per_full_xiqi {$full_learn_multiple * 50};
+
+    #LOCAL js_per_full_xiqi {};
+    #MATH js_per_full_xiqi {$js_per_qn * $qn_per_full_xiqi};
+
+    #MATH xiqi_full {($js_per_full_xiqi / $min_restore + 1) * 20};
 
     #LOCAL ret {
-        {multiple} {$multiple}
-        {qn} {$qn}
+        {xiqi_full} {$xiqi_full}
+        {qn_per_full_xiqi} {$qn_per_full_xiqi}
+        {full_learn_multiple} {$full_learn_multiple}
     };
-    #return {$ret};
-};
+    #RETURN {$ret};
+}
 
-#FUNCTION GetMinQnToLevel {
+#FUNCTION GetMinQnBeforeLevel {
     #LOCAL level %1;
-    #LOCAL curr_pro %2;
+    #LOCAL prof %2;
     #LOCAL wx %3;
 
     #LOCAL next_level {$level};
@@ -125,7 +178,7 @@
     
     #MATH next_level {$next_level + 1};
     #MATH max_pro {$next_level * $next_level + 1};
-    #MATH diff {$max_pro - $curr_pro};
+    #MATH diff {$max_pro - $prof};
 
     #MATH max_pro_per_qn {$wx * 3 / 4 + 2};
     #MATH res {$diff / $max_pro_per_qn};
@@ -133,4 +186,19 @@
     #RETURN $res;
 };
 
+#FUNCTION GetSkillToLearn {
+    #FOREACH {$learn_skill[%*]} {skill} {
+        
+        #LOCAL sk {*skill[+1]};
+        #LOCAL target_lv {$skill[*skill[+1]]};
+        
+        #IF {"$skills[$sk]" === "" || $skills[$sk][lv] < $target_lv} {
+            #RETURN {{$sk}{$target_lv}};
+        };
+    };
+    #RETURN {};
+};
 
+#PROMPT {^你目前至少要用 %d 点潜能。$} {RES潜能: >> %1 <<} 0 2;
+
+#CLASS learn CLOSE;

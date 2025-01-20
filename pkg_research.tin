@@ -1,0 +1,116 @@
+#NOP learn
+
+#CLASS research OPEN;
+
+#ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
+    score;
+};
+
+#ALIAS {feedback_loop_research} {
+    #LOCAL time {};
+    #FORMAT time {%T};
+    #NOP #ECHO {[Debug] assert_not_busy: busy until $busy[until], current timestamp: $time};
+    #IF {$time < $busy[until]} {
+        #RETURN {};
+    };
+
+    #IF {$vitals[内力] < $vitals[内力_max]} {
+        #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+        #IF {$xiqi > 0} {
+            cmd {xiqi $xiqi};
+        };
+        #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+        #IF {$yunqi > 0} {
+            cmd {yunqi $yunqi};
+        };
+        busy_dazuo $vitals[气血_max];
+        #RETURN {};
+    };
+
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL m {};
+    #MATH m {$vitals[精神_max] / 20};
+    #LOCAL max_qn_to_spend {};
+    #MATH max_qn_to_spend {$m * 5};
+
+    
+    #IF {$xiqi > 0} {
+        cmd {xiqi $xiqi};
+    };
+    #VARIABLE skill_to_learn {@GetSkillToLearn{}};
+    #LOCAL {sk} {*skill_to_learn[+1]};
+    #LOCAL {target_lv} {$skill_to_learn[+1]};
+
+    #ECHO {DEBUG: ================> research skill: $sk, desired level: $target_lv};
+
+    #IF {$skills[$sk][lv] + 1 < $target_lv} {
+        cmd {research $sk $max_qn_to_spend};
+        #RETURN {};
+    };
+    
+    #LOCAL min_qn_before_level {@GetMinQnToLevel{$skills[$sk][lv];$skills[$sk][prof];$score[悟性]}};
+    #ECHO {DEBUG: ================> m: $m, max_qn_to_spend: $max_qn_to_spend, min_qn_before_level: $min_qn_before_level};
+    
+    #IF {$min_qn_before_level > $m} {
+        cmd {research $sk $max_qn_to_spend};
+    };
+    #ELSEIF {$min_qn_before_level > 0} {
+        #LOCAL qn_to_spend {};
+        #MATH qn_to_spend {$min_qn_before_level * 5};
+        cmd {research $sk $qn_to_spend};
+    };
+    #ELSE {
+        cmd {research $sk 5};
+    };
+} {5}; 
+
+#ALIAS {stop} {
+    #ECHO {关闭 学习 模块};
+    feedback_loop_idle;
+    #CLASS research kill;
+} {5};
+
+#EVENT {VARIABLE UPDATED busy[updated]} {
+    cmd {skills};
+    cmd {hp};
+};
+
+#EVENT {VARIABLE UPDATED vitals[经验]} {
+    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
+    feedback_loop_research;
+};
+
+#FUNCTION GetMinQnToLevel {
+    #LOCAL level %1;
+    #LOCAL curr_pro %2;
+    #LOCAL wx %3;
+
+    #LOCAL next_level {$level};
+    #LOCAL diff {0};
+    
+    #MATH next_level {$next_level + 1};
+    #MATH max_pro {$next_level * $next_level + 1};
+    #MATH diff {$max_pro - $curr_pro};
+
+    #MATH max_pro_per_qn {$wx * 3 / 4 + 2};
+    #MATH res {$diff / $max_pro_per_qn};
+
+    #RETURN $res;
+};
+
+#FUNCTION GetSkillToLearn {
+    #FOREACH {$learn[%*]} {skill} {
+        
+        #LOCAL sk {*skill[+1]};
+        #LOCAL target_lv {$skill[*skill[+1]]};
+        
+        #IF {"$skills[$sk]" === "" || $skills[$sk][lv] < $target_lv} {
+            #RETURN {{$sk}{$target_lv}};
+        };
+    };
+    #RETURN {};
+};
+
+#PROMPT {^你目前至少要用 %d 点潜能。$} {RES潜能: >> %1 <<} 0 ;
+
+#CLASS research CLOSE;

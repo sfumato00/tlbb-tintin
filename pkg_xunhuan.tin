@@ -48,7 +48,9 @@
     #IF {$yunqi > 0} {
         cmd {yunqi $yunqi};
     };
-    #5 exert transfer $xunhuan[xfer_target];
+    #IF {$vitals[内力] > $vitals[内力_max]} {
+        #5 exert transfer $xunhuan[xfer_target];
+    };    
     busy_dazuo $vitals[气血_max];
 } {5};
 
