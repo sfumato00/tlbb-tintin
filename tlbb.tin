@@ -16,8 +16,6 @@
 }
 
 
-
-
 #NOP {common}
 #ALIAS {log} {
     #LOG APPEND %1;
@@ -254,6 +252,3 @@
 #ACTION {^你目前至少要用 %1 点潜能。$} {
     #VARIABLE {xunhuan[qn_per_res]} {@ParseFlakyNumber{%1}};
 } {5};
-
-
-

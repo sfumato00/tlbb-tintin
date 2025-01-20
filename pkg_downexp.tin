@@ -31,7 +31,7 @@
 
 #ALIAS {去降经验} {
     #UNEVENT {VARIABLE UPDATED fight_stats[epoch][last]};
-    练功 off;
+    stop;
     quit;
 }
 

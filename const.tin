@@ -1,0 +1,20 @@
+#NOP 数据库;
+
+#VARIABLE {npc_id} {
+    {神州刀客} {blademan}
+    {石人武士} {shi}
+    {金衣剑客} {sword man}
+    {村民} {cunmin}
+    {校尉} {captain}
+    {守卫} {guard}
+};
+
+
+#VARIABLE {npc_name} {
+    {blade man} {神州刀客} 
+    {shi} {石人武士} 
+    {sword man} {金衣剑客} 
+    {cunmin} {村民} 
+    {captain} {校尉} 
+    {guard} {守卫} 
+};

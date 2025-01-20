@@ -22,11 +22,23 @@
         busy_dazuo $vitals[气血_max];
         #RETURN {};
     } {
-        #LOCAL full_xiqi {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+        #LOCAL full_xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+        
         #IF {$full_xiqi > 0} {
             cmd {xiqi $full_xiqi};
         };
-        busy_du $read[book] $vitals[精神_max];
+        
+        #IF {"$read[book]" == "yijinjing"} {
+            #LOCAL full_xiqi_max {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
+            #LOCAL multiple {};
+            #MATH multiple {($vitals[内力] - $vitals[内力_max]) / $full_xiqi_max + 1};
+            #$multiple {
+                cmd {du $read[book] $vitals[精神_max];xiqi $full_xiqi_max;};
+            };
+        };
+        #ELSE {
+            busy_du $read[book] $vitals[精神_max];
+        };              
     };
 } {5};
 
@@ -47,8 +59,8 @@
 } {5};
 
 
-#ACTIOn {你的%u功力不足，无法继续练%u。} {
-    cmd {put $read[book] in bag 3};
+#ACTION {你的%u功力不足，无法继续练%u。} {
+    cmd {put $read[book] in bag};
 }
 
 #ACTION {你发现上面所说的对你而言都太浅了，没有学到任何东西。} {
@@ -58,6 +70,10 @@
 #ACTION {^你要读什麽？$} {
     get book from bag 2;
 } {5};
+
+#ACTIOn {^阿弥陀佛，整天就知道打打杀杀，你还是先去念念金刚经吧！！$} {
+    cmd {put book in bag};
+}
 
 #FUNCTION CalReadParam {
     #LOCAL {prof_per_read} {%1};
