@@ -11,7 +11,7 @@
 } {5};
 
 #ALIAS {stop} {
-     {关闭 学习 模块};
+    #ECHO {关闭 学习 模块};
     feedback_loop_idle;
     #CLASS learn kill;
 } {5};

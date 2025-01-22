@@ -1,4 +1,6 @@
-#NOP ------------------------ Alias ----------------------------------
+#CLASS read OPEN;
+
+#VARIABLE THROTTLE {8};
 
 #ALIAS {feedback_loop_read} {
     #LOCAL time {};
@@ -32,6 +34,9 @@
             #LOCAL full_xiqi_max {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
             #LOCAL multiple {};
             #MATH multiple {($vitals[内力] - $vitals[内力_max]) / $full_xiqi_max + 1};
+            #IF {$multiple > $THROTTLE} {
+                #LOCAL {multiple} {$THROTTLE};
+            };
             #$multiple {
                 cmd {du $read[book] $vitals[精神_max];xiqi $full_xiqi_max;};
             };
@@ -54,6 +59,7 @@
 
 #ALIAS {stop} {
     #ECHO {关闭 读书 模块};
+    cmd {put $read[book] in bag};
     feedback_loop_idle;
     #CLASS read kill;
 } {5};
@@ -73,7 +79,11 @@
 
 #ACTIOn {^阿弥陀佛，整天就知道打打杀杀，你还是先去念念金刚经吧！！$} {
     cmd {put book in bag};
-}
+};
+
+#ACTION {^你专心地研读了一会儿易筋经，可是只觉得头大如斗。看来以你现在的经验值无法理解易筋经。$} {
+    cmd {put yijinjing in bag;put bag in bag 2;put bag in bag 2};
+} {5};
 
 #FUNCTION CalReadParam {
     #LOCAL {prof_per_read} {%1};
@@ -100,3 +110,5 @@
     #ECHO {[Debug]: need_js: $need_js, times: $times};
     #RETURN {@Min{$max_js;$need_js}};
 }
+
+#CLASS read CLOSE;

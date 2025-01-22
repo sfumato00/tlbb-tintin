@@ -90,6 +90,8 @@
 
 #ACTION {一阵时空的扭曲将你传送到另一个地方......} {
     #3 s;w;
+    drink tong;
+    eat pig;
     i;
     sell_all;
     i;
@@ -100,7 +102,10 @@
             drop coin;
             check;
             #DELAY 5 {
-                e;#3 n;drink tong;give highlander silver;give highlander coin;enter door;
+                e;#3 n;
+                drink tong;
+                eat pig;
+                give highlander silver;give highlander coin;enter door;
                 dazuo 100;
                 #DELAY 10 {
                     start;

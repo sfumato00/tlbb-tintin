@@ -6,6 +6,12 @@
 
 #ALIAS {大理-开封} {#9 n;ne;#9 n}
 #alias {大理-洛阳} {#9 n;ne;#6 w;#3 n;#7 w;}
+#ALIAS {大理驿站-开封} {w;#8 n;ne;#9 n} {5};
+#ALIAS {大理驿站-神憩小舍} {大理驿站-开封;#6 e;
+    #DELAY 3 {
+        东安门-神憩小舍
+    };
+} {5};
 
 #ALIAS {洛阳-天水} {#8 w;}
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
@@ -209,19 +215,13 @@
 } {5};
 
 
-#ALIAS {城隍庙-神憩小舍} {
-    n;
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[room]" == "东安门"} {
-            #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            黄土大道-神憩小舍;
-        };
+#ALIAS {城隍庙-神憩小舍} {n;东安门-神憩小舍} {5};
+
+
+#alias {东安门-神憩小舍} {
+    #ACTION {^请不要一次输入太多的指令。$} {
+        #DELAY 12 {cmd {e}};
     };
-    e;
-} {5};
-
-
-#alias {黄土大道-神憩小舍} {
     #EVENT {VARIABLE UPDATED env[room_updated]} {
         #IF {"$env[exits]" == " east 和 west"} {
             #DELAY 0.1 {
@@ -229,6 +229,7 @@
             };
         } {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #UNACTION {^请不要一次输入太多的指令。$};
             #DELAY 12 {
                 se;e;#13 n;
                 #3 n;#2 nw;nu;#3 {nu;n};nu;ne;nu;

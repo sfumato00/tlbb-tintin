@@ -19,7 +19,7 @@
 #EVENT {SESSION TIMED OUT} {
     #LOCAL delay {@Ran{10}};
     #ECHO {Delay $delay seconds before reconnecting...};
-    #gts #DELAY {$delay} {
+    #gts #DELAY {0.1} {
         conn $username;
     };
 };

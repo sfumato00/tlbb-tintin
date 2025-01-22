@@ -80,7 +80,7 @@
     #VARIABLE {env[name]} {%2};
 };
 
-#ACTION {^ %u性，二千零%u时生人，现年%u，$} {
+#ACTION {^ %u性，二千零%u时生人，现年%u$} {
     #VARIABLE {env[sex]} {%1};
     #VARIABLE {env[age]} {%3};
 };
