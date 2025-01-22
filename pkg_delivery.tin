@@ -19,6 +19,7 @@
         #CASE {"神州刀客"} {#VAR {npc} {blademan};送快递;};
         #CASE {"石人武士"} {#VAR {npc} {shi};送快递;};
     };
+    get all from $npc;
 } {5};
 
 #ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？} {

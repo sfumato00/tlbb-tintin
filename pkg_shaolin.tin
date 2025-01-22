@@ -7,5 +7,11 @@
     cmd {ask master about 名气};
 };
 
+#ACTION {^%u重新连线回到这个世界。} {
+    cmd {ask master about 任务};
+} {5};
+
+#TICKER {ticker_shaolin} {cmd {ask master about 任务}} {10};
+
 #class 名气 close;
 
