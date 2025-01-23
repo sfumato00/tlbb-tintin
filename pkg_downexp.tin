@@ -72,7 +72,6 @@
     #MATH time_in_one_room {($timestamp - $env[room_updated])};
     #ECHO {在当前房间时间: $time_in_one_room 秒。};
     #IF {$time_in_one_room > 3600} {
-        #NOP got stuck in a room for too long;
         quit;
     };
 } {};
