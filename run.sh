@@ -10,16 +10,19 @@ usage() {
 }
 
 # Check if the session name is provided
-if [ -z "$1" ]; then
+if [ -z "$2" ]; then
     echo "Error: Session name is required."
     usage
 fi
 
+MAIN_FILE="$1"
 # Extract session name from the first argument
-SESSION_NAME="$1"
-screen -X -S $SESSION_NAME "quit"
+SESSION_NAME="$2"
+# screen -X -S $SESSION_NAME "quit"
 # Create the profile file path
 tin_profile="./profiles/profile_${SESSION_NAME}.tin"
+
+echo "debug: $tin_profile"
 
 # Check if the profile file exists
 if [ ! -f "$tin_profile" ]; then
@@ -28,10 +31,10 @@ if [ ! -f "$tin_profile" ]; then
 fi
 
 # Start a new screen session and run tintin++ with the profile file
-screen -dmS "$SESSION_NAME" bash -c "tt++ main.tin && exec bash"
+screen -dmS "$SESSION_NAME" bash -c "tt++ $MAIN_FILE && exec bash"
 
 # Send 'conn <session_name>' and 'Enter' to the screen session
-screen -S "$SESSION_NAME" -p 0 -X stuff "conn ${SESSION_NAME}$(printf '\r')"
+screen -X -S "$SESSION_NAME" -p 0 -X stuff "conn ${SESSION_NAME}$(printf '\r')"
 
 # Switch into the screen session
 screen -r "$SESSION_NAME"
