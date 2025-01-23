@@ -7,6 +7,7 @@
 #CLASS login read {./pkg/pkg_login.tin};
 #CLASS utils read {./pkg/pkg_utils.tin};
 #CLASS busy read {./pkg/pkg_busy.tin};
+#CLASS display read {./pkg/pkg_display.tin};
 
 #EVENT {VARIABLE UPDATED vitals[精神_max]} {
     #VARIABLE {xunhuan[max_xiqi_full]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
