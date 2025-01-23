@@ -31,3 +31,8 @@
     #MATH ret {($random_number + 1.1) / 10};
     #RETURN {$ret};
 };
+
+#ALIAS reload {
+    #CLASS profile kill;
+    #CLASS profile read {$env[profile]};
+}

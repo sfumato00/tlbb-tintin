@@ -5,6 +5,7 @@ profile_*
 _profile_*
 sessions/
 dev_*
+dev_pkg/
 backup_*
 
 *.log

@@ -17,7 +17,7 @@ fi
 
 # Extract session name from the first argument
 SESSION_NAME="$1"
-
+screen -X -S $SESSION_NAME "quit"
 # Create the profile file path
 tin_profile="./profiles/profile_${SESSION_NAME}.tin"
 

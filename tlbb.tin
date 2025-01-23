@@ -1,11 +1,12 @@
 #NOP TLBB main module
 
-#CLASS config read {./pkg_config.tin};
 #CLASS paths read {./paths.tin};
-#CLASS room read {./pkg_room.tin};
-#CLASS login read {./pkg_login.tin};
-#CLASS utils read {./pkg_utils.tin};
-#CLASS busy read {./pkg_busy.tin};
+#CLASS config read {./config.tin};
+
+#CLASS room read {./pkg/pkg_room.tin};
+#CLASS login read {./pkg/pkg_login.tin};
+#CLASS utils read {./pkg/pkg_utils.tin};
+#CLASS busy read {./pkg/pkg_busy.tin};
 
 #EVENT {VARIABLE UPDATED vitals[精神_max]} {
     #VARIABLE {xunhuan[max_xiqi_full]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
@@ -94,7 +95,7 @@
 
     #ECHO {开启 fight 模块};
     #CLASS fight kill;
-    #CLASS fight read {./pkg_fight.tin};
+    #CLASS fight read {./pkg/pkg_fight.tin};
     #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
     #DELAY {5} {
         cmd {hp};
@@ -109,7 +110,7 @@
         #CASE {"on"} {
             #ECHO {开启九阳模块};
             #CLASS jiuyang kill;
-            #CLASS jiuyang read {./pkg_jiuyang.tin};
+            #CLASS jiuyang read {./pkg/pkg_jiuyang.tin};
             cmd {exert powerup};
         };
 
@@ -142,7 +143,7 @@
 
             #VARIABLE {xunhuan[xfer_target]} {%2};
             #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg_xunhuan.tin};
+            #CLASS xunhuan read {./pkg/pkg_xunhuan.tin};
 
             #ALIAS {feedback_loop} {
                 feedback_loop_master;
@@ -164,7 +165,7 @@
 
             #VARIABLE {xunhuan[xfer_target]} {%2};
             #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg_xunhuan.tin};
+            #CLASS xunhuan read {./pkg/pkg_xunhuan.tin};
 
             #ALIAS {feedback_loop} {
                 feedback_loop_xfer;
@@ -185,7 +186,7 @@
     #DELAY {init} {
         #TICKER {ticker_feedback_loop} {check_busy} {1.2};
         #CLASS tuna kill;
-        #CLASS tuna read {./pkg_tuna.tin};
+        #CLASS tuna read {./pkg/pkg_tuna.tin};
     } {3};
 }
 
@@ -197,7 +198,7 @@
     #DELAY {init} {
         #TICKER {ticker_feedback_loop} {check_busy} {2};
         #CLASS read kill;
-        #CLASS read read {./pkg_read.tin};
+        #CLASS read read {./pkg/pkg_read.tin};
     } {3};
 }
 
@@ -212,7 +213,7 @@
         #DELAY {init} {
             #TICKER {ticker_feedback_loop} {check_busy} {2};
             #CLASS learn kill;
-            #CLASS learn read {./pkg_learn.tin};
+            #CLASS learn read {./pkg/pkg_learn.tin};
         } {4};
         research literate 1;
 } {5};
@@ -223,7 +224,7 @@
         #DELAY {init} {
             #TICKER {ticker_feedback_loop} {check_busy} {2};
             #CLASS research kill;
-            #CLASS research read {./pkg_research.tin};
+            #CLASS research read {./pkg/pkg_research.tin};
         } {4};
 } {5};
 
@@ -235,7 +236,7 @@
         #CASE {"on"} {
             #ECHO {开启北冥模块};
             #CLASS beiming kill;
-            #CLASS beiming read {./pkg_beiming.tin};
+            #CLASS beiming read {./pkg/pkg_beiming.tin};
         };
 
         #CASE {"off"} {
