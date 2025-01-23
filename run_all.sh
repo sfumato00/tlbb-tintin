@@ -16,12 +16,6 @@ for file in "$DIRECTORY"/profile_*.tin; do
         extracted_part="${filename#profile_}"   # Remove the "profile_" prefix
         session_name="${extracted_part%.tin}" # Remove the ".tin" suffix
 
-        # echo "Processing file: $file"
-        # echo "Extracted part: $extracted_part"
-
-        # temp=${file#profile_}
-        # session_name=${temp%.tin}
-
         screen -X -S $session_name "quit"
         screen -dmS $session_name bash -c "tt++ main.tin; exec bash"
         screen -X -S "$session_name" -p 0 -X stuff "conn $session_name\n"
