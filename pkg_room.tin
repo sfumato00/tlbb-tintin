@@ -1,12 +1,12 @@
 #NOP Room package
 
 #ACTION {^%u - $} {
-    #var env[room] {%1};
+    #VARIABLE env[room] {%1};
     #NOP #ECHO {debug: 进入房间 $env[room]};
-} {5};
+} {1};
 
-#ACTION {这里%u的出口是%*。$} {
+#ACTION {这里%u的出口是%*。} {
     #NOP #ECHO {debug: Exits: %2};
     #VARIABLE {env[exits]} {%2};
     #FORMAT {env[room_updated]} {%T};
-}
+} {1};

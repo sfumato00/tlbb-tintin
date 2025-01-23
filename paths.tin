@@ -6,6 +6,8 @@
 
 #ALIAS {大理-开封} {#9 n;ne;#9 n}
 #alias {大理-洛阳} {#9 n;ne;#6 w;#3 n;#7 w;}
+#alias {大理-登封} {#9 n;ne;#6 w};
+
 #ALIAS {大理驿站-开封} {w;#8 n;ne;#9 n} {5};
 #ALIAS {大理驿站-神憩小舍} {大理驿站-开封;#6 e;
     #DELAY 3 {
@@ -29,7 +31,42 @@
 #ALIAS {洛阳-大理} {洛阳-登封;登封-大理} {5};
 
 
-#ALIAS {登封-大理} {#6 e;sw;#5 s;#3 s;s;} {5};
+#ALIAS {登封-大理} {#6 e;sw;#9 s} {5};
+
+#alias {登封北街-大雄宝殿} {
+
+    #IF {"$env[room]" != "登封县北街"} {
+        #ECHO {起始地必须是【登封县北街】};
+        #RETURN {};
+    };
+
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "少室山山脚"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            cmd {nw;nu;n;eu;n;nw;nu;nu;n;n;n;nu;nu;n;n;nu;nu};
+            #RETURN {};
+        };
+        #regexp {$env[exits]} {northwest} {cmd {nw}} {cmd {n}};
+    };
+    nw;
+};
+
+#ALIAS {大雄宝殿-登封北街} {
+    #IF {"$env[room]" != "大雄宝殿"} {
+        #ECHO {起始地必须是【大雄宝殿】};
+        #RETURN {};
+    };
+
+    sd;sd;s;s;sd;sd;s;s;s;sd;sd;se;s;wd;s;sd;se;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "登封县北街"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #RETURN {};
+        };
+        #regexp {$env[exits]} {southeast} {cmd {se}} {cmd {s}};
+    };
+    s
+} {5};
 
 #ALIAS {初生点-食物屋} {#5 s}
 #ALIAS {食物屋-龙门客栈} {#6 s;d}
@@ -99,6 +136,10 @@
     神憩小舍-天贶殿;w;n;
 };
 
+#ALIAS {天水-西夏-2} {
+    wu;wd;#3 w;s;n;w;#6 n;
+}
+
 #ALIAS {天水-西夏} {
     天水-黑沼泽;
     #DELAY {3} {
@@ -155,7 +196,10 @@
 } {5};
 
 #ALIAS {西夏-天水大道} {
-    #2 s;兴庆城城门-天水大道
+    #2 s;
+    #delay 1 {
+        兴庆城城门-天水大道
+    };
 } {5};
 
 #ALIAS {兴庆城城门-天水大道} {
