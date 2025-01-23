@@ -5,6 +5,7 @@
     #FOREACH {$_cmds} {_last_cmd} {
         #ECHO {输入指令: $_last_cmd};
         #SEND {$_last_cmd};
+        #VARIABLE {env[last_cmd]} {%U};
     };
 } {5};
 
