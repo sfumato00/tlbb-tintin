@@ -3,6 +3,9 @@
 #ALIAS {cmd} {
     #VARIABLE {_cmds} {%1};
     #FOREACH {$_cmds} {_last_cmd} {
+        #IF {"$_last_cmd" == ""} {
+            #CONTINUE;
+        };
         #ECHO {输入指令: $_last_cmd};
         #SEND {$_last_cmd};
         #VARIABLE {env[last_cmd]} {%U};
@@ -75,4 +78,10 @@
     #LOCAL time_str {};
     #format {time_str} {%t} {{%H:%M:%S}{$ts}};
     #RETURN {$time_str};
+};
+
+#FUNCTION timestamp {
+    #LOCAL utime {};
+    #format utime {%U};
+	#format result {%t.%m} {%Y-%m-%d %H:%M:%S} {$utime % 1000000 / 100000}
 };

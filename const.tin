@@ -18,3 +18,11 @@
     {captain} {校尉} 
     {guard} {守卫} 
 };
+
+#VARIABLE {npc_weapon} {
+    {神州刀客} {blade}
+    {石人武士} {blade}
+    {金衣剑客} {sword}
+    {校尉} {blade}
+    {守卫} {sixhammer}
+};
