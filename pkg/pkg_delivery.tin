@@ -1,4 +1,4 @@
-#NOP delivery
+#CLASS delivery OPEN;
 
 #ACTION {给你一位%u。$} {
     #ECHO {收到%1};
@@ -32,20 +32,6 @@
 
 #ACTION {^你给%*一位%*。} {quit}
 
-
-
 #TICKER {发呆} {i;} {120};
 
-
-#ALIAS {test} {
-    #SHOW {
-        某人给你一位神州刀客。
-    };
-} {5};
-
-
-#ALIAS {test2} {
-    #SHOW {
-        某人给你一位校尉。
-    };
-} {5};
+#CLASS delivery CLOSE;

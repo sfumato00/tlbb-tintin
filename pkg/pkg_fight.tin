@@ -6,6 +6,15 @@
 
 #TICKER {ticker_feedback_loop} {hp} {15};
 
+#VARIABLE {NPC_NAME} {
+    {校尉} {captain} 
+    {守卫} {guard} 
+    {石人武士} {shi} 
+    {金衣剑客} {sword man}
+    {神州刀客} {blademan}
+    {叶二娘} {ye}
+};
+
 #VARIABLE {fight_stats} {
     {epoch} {
         {start} {0}
@@ -184,10 +193,14 @@
     cmd {surrender};
 }
 
-#ACTION {慢慢睁开眼睛，清醒了过来。} {
-    cmd {surrender};
-    #DELAY {3.1} {
-        init_fight;
+#ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
+    #LOCAL npc_id {$NPC_NAME[%1]};
+    #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list[$npc_id]: $npc_list[$npc_id]};
+    #IF {"$npc_list[$npc_id]" != ""} {
+        cmd {surrender};
+        #DELAY {3.1} {
+            hp;
+        };
     };
 };
 
