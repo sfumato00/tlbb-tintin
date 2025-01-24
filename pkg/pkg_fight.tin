@@ -12,6 +12,7 @@
     {石人武士} {shi} 
     {金衣剑客} {sword man}
     {神州刀客} {blademan}
+    {叶二娘} {ye}
 };
 
 #VARIABLE {fight_stats} {
