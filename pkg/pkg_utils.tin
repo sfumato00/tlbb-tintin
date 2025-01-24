@@ -1,4 +1,6 @@
-#NOP utilities
+#CLASS utils OPEN;
+
+#VARIABLE LOG_DIRECTORY {./log};
 
 #ALIAS {cmd} {
     #VARIABLE {_cmds} {%1};
@@ -12,22 +14,39 @@
     };
 } {5};
 
+#FUNCTION {Info} {
+    @Log{%1;info;$username};
+};
 
-#ALIAS {info} {
-    #ECHO {[INFO] %1};
-}
+#FUNCTION {Debug} {
+    @Log{%1;debug;$username};
+};
 
-#ALIAS {debug} {
-    #ECHO {[DEBUG] %1};
-}
+#FUNCTION {Error} {
+    @Log{%1;error;$username};
+};
 
-#ALIAS {warn} {
-    #ECHO {[WARN] %1};
-}
+#FUNCTION {Log} {
+    #LOCAL ts @timestamp{};
+    #ECHO {[LOG] %1 $ts};
+    #LOCAL filename {$LOG_DIRECTORY};
+    #LOCAL msg %1;
+    #LOCAL level %2;
+    #LOCAL filename %3;
+    #LOCAL file_path {};
+    #IF {"%2" == ""} {
+        #LOCAL msg {[LOG] $msg $ts};
+    } {
+        #LOCAL msg {[$level] $msg $ts};
+    };
 
-#ALIAS {error} {
-    #ECHO {[ERROR] %1};
-}
+    #IF {"$filename" == ""} {
+        #LOCAL file_path {$LOG_DIRECTORY/log.log};
+    } {
+        #LOCAL file_path {$LOG_DIRECTORY/$filename.log};
+    };   
+    #LINE LOG {$file_path} {$msg};
+};
 
 #FUNCTION ParseFlakyNumber {
     #LOCAL res {0};
@@ -85,3 +104,5 @@
     #format utime {%U};
 	#format result {%t.%m} {%Y-%m-%d %H:%M:%S} {$utime % 1000000 / 100000}
 };
+
+#CLASS utils CLOSE;

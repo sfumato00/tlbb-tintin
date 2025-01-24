@@ -17,6 +17,9 @@
     #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
 }
 
+#EVENT {VARIABLE UPDATED env[event]} {
+    #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
+}
 
 #NOP {common}
 #ALIAS {log} {
@@ -227,7 +230,6 @@
         } {4};
 } {5};
 
-
 #ALIAS {北冥} {
 
     #SWITCH {"%1"} {
@@ -248,8 +250,6 @@
         };
     };
 } {5};
-
-
 
 #ALIAS {dazuo_max} {
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};

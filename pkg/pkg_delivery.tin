@@ -1,36 +1,49 @@
 #CLASS delivery OPEN;
 
+#CLASS consts READ {./consts.tin};
+
 #ACTION {给你一位%u。$} {
     #ECHO {收到%1};
-    log {./log/$username.log} {12};
-    #SWITCH {"%1"}
-    {
-        #CASE {"举子"} {#VAR {npc} {student};送快递;};
-        #CASE {"戏迷"} {#VAR {npc} {viewer};送快递;};
-        #CASE {"禁军"} {#VAR {npc} {garrison};送快递;};
-        #CASE {"白衣武士"} {#VAR {npc} {fighter};送快递;};
-        #CASE {"村民"} {#VAR {npc} {cunmin};送快递;};
-        #CASE {"守卫"} {#VAR {npc} {guard};送快递;};
-        #CASE {"校尉"} {#VAR {npc} {captain};送快递;};
-        #CASE {"叶二娘"} {#VAR {npc} {ye};送快递;};
-        #CASE {"段延庆"} {#VAR {npc} {duan};送快递;};
-        #CASE {"鸠摩智"} {#VAR {npc} {jiumozhi};送快递;};
-        #CASE {"金衣剑客"} {#VAR {npc} {sword man};送快递;};
-        #CASE {"神州刀客"} {#VAR {npc} {blademan};送快递;};
-        #CASE {"石人武士"} {#VAR {npc} {shi};送快递;};
+    @Log{%0;info;$username};
+    #VARIABLE {npc} {$npc_id[%1]};
+    // #SWITCH {"%1"}
+    // {
+    //     #CASE {"举子"} {#VAR {npc} {student};送快递;};
+    //     #CASE {"戏迷"} {#VAR {npc} {viewer};送快递;};
+    //     #CASE {"禁军"} {#VAR {npc} {garrison};送快递;};
+    //     #CASE {"白衣武士"} {#VAR {npc} {fighter};送快递;};
+    //     #CASE {"村民"} {#VAR {npc} {cunmin};送快递;};
+    //     #CASE {"守卫"} {#VAR {npc} {guard};送快递;};
+    //     #CASE {"校尉"} {#VAR {npc} {captain};送快递;};
+    //     #CASE {"叶二娘"} {#VAR {npc} {ye};送快递;};
+    //     #CASE {"段延庆"} {#VAR {npc} {duan};送快递;};
+    //     #CASE {"鸠摩智"} {#VAR {npc} {jiumozhi};送快递;};
+    //     #CASE {"金衣剑客"} {#VAR {npc} {sword man};送快递;};
+    //     #CASE {"神州刀客"} {#VAR {npc} {blademan};送快递;};
+    //     #CASE {"石人武士"} {#VAR {npc} {shi};送快递;};
+    // };
+    #IF {"$npc" == ""} {
+        #ECHO 
     };
-    get all from $npc;
+    #IF {"$npc_weapon[$npc]" != ""} {
+        get $npc_weapon[$npc] from $npc;
+    };
+    #ELSE {
+        get all from $npc;
+    };
+    送快递;
 } {5};
 
 #ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？} {
+    @Log{%0;info;$username};
     y;
 } {5};
 
 #ACTION {^你必须连线十秒后才能离开游戏。$} {#DELAY {1} {quit}}
 
-#ACTION {%*慢慢睁开眼睛，清醒了过来。} {quit}
+#ACTION {%*慢慢睁开眼睛，清醒了过来。} {@Log{%0;info;$username};quit}
 
-#ACTION {^你给%*一位%*。} {quit}
+#ACTION {^你给%*一位%*。} {@Log{%0;info;$username};quit}
 
 #TICKER {发呆} {i;} {120};
 

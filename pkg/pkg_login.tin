@@ -8,5 +8,4 @@
 
 #ACTION {^目前权限：} {
     #FORMAT {env[last_login]} {%T};
-    cmd {$reposition_path};
 } {1};

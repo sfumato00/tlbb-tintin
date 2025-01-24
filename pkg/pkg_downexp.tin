@@ -1,19 +1,13 @@
 #ALIAS {返回战斗地点} {
     #ECHO {返回战斗地点};
-
+    #ECHO {距离返回战斗地点还有 18 秒};
     #DELAY {6} {
-        #ECHO {距离返回战斗地点还有 18 秒};
+        #ECHO {距离返回战斗地点还有 12 秒};
         #DELAY {6} {
-            #ECHO {距离返回战斗地点还有 12 秒};
+            #ECHO {距离返回战斗地点还有 6 秒};
             #DELAY {6} {
-                #ECHO {距离返回战斗地点还有 6 秒};
-                #EVENT {VARIABLE UPDATED env[room_updated]} {
-                    #IF {"$env[room]" == "$downexp[room]"} {
-                        #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                        练功;
-                    };
-                };
                 城隍庙-练功房间;
+                练功;
             };
         };
     };
@@ -111,6 +105,7 @@
                         };
                         #CASE {"城隍庙"} {
                             #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                            drink tong;
                             返回战斗地点;
                         };
                     };                    

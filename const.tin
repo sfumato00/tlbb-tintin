@@ -7,16 +7,32 @@
     {村民} {cunmin}
     {校尉} {captain}
     {守卫} {guard}
+    {举子} {student}
+    {戏迷} {viewer}
+    {禁军} {garrison}
+    {白衣武士} {fighter}
+    {村民} {cunmin}
+    {段延庆} {duan}
+    {叶二娘} {ye}
+    {鸠摩智} {jiumozhi}
 };
 
 
 #VARIABLE {npc_name} {
-    {blade man} {神州刀客} 
-    {shi} {石人武士} 
-    {sword man} {金衣剑客} 
-    {cunmin} {村民} 
-    {captain} {校尉} 
-    {guard} {守卫} 
+    {blademan} {神州刀客}
+    {shi} {石人武士}
+    {sword man} {金衣剑客}
+    {cunmin} {村民}
+    {captain} {校尉}
+    {guard} {守卫}
+    {student} {举子}
+    {viewer} {戏迷}
+    {garrison} {禁军}
+    {fighter} {白衣武士}
+    {cunmin} {村民}
+    {duan} {段延庆}
+    {ye} {叶二娘}
+    {jiumozhi} {鸠摩智}
 };
 
 #VARIABLE {npc_weapon} {
@@ -25,4 +41,6 @@
     {金衣剑客} {sword}
     {校尉} {blade}
     {守卫} {sixhammer}
+    {叶二娘} {all}
+    {段延庆} {}
 };
