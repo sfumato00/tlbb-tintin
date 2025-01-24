@@ -3,11 +3,10 @@
 #ACTION {^Please input gb or big5:} {gb;$username;$password;} {1};
 
 #ACTION {^重新连线完毕。$} {
-    init_task;
+    #FORMAT {env[last_reconnect]} {%T};
 } {1};
 
 #ACTION {^目前权限：} {
-    #FORMAT {env[init_login]} {%T};
+    #FORMAT {env[last_login]} {%T};
     cmd {$reposition_path};
-    init_task;
 } {1};

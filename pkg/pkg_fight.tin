@@ -208,7 +208,6 @@
     feedback_loop;
 };
 
-
 #FUNCTION CalNpcMsg {
     #LOCAL {msg} {};
     #FOREACH {*npc_list[%*]} {x} {

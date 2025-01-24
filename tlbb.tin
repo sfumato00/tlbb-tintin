@@ -98,9 +98,7 @@
     #CLASS fight kill;
     #CLASS fight read {./pkg/pkg_fight.tin};
     #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
-    #DELAY {5} {
-        cmd {hp};
-    };
+    cmd {hp};
 } {5};
 
 #NOP 九阳
