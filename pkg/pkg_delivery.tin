@@ -8,22 +8,6 @@
     @Log{%0;info;$username};
     #VARIABLE {npc} {$npc_id[%2]};
     
-    // #SWITCH {"%1"}
-    // {
-    //     #CASE {"举子"} {#VAR {npc} {student};送快递;};
-    //     #CASE {"戏迷"} {#VAR {npc} {viewer};送快递;};
-    //     #CASE {"禁军"} {#VAR {npc} {garrison};送快递;};
-    //     #CASE {"白衣武士"} {#VAR {npc} {fighter};送快递;};
-    //     #CASE {"村民"} {#VAR {npc} {cunmin};送快递;};
-    //     #CASE {"守卫"} {#VAR {npc} {guard};送快递;};
-    //     #CASE {"校尉"} {#VAR {npc} {captain};送快递;};
-    //     #CASE {"叶二娘"} {#VAR {npc} {ye};送快递;};
-    //     #CASE {"段延庆"} {#VAR {npc} {duan};送快递;};
-    //     #CASE {"鸠摩智"} {#VAR {npc} {jiumozhi};送快递;};
-    //     #CASE {"金衣剑客"} {#VAR {npc} {sword man};送快递;};
-    //     #CASE {"神州刀客"} {#VAR {npc} {blademan};送快递;};
-    //     #CASE {"石人武士"} {#VAR {npc} {shi};送快递;};
-    // };
     #IF {"$npc" == ""} {
         #LOCAL msg {无法识别的NPC: %2};
         #ECHO {msg};
