@@ -1,11 +1,13 @@
 #CLASS delivery OPEN;
 
-#CLASS consts READ {./consts.tin};
+#CLASS consts READ {./const.tin};
 
-#ACTION {给你一位%u。$} {
-    #ECHO {收到%1};
+#ACTION {^%*给你一位%u。$} {
+    log delivery 5;
+    #ECHO {收到%2};
     @Log{%0;info;$username};
-    #VARIABLE {npc} {$npc_id[%1]};
+    #VARIABLE {npc} {$npc_id[%2]};
+    
     // #SWITCH {"%1"}
     // {
     //     #CASE {"举子"} {#VAR {npc} {student};送快递;};
@@ -23,13 +25,17 @@
     //     #CASE {"石人武士"} {#VAR {npc} {shi};送快递;};
     // };
     #IF {"$npc" == ""} {
-        #ECHO 
+        #LOCAL msg {无法识别的NPC: %2};
+        #ECHO {msg};
+        @Log{$msg;info;$username};
     };
+    #var npc;
+    #var npc_weapon[$npc];
     #IF {"$npc_weapon[$npc]" != ""} {
-        get $npc_weapon[$npc] from $npc;
+        cmd {get $npc_weapon[$npc] from $npc};
     };
     #ELSE {
-        get all from $npc;
+        cmd {get all from $npc};
     };
     送快递;
 } {5};
@@ -42,6 +48,12 @@
 #ACTION {^你必须连线十秒后才能离开游戏。$} {#DELAY {1} {quit}}
 
 #ACTION {%*慢慢睁开眼睛，清醒了过来。} {@Log{%0;info;$username};quit}
+
+#EVENT {VARIABLE UPDATED env[room_updated]} {
+    #IF {"$env[room]" == "鬼门关" || "$env[room]" == "城隍庙"} {
+        quit;
+    };
+};
 
 #ACTION {^你给%*一位%*。} {@Log{%0;info;$username};quit}
 
