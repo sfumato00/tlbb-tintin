@@ -63,7 +63,7 @@
     #LOCAL {curr_prof} {$skills[$sk][prof]};
 
     #IF {"$sk" == "" ||  "$target_lv" == "" || "$skills[$sk]" == ""} {
-        debug {sk: $sk, target_lv: $target_lv, skill: $skills[$sk]};
+        #ECHO {sk: $sk, target_lv: $target_lv, skill: $skills[$sk]};
         error {=================== please make skill variables are set correctly!!!!!!!!!!!!! ===================};
         #RETURN {};
     };
@@ -81,9 +81,9 @@
     #LOCAL available_neili {};
     #MATH available_neili {$vitals[内力] - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - $xiqi};
 
-    debug {qn_before_level: $qn_before_level};
-    debug {$full_xiqi_params};
-    debug {可供使用内力: $available_neili};   
+    #ECHO {qn_before_level: $qn_before_level};
+    #ECHO {$full_xiqi_params};
+    #ECHO {可供使用内力: $available_neili};   
     
     #WHILE {$available_neili >= $full_xiqi_params[xiqi_full] 
         && ($qn_before_level >= $full_xiqi_params[qn_per_full_xiqi] 
@@ -101,7 +101,7 @@
 
         #MATH n_cmd {$n_cmd + $full_xiqi_params[full_learn_multiple] + 1};
 
-        debug {available_neili: $available_neili, qn_before_level: $qn_before_level};
+        #ECHO {available_neili: $available_neili, qn_before_level: $qn_before_level};
         #IF {$n_cmd >= $THROTTLE} {
             #RETURN {};
         };
@@ -116,7 +116,7 @@
         #MATH {qn_before_level} {$qn_before_level - 50};
         #MATH {js_remain} {$js_remain - $js_per_full_learn};
         #MATH n_cmd {$n_cmd + 1};
-        debug {available_neili: $available_neili, js_remain: $js_remain, qn_before_level: $qn_before_level};
+        #ECHO {available_neili: $available_neili, js_remain: $js_remain, qn_before_level: $qn_before_level};
         #IF {$n_cmd >= $THROTTLE} {
             #RETURN {};
         };
@@ -124,12 +124,12 @@
 
     #LOCAL x {0};
     #MATH x {$js_remain / $xunhuan[js_per_qn]};
-    debug {js_remain: $js_remain, $xunhuan[js_per_qn]: $xunhuan[js_per_qn], x: $x};
+    #ECHO {js_remain: $js_remain, $xunhuan[js_per_qn]: $xunhuan[js_per_qn], x: $x};
     #IF {$curr_lv < 100 || $xunhuan[qn_per_res] == 5 || "$sk" == "jiuyang-shengong"} {
          #MATH qn_before_level {$qn_before_level + 1};
     };
     #LOCAL qn {@Min{$qn_before_level;$x}};
-    debug {qn_before_level: $qn_before_level, x: $x, qn: $qn};
+    #ECHO {qn_before_level: $qn_before_level, x: $x, qn: $qn};
     #IF {$qn > 0} {
         cmd {learn $sk from $learn[master] with $qn};
     };
