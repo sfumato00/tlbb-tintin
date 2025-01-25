@@ -3,7 +3,7 @@
 #CLASS consts READ {./const.tin};
 
 #ACTION {^%*给你一位%u。$} {
-    log delivery 5;
+    log {./log/delivery.log} {5};
     #ECHO {收到%2};
     @Log{%0;info;$username};
     #VARIABLE {npc} {$npc_id[%2]};
@@ -29,8 +29,7 @@
         #ECHO {msg};
         @Log{$msg;info;$username};
     };
-    #var npc;
-    #var npc_weapon[$npc];
+    #SHOW {npc: $npc, weapon: npc_weapon[%2]};
     #IF {"$npc_weapon[$npc]" != ""} {
         cmd {get $npc_weapon[$npc] from $npc};
     };
