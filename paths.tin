@@ -15,6 +15,7 @@
     };
 } {5};
 
+
 #ALIAS {洛阳-天水} {#8 w;}
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
 #alias {洛阳-西夏} {
@@ -314,4 +315,4 @@
     #IF {"$callback" != ""} {
         cmd {$callback};
     };    
-}
+};

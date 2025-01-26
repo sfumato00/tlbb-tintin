@@ -14,3 +14,43 @@
 
 #CLASS experiment close;
 
+
+
+#ALIAS {大理-段誉} {
+    #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nd;nw;wu;n;n;nu;wu;climb mountain;
+    #DELAY 5 {
+        nu;climb mountain;
+        #DELAY 5 {
+            n;e;n;n;w;w;jump down;
+            #DELAY {10} {
+                down;climb down;
+                #DELAY 5 {
+                    climb down;
+                    #DELAY {5} {
+                        climb down;
+                        #DELAY {5} {
+                            climb down;
+                            #DELAY {6} {
+                                s;#3 ne;n;e;n;pull 青藤;
+                                #DELAY 2 {
+                                    l 玉壁;ne;pull 青藤;
+                                    jiali 50;
+                                    #TICKER {ticker_push} {
+                                        push rock;
+                                    } {2};
+                                    #ACTION {^大岩石终于被推开了，露出一个三尺来高的洞穴。$} {
+                                        #UNTICKER {ticker_push};
+                                        #UNACTION {^大岩石终于被推开了，露出一个三尺来高的洞穴。$};
+                                        #DELAY 2{
+                                            n;nd;nd;wd;nd;ed;nd;nd;open door;n;ne;open door;w;wd;wd;open door;w;s;w
+                                        };
+                                    } {5};
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+} {5};

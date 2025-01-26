@@ -217,6 +217,7 @@
             #CLASS learn kill;
             #CLASS learn read {./pkg/pkg_learn.tin};
         } {4};
+        score;
         research literate 1;
 } {5};
 
