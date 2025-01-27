@@ -82,6 +82,9 @@
     #MATH available_neili {$vitals[内力] - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - $xiqi};
 
     #ECHO {qn_before_level: $qn_before_level};
+    #IF {$full_xiqi_params[full_learn_multiple] > $THROTTLE} {
+        #VARIABLE {full_xiqi_params[full_learn_multiple]} {$THROTTLE};
+    };
     #ECHO {$full_xiqi_params};
     #ECHO {可供使用内力: $available_neili};   
     
@@ -93,18 +96,21 @@
         } {
         #$full_xiqi_params[full_learn_multiple] {
             cmd {learn $sk from $learn[master] with 50};
+            #MATH n_cmd {$n_cmd + 1};
+            #IF {$n_cmd > $THROTTLE} {
+                #RETURN {};
+            };
         };
         cmd {xiqi $full_xiqi_params[xiqi_full]};
+        #MATH n_cmd {$n_cmd + 1};
+        #IF {$n_cmd >= $THROTTLE} {
+            #RETURN {};
+        };
 
         #MATH {available_neili} {$available_neili - $full_xiqi_params[xiqi_full]};
         #MATH {qn_before_level} {$qn_before_level - $full_xiqi_params[qn_per_full_xiqi]};
 
-        #MATH n_cmd {$n_cmd + $full_xiqi_params[full_learn_multiple] + 1};
-
         #ECHO {available_neili: $available_neili, qn_before_level: $qn_before_level};
-        #IF {$n_cmd >= $THROTTLE} {
-            #RETURN {};
-        };
     };
 
     #LOCAL js_remain {$vitals[精神_max]};
@@ -112,14 +118,15 @@
     #MATH js_per_full_learn {$js_per_qn * 50};
     #WHILE {$js_remain > $js_per_full_learn && $qn_before_level >= 50} {
         cmd {learn $sk from $learn[master] with 50};
-
-        #MATH {qn_before_level} {$qn_before_level - 50};
-        #MATH {js_remain} {$js_remain - $js_per_full_learn};
         #MATH n_cmd {$n_cmd + 1};
-        #ECHO {available_neili: $available_neili, js_remain: $js_remain, qn_before_level: $qn_before_level};
         #IF {$n_cmd >= $THROTTLE} {
             #RETURN {};
         };
+
+        #MATH {qn_before_level} {$qn_before_level - 50};
+        #MATH {js_remain} {$js_remain - $js_per_full_learn};
+        
+        #ECHO {available_neili: $available_neili, js_remain: $js_remain, qn_before_level: $qn_before_level};
     };
 
     #LOCAL x {0};
