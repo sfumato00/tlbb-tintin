@@ -15,15 +15,15 @@
 } {5};
 
 #FUNCTION {Info} {
-    @Log{%1;info;$username};
+    #RETURN {@Log{%1;info;$username}};
 };
 
 #FUNCTION {Debug} {
-    @Log{%1;debug;$username};
+    #RETURN {@Log{%1;debug;$username}};
 };
 
 #FUNCTION {Error} {
-    @Log{%1;error;$username};
+    #RETURN {@Log{%1;error;$username}};
 };
 
 #FUNCTION {Log} {
@@ -46,6 +46,7 @@
         #LOCAL file_path {$LOG_DIRECTORY/$filename.log};
     };   
     #LINE LOG {$file_path} {$msg};
+    #RETURN {$file_path};
 };
 
 #FUNCTION ParseFlakyNumber {

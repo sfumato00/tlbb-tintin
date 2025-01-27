@@ -1,5 +1,7 @@
 #NOP Paths
 
+#CLASS room READ {./pkg/pkg_room.tin};
+
 #ALIAS {开封-大理} {#9 s;sw;#9 s};
 #ALIAS {开封-东安门} {#6 e};
 #ALIAS {开封-洛阳} {#16 w;}
@@ -20,11 +22,14 @@
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
 #alias {洛阳-西夏} {
     洛阳-天水;
-    天水-黑沼泽;
     #DELAY {6} {
-        黑沼泽-西夏;
+        天水-黑沼泽;
+        #DELAY {6} {
+            黑沼泽-西夏;
+        };
     };
 };
+
 #ALIAS {洛阳-开封} {#16 e;}
 #ALIAS {洛阳-东安门} {洛阳-开封;开封-东安门} {5};
 
@@ -186,10 +191,11 @@
                 #UNVARIABLE {env[odd]};
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #4 {cmd {n}};
+                cmd {$callback};
             };
             #DEFAULT {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            }
+            };
         };
     } {5};
 
