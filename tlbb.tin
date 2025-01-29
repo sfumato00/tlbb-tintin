@@ -229,6 +229,7 @@
             #CLASS research kill;
             #CLASS research read {./pkg/pkg_research.tin};
         } {4};
+        score;
 } {5};
 
 #ALIAS {北冥} {

@@ -6,10 +6,11 @@
 
 #CLASS experiment open;
 
-#CLASS room read {./pkg_room.tin};
+#CLASS room read {./pkg/pkg_room.tin};
 
-#EVENT {VARIABLE UPDATED test[a]} {
-    #ECHO {<faa> var changed: $test[a]};
+#ALIAS test {
+    #CLASS zhua read {./pkg/pkg_zhua.tin};
+    go;
 };
 
 #CLASS experiment close;

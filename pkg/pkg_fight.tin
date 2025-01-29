@@ -195,12 +195,16 @@
 
 #ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
     #LOCAL npc_id {$NPC_NAME[%1]};
-    #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list[$npc_id]: $npc_list[$npc_id]};
-    #IF {"$npc_list[$npc_id]" != ""} {
+    #NOP #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list1: *npc_list[+1]};
+    #IF {"*npc_list[+1]" == "$npc_id"} {
         cmd {surrender};
         #DELAY {3.1} {
             hp;
         };
+    };
+
+    #FOREACH {$npc_list} {npc} {
+        #ECHO {npc: $npc};
     };
 };
 

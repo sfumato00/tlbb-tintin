@@ -1,6 +1,9 @@
+#CLASS zhua OPEN;
+#CLASS room READ {./pkg/pkg_room.tin};
+
 #ALIAS {doclaw} {
     enable unarmed dragon-claw;
-    jiali 100;
+    jiali 50;
     fight %1;
     perform claw;
     jiali 0;
@@ -9,32 +12,37 @@
 
 #ALIAS {mh} {
     enable unarmed mohe-finger;
-    #if {"%2" != ""} {
-        jiali %2;
-    } {
-        jiali 300;
-    };    
+    jiali %2;
     fight %1;
     perform strike;
     jiali 0;
     surrender;
 }
 
-#ALIAS {rb} {
-    enable unarmed rainbow-strike;
-    #if {"%2" != ""} {
-        jiali %2;
-    } {
-        jiali 300;
-    };    
-    fight %1;
-    perform rainbow;
-    jiali 0;
-    surrender;
+#ACTION {^令和(highlander)告诉你：北门校尉} {
+    go;
 }
 
-#ALIAS {gn} {
-    get blade from captain;
-    get captain;
-    give captain to yuantong;
-} {5};
+#ALIAS go {
+    stop;
+    #DELAY 6 {
+        cmd {s;e;s;s;s;s;s;s;s;s};
+
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #ACTION {^{请不要一次输入太多的指令。|你必须先用 enable 选择你要用的内功心法。}$} {
+                #DELAY 3 {w};
+            } {1};
+            
+            #IF {"$env[room]" == "黄土大道"} {
+                cmd {w};
+            };
+            #ELSE {
+                #UNACTION {^请不要一次输入太多的指令。$};
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            };
+        };
+        cmd {s};    
+    };
+}
+
+#CLASS zhua CLOSE;

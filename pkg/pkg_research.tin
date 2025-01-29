@@ -99,7 +99,7 @@
 };
 
 #FUNCTION GetSkillToLearn {
-    #FOREACH {$learn[%*]} {skill} {
+    #FOREACH {$learn_skill[%*]} {skill} {
         
         #LOCAL sk {*skill[+1]};
         #LOCAL target_lv {$skill[*skill[+1]]};
