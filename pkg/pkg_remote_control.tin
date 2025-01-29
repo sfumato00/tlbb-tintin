@@ -1,10 +1,11 @@
 #NOP remote control module
+#CLASS utils READ {./pkg/pkg_utils.tin};
 
 #ACTION {(%w)告诉你：(%a) "%a"} {
     log {remote_control.log} {1};
     #IF {"%2" == "$password"} {
         #ECHO {%3};
-        %3;
+        cmd {%3};
         cmd {tell %1 {已经执行: %3}};
     };
 }
