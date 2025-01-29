@@ -15,6 +15,8 @@
     {段延庆} {duan}
     {叶二娘} {ye}
     {鸠摩智} {jiumozhi}
+    {云中鹤} {yun}
+    {南海鳄神} {yue}
 };
 
 
@@ -33,6 +35,8 @@
     {duan} {段延庆}
     {ye} {叶二娘}
     {jiumozhi} {鸠摩智}
+    {yue} {南海鳄神}
+    {yun} {云中鹤}
 };
 
 #VARIABLE {npc_weapon} {
@@ -44,4 +48,5 @@
     {叶二娘} {blade}
     {段延庆} {tie-gan}
     {云中鹤} {fan dagger}
+    {南海鳄神} {shears}
 };

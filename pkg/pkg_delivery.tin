@@ -42,4 +42,6 @@
 
 #TICKER {发呆} {i;} {120};
 
+#ACTION {^你死了。} {quit;};
+
 #CLASS delivery CLOSE;
