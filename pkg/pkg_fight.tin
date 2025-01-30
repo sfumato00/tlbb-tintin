@@ -43,7 +43,7 @@
         log $log_file_fight 30;
         #buffer write $log_file_buffer;
         #EVENT {SESSION DISCONNECTED} {
-            #buffer write $log_file_buffer;
+            #gts #buffer write $log_file_buffer;
             #UNTICKER {ticker_quit};
         };
         quit;
