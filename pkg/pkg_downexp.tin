@@ -1,3 +1,9 @@
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#CLASS downexp OPEN;
+
+#VARIABLE downexp[last_attempt] {0};
+
 #ALIAS {返回战斗地点} {
     #ECHO {返回战斗地点};
     #ECHO {距离返回战斗地点还有 18 秒};
@@ -31,14 +37,17 @@
 
 
 #ALIAS {去降经验} {
-    #UNEVENT {VARIABLE UPDATED fight_stats[epoch][last]};
+    #VARIABLE {downexp[last_attempt]} {@GetEpoch{}};
     stop;
     quit;
 }
 
-#EVENT {VARIABLE UPDATED fight_stats[epoch][last]} {
-    #FORMAT {vitals[last_updated]} {#T};
-    #IF {$vitals[经验] >= $downexp[threshold_exp]} {
+#EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
+    #LOCAL current_epoch {@GetEpoch{}};
+    
+    #IF {$vitals[经验] >= $downexp[threshold_exp] 
+        && ("$downexp[last_attempt]" == "" 
+            || @GetEpoch{} - $downexp[last_attempt] >= 120)} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
         去降经验;
     };
@@ -46,7 +55,7 @@
 
 #EVENT {VARIABLE UPDATED env[last_login]} {
     #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[room]" == "驿站"} {
+        #IF {"$env[room]" == "驿站" && "$env[exits]" == " west"} {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
             #ECHO {[Debug]: 开始自杀。};
             enable dodge duan-steps;
@@ -58,7 +67,6 @@
 };
 
 #ACTION {^你必须连线十秒后才能离开游戏。$} {
-    
     #delay 2 {quit};
 } {1};
 
@@ -73,11 +81,8 @@
         #RETURN {};
     };
 
-    #LOCAL timestamp %T;
-    #LOCAL time_in_one_room {};
-    #MATH time_in_one_room {($timestamp - $env[room_updated])};
     #ECHO {在当前房间时间: $time_in_one_room 秒。};
-    #IF {$time_in_one_room > 3600} {
+    #IF {@GetEpoch{} - $env[room_updated] > 300} {
         quit;
     };
 } {};

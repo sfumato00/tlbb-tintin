@@ -1,12 +1,19 @@
-#NOP Room package
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#CLASS room OPEN;
 
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};
-    #NOP #ECHO {debug: 进入房间 $env[room]};
 } {1};
 
-#ACTION {这里%u的出口是%*。} {
-    #NOP #ECHO {debug: Exits: %2};
+#ACTION {    这里%u的出口是%*。} {
     #VARIABLE {env[exits]} {%2};
-    #FORMAT {env[room_updated]} {%T};
+    #VARIABLE {env[room_updated]} {@GetEpoch{}};
 } {1};
+
+#ACTION {    这里没有明显的出口。} {
+    #VARIABLE {env[exits]} {};
+    #VARIABLE {env[room_updated]} {@GetEpoch{}};
+}
+
+#CLASS room CLOSE;

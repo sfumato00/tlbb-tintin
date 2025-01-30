@@ -1,0 +1,36 @@
+#CLASS stats OPEN;
+
+#ACTION {^%s气血：%s%d/%s%d%s(%s%d%)%s内力：%s%d%s/%s%d%s(%*)} {
+    #VARIABLE {vitals[气血]}{%3};
+    #VARIABLE {vitals[气血_max]}{%5};
+    #VARIABLE {vitals[气血%]}{%8};
+    #VARIABLE {vitals[内力]}{%11};
+    #VARIABLE {vitals[内力_max]}{%14};
+    #VARIABLE {vitals[内力+]}{%16};
+} {5};
+
+#ACTION {^%s精神：%s%d/%s%d%s(%s%d%)%s潜力：%s%d%s/%s%d%s(%*)} {
+    #VARIABLE {vitals[精神]}{%3};
+    #VARIABLE {vitals[精神_max]}{%5};
+    #VARIABLE {vitals[精神%]}{%8};
+    #VARIABLE {vitals[潜力]}{%11};
+    #VARIABLE {vitals[潜力_max]}{%14};
+    #VARIABLE {vitals[潜力%]}{%16};
+} {5};
+
+#ACTION {^%s食物：%s%d/%s%d%s潜能：%.%d} {
+    #VARIABLE {vitals[食物]}{%3};
+    #VARIABLE {vitals[食物_max]}{%5};
+    #VARIABLE {vitals[潜能]}{%8};
+} {5};
+
+#ACTION {^%s饮水：%s%d/%s%d%s经验：%.%d} {
+    #VARIABLE {vitals[饮水]}{%3};
+    #VARIABLE {vitals[饮水_max]}{%5};
+
+    #VARIABLE {vitals[经验]}{%8};
+    #FORMAT {vitals[last_updated]}{%T};
+    #VARIABLE {vitals[hook_downexp]}{1};
+} {5};
+
+#CLASS stats CLOSE;

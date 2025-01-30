@@ -284,7 +284,7 @@
             #UNACTION {^请不要一次输入太多的指令。$};
             #DELAY 12 {
                 se;e;#13 n;
-                #3 n;#2 nw;nu;#3 {nu;n};nu;ne;nu;
+                cmd {nw;nw;nu;nu;n;nu;n;nu;n;nu;ne;nu};
                 init_task;              
             };            
         };

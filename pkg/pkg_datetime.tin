@@ -1,0 +1,22 @@
+#CLASS datetime OPEN;
+
+#FUNCTION GetEpoch {
+    #LOCAL epoch {};
+    #FORMAT epoch {%T};
+    #RETURN $epoch;
+}
+
+#FUNCTION ConvertEpochToTimeStr {
+    #LOCAL epoch %1;
+    #LOCAL time_str {};
+    #format {time_str} {%t} {{%H:%M:%S} {$epoch}};
+    #RETURN {$time_str};
+};
+
+#FUNCTION timestamp {
+    #LOCAL utime {};
+    #format utime {%U};
+	#format result {%t} {%Y-%m-%d %H:%M:%S} {$utime % 1000000 / 100000}
+};
+
+#CLASS ddatetime CLOSE;
