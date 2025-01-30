@@ -1,11 +1,12 @@
 #NOP 
 
-#CLASS tlbb read {./tlbb.tin};
+
 
 #ALIAS {conn} {
     #VARIABLE {env} {
         {profile} {./profiles/profile_%1.tin}
     };
+    #CLASS tlbb read {./tlbb.tin};
     #CLASS profile read {$env[profile]};
     #SESSION {$username} {103.10.85.133} {8888};
 };
@@ -34,5 +35,8 @@
 
 #ALIAS reload {
     #CLASS profile kill;
+    #CLASS tlbb kill;
+    #CLASS tlbb read {./tlbb.tin};
     #CLASS profile read {$env[profile]};
 }
+
