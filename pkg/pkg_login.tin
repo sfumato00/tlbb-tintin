@@ -1,10 +1,5 @@
 #nop {login}
 
-#ACTION {^Please input gb or big5:} {
-    #UNDELAY {delay_connection_timeout};
-    gb;$username;$password;
-} {1};
-
 #ACTION {^重新连线完毕。$} {
     #FORMAT {env[last_reconnect]} {%T};
 } {1};
@@ -13,19 +8,20 @@
     #FORMAT {env[last_login]} {%T};
 } {1};
 
+#ACTION {^Please input gb or big5:} {
+    
+    #UNDELAY {delay_connection_timeout};
+    #VARIABLE {env[conn_update]} {};
+    #FORMAT {env[conn_update]} {%T};
+    gb;$username;$password;
+} {1};
+
 #EVENT {SESSION CONNECTED} {
     #ECHO {SESSION CONNECTED};
-    #VARIABLE {env[conn_last_update]} {};
-    #FORMAT {env[conn_last_update]} {%T};
     #DELAY {delay_connection_timeout} {
-        #LOCAL timestamp {};
-        #FORMAT timestamp {%T};
-        #LOCAL lapse {};
-        #MATH lapse {$timestamp - $env[conn_last_update]};
-        #ECHO {lapse: $lapse seconds};
-        #IF {$timestamp - $env[conn_last_update] > 10} {
+        #IF {"$env[conn_update]" == ""} {
             #ECHO {Cannot establish connection. Abort.};
             #zap;
-        };
-    } {20};
+        }
+    } {11};
 };
