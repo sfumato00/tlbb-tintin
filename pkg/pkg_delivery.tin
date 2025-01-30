@@ -33,9 +33,14 @@
 #ACTION {%*慢慢睁开眼睛，清醒了过来。} {@Log{%0;info;$username};quit}
 
 #EVENT {VARIABLE UPDATED env[room_updated]} {
-    #IF {"$env[room]" == "鬼门关" || "$env[room]" == "城隍庙"} {
+    #IF {"$env[room]" == "城隍庙"} {
         quit;
     };
+
+    #IF {"$env[room]" == "鬼门关"} {
+        #2 n;w;
+        ask $username about 回家;
+    }
 };
 
 #ACTION {^你给%*一位%*。} {@Log{%0;info;$username};quit}
