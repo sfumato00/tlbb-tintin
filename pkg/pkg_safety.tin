@@ -1,0 +1,12 @@
+#NOP death log module
+
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#ACTION {^你死了。} {
+    
+    #LIST file_name CREATE {./log/death;$username;@GetEpochAsDateTimeStr{}};
+    #LIST file_name COLLAPSE {_};
+    #CAT file_name {.log};
+    #ECHO {[DEBUG] Writing buffer to $file_name};
+    #BUFFER write $file_name;
+} {1};

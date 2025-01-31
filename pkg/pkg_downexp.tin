@@ -1,19 +1,23 @@
+#NOP Downexp module
+
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS room READ {./pkg/pkg_room.tin};
 
-#CLASS downexp OPEN;
-
-#VARIABLE downexp[last_attempt] {0};
+#VARIABLE downexp[last_attempt] {0}; #NOP 这个变量的作用是防止在启动降经验模块的过程中卡住。
 
 #ALIAS {返回战斗地点} {
+    
     #ECHO {返回战斗地点};
+    stop_stuck_check
     #ECHO {距离返回战斗地点还有 18 秒};
     #DELAY {6} {
         #ECHO {距离返回战斗地点还有 12 秒};
         #DELAY {6} {
             #ECHO {距离返回战斗地点还有 6 秒};
             #DELAY {6} {
-                城隍庙-练功房间;
-                练功;
+                start_stuck_check;
+                城隍庙-练功房间; #NOP 需要在角色profile里单独设置从城隍庙回到练功房间的路径。
+                
             };
         };
     };
@@ -36,12 +40,6 @@
 } {5};
 
 
-#ALIAS {去降经验} {
-    #VARIABLE {downexp[last_attempt]} {@GetEpoch{}};
-    stop;
-    quit;
-}
-
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
     #LOCAL current_epoch {@GetEpoch{}};
     
@@ -49,7 +47,9 @@
         && ("$downexp[last_attempt]" == "" 
             || @GetEpoch{} - $downexp[last_attempt] >= 120)} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
-        去降经验;
+        #VARIABLE {downexp[last_attempt]} {@GetEpoch{}};
+        stop;
+        quit;
     };
 }
 
@@ -64,6 +64,7 @@
             w;s;大理-跳崖;
         };
     };
+    start_stuck_check;
 };
 
 #ACTION {^你必须连线十秒后才能离开游戏。$} {
@@ -73,19 +74,6 @@
 #ACTION {^你正忙着呢，暂时无法离开游戏。$} {
     #delay 2 {quit};
 } {5};
-
-
-#TICKER {stuck_check} {
-
-    #IF {"$downexp[room]" == "" || "$downexp[room]" == "$env[room]"} {
-        #RETURN {};
-    };
-
-    #ECHO {在当前房间时间: $time_in_one_room 秒。};
-    #IF {@GetEpoch{} - $env[room_updated] > 300} {
-        quit;
-    };
-} {};
 
 
 #ALIAS {大理-跳崖} {
@@ -125,3 +113,29 @@
         nu;wu;
     };
 } {1};
+
+
+#ALIAS {start_stuck_check} {
+    #VARIABLE env[maxSecondsAllowedRemainInTheSameRoom] {30};
+    
+    #REGEXP {%1} {\d+} {
+        #VARIABLE env[maxSecondsAllowedRemainInTheSameRoom] {%1};
+    };
+
+    #ECHO {<fca>[DEBUG] Start StuckCheck. Maximum allowed duration in a single room is $env[maxSecondsAllowedRemainInTheSameRoom] seconds.};
+
+    #TICKER {ticker_stuck_check} {
+        #LOCAL duration_remained_in_room {};
+        #MATH duration_remained_in_room {@GetEpoch{} - $env[room_updated]};
+    
+        #ECHO {在当前房间时间: $duration_remained_in_room 秒。};
+        #IF {$duration_remained_in_room > $env[maxSecondsAllowedRemainInTheSameRoom]} {
+            quit;
+        };
+    } {12};
+} {5};
+
+#ALIAS {stop_stuck_check} {
+    #ECHO {<fca>[DEBUG] StuckCheck Stopped. };
+    #UNTICKER {ticker_stuck_check};
+} {5};

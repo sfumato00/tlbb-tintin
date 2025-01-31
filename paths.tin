@@ -290,6 +290,10 @@
 
 
 #alias {东安门-神憩小舍} {
+    #IF {!@AssertRoom{东安门;$env[room]}} {
+        #RETURN {};
+    };
+    
     #ACTION {^请不要一次输入太多的指令。$} {
         #DELAY 12 {cmd {e}};
     };

@@ -1,4 +1,4 @@
-#CLASS datetime OPEN;
+#NOP Date time
 
 #FUNCTION GetEpoch {
     #LOCAL epoch {};
@@ -8,9 +8,13 @@
 
 #FUNCTION ConvertEpochToTimeStr {
     #LOCAL epoch %1;
-    #LOCAL time_str {};
-    #format {time_str} {%t} {{%H:%M:%S} {$epoch}};
-    #RETURN {$time_str};
+    #LOCAL datetime_str {};
+    #format {datetime_str} {%t} {{%Y-%m-%d %H:%M:%S} {$epoch}};
+    #RETURN {$datetime_str};
+};
+
+#FUNCTION GetEpochAsDateTimeStr {
+    #RETURN @ConvertEpochToTimeStr{@GetEpoch{}};
 };
 
 #FUNCTION timestamp {

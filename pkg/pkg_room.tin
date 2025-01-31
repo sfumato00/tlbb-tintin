@@ -1,6 +1,6 @@
-#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#NOP Room module
 
-#CLASS room OPEN;
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};
@@ -14,6 +14,13 @@
 #ACTION {    这里没有明显的出口。} {
     #VARIABLE {env[exits]} {};
     #VARIABLE {env[room_updated]} {@GetEpoch{}};
-}
+} {1};
 
-#CLASS room CLOSE;
+
+#ALIAS {start_stuck_check} {
+    commands
+} {5};
+
+#ALIAS {stop_stuck_check} {
+    commands
+} {5};

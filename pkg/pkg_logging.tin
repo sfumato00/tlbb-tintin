@@ -1,0 +1,38 @@
+#NOP logging
+
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#FUNCTION {Info} {
+    #RETURN {@Log{%1;info;$username}};
+};
+
+#FUNCTION {Debug} {
+    #RETURN {@Log{%1;debug;$username}};
+};
+
+#FUNCTION {Error} {
+    #RETURN {@Log{%1;error;$username}};
+};
+
+#FUNCTION {Log} {
+    #LOCAL ts @timestamp{};
+    #ECHO {[LOG] %1 $ts};
+    #LOCAL filename {$LOG_DIRECTORY};
+    #LOCAL msg %1;
+    #LOCAL level %2;
+    #LOCAL filename %3;
+    #LOCAL file_path {};
+    #IF {"%2" == ""} {
+        #LOCAL msg {[LOG] $msg $ts};
+    } {
+        #LOCAL msg {[$level] $msg $ts};
+    };
+
+    #IF {"$filename" == ""} {
+        #LOCAL file_path {$LOG_DIRECTORY/log.log};
+    } {
+        #LOCAL file_path {$LOG_DIRECTORY/$filename.log};
+    };   
+    #LINE LOG {$file_path} {$msg};
+    #RETURN {$file_path};
+};
