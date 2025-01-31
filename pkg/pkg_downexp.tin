@@ -139,3 +139,36 @@
     #ECHO {<fca>[DEBUG] StuckCheck Stopped. };
     #UNTICKER {ticker_stuck_check};
 } {5};
+
+
+#ALIAS {练功-城隍庙-神憩小舍} {
+    n;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "东安门"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #ACTION {^请不要一次输入太多的指令。$} {
+                #DELAY 12 {cmd {e}};
+            };
+            #EVENT {VARIABLE UPDATED env[room_updated]} {
+                #IF {"$env[exits]" == " east 和 west"} {
+                    #DELAY 0.1 {
+                        cmd {e};
+                    };
+                } {
+                    #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                    #UNACTION {^请不要一次输入太多的指令。$};
+                    #DELAY 12 {
+                        se;e;#13 n;
+                        cmd {nw;nw;nu;nu;n;nu;n;nu;n;nu;ne;nu};
+                        #DELAY 5 {
+                            stop_stuck_check;
+                            练功;
+                        };
+                    };            
+                };
+            };
+            cmd {e};
+        };
+    };
+    cmd {e};
+} {5};

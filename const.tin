@@ -1,6 +1,6 @@
 #NOP 数据库;
 
-#VARIABLE {npc_id} {
+#VARIABLE {NPC_NAME_CN_EN} {
     {神州刀客} {blademan}
     {石人武士} {shi}
     {金衣剑客} {sword man}
@@ -20,7 +20,7 @@
 };
 
 
-#VARIABLE {npc_name} {
+#VARIABLE {NPC_NAME_EN_CN} {
     {blademan} {神州刀客}
     {shi} {石人武士}
     {sword man} {金衣剑客}
@@ -39,7 +39,7 @@
     {yun} {云中鹤}
 };
 
-#VARIABLE {npc_weapon} {
+#VARIABLE {NPC_WEAPON} {
     {神州刀客} {blade}
     {石人武士} {blade}
     {金衣剑客} {sword}
@@ -52,7 +52,7 @@
 };
 
 
-#VARIABLE alphabet_cn_mapping {
+#VARIABLE ALPHABET_MAPPING_CN_EN {
     {a} {爱}
     {b} {北}
     {c} {春}

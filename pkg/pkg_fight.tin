@@ -1,24 +1,21 @@
-#GAG {似乎有些疲惫，但是仍然十分有活力。 )}
-#GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )}
-#GAG {气喘嘘嘘，看起来状况并不太好。 )}
-#GAG {看起来可能有些累了。 )}
-#GAG {看起来充满活力，一点也不累。 )}
+#NOP 练功模块
+
+#CLASS const READ {./const.tin};
+#CLASS safety READ {./pkg/pkg_safety.tin};
+
+#GAG {似乎有些疲惫，但是仍然十分有活力。 )};
+#GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};
+#GAG {气喘嘘嘘，看起来状况并不太好。 )};
+#GAG {看起来可能有些累了。 )};
+#GAG {看起来充满活力，一点也不累。 )};
+#GAG {拿起水桶咕噜噜地喝了几口凉水。};
 
 #TICKER {ticker_feedback_loop} {hp} {15};
 
-#VARIABLE {NPC_NAME} {
-    {校尉} {captain} 
-    {守卫} {guard} 
-    {石人武士} {shi} 
-    {金衣剑客} {sword man}
-    {神州刀客} {blademan}
-    {叶二娘} {ye}
-};
-
 #VARIABLE {fight_stats} {
     {epoch} {
-        {start} {0}
-    }
+        {start} {0};
+    };
 };
 
 #VARIABLE {MIN_IN_SECOND} {60};
@@ -38,12 +35,9 @@
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
     #IF {$vitals[气血%] < 30} {
-        #LOCAL {log_file_buffer} {./log/$username_buffer.log};
-        #LOCAL {log_file_fight} {./log/$username_fight.log};
-        log $log_file_fight 30;
-        #buffer write $log_file_buffer;
+        
         #EVENT {SESSION DISCONNECTED} {
-            #gts #buffer write $log_file_buffer;
+            buffer_dump {fight_low_hp};
             #UNTICKER {ticker_quit};
         };
         quit;
@@ -84,25 +78,25 @@
         #VARIABLE {fight_stats[character]} {$username};
 
         #VARIABLE {fight_stats[epoch]} {
-            {start} {$time}
-            {last} {$time}
+            {start} {$time};
+            {last} {$time};
         };
 
         #VARIABLE {fight_stats[经验]} {
-            {start} {$exp}
-            {last} {$exp}
+            {start} {$exp};
+            {last} {$exp};
             {velocity} {
-                {max} {0}
-                {mean} {0}
-            }
+                {max} {0};
+                {mean} {0};
+            };
         };
         #VARIABLE {fight_stats[潜能]} {
-            {start} {$qn}
-            {last} {$qn}
+            {start} {$qn};
+            {last} {$qn};
             {velocity} {
-                {max} {0}
-                {mean} {0}
-            }
+                {max} {0};
+                {mean} {0};
+            };
         };
     };
 
@@ -138,8 +132,7 @@
         #SHOWME {$exp_msg};
         #SHOWME {$qn_msg};
     };
-}
-
+};
 #ALIAS {fight_npcs} {
     #FOREACH {*npc_list[%*]} {x} {
         #FOREACH {*npc_list[$x][%*]} {i} {
@@ -158,8 +151,7 @@
     set mute2;
     enable dodge none;
     enable move none;
-}
-
+};
 #ALIAS {stop} {
     #ECHO {关闭 fight 模块};
     #CLASS fight kill;
@@ -169,12 +161,9 @@
 } {5};
 
 #ACTION {^看起来%u想杀死你！$} {
-    #LOCAL {log_file_buffer} {./log/$username_buffer.log};
-    #LOCAL {log_file_fight} {./log/$username_fight.log};
-    log $log_file_fight 30;
-    #buffer write $log_file_buffer;
+    
     #EVENT {SESSION DISCONNECTED} {
-        #buffer write $log_file_buffer;
+        buffer_dump {kill};
         #UNTICKER {ticker_quit};
     };
     quit;
@@ -187,14 +176,12 @@
     #DELAY {15} {
         cmd {no};
     };
-}
-
+};
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
     cmd {surrender};
-}
-
+};
 #ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
-    #LOCAL npc_id {$NPC_NAME[%1]};
+    #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #NOP #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list1: *npc_list[+1]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
         cmd {surrender};
@@ -220,5 +207,4 @@
     };
     #LIST msg COLLAPSE {, };
     #RETURN {$msg};
-}
-
+};
