@@ -4,10 +4,10 @@
 
 #ALIAS {开封-大理} {#9 s;sw;#9 s};
 #ALIAS {开封-东安门} {#6 e};
-#ALIAS {开封-洛阳} {#16 w;}
+#ALIAS {开封-洛阳} {#16 w;};
 
-#ALIAS {大理-开封} {#9 n;ne;#9 n}
-#alias {大理-洛阳} {#9 n;ne;#6 w;#3 n;#7 w;}
+#ALIAS {大理-开封} {#9 n;ne;#9 n};
+#alias {大理-洛阳} {#9 n;ne;#6 w;#3 n;#7 w;};
 #alias {大理-登封} {#9 n;ne;#6 w};
 
 #ALIAS {大理驿站-开封} {w;#8 n;ne;#9 n} {5};
@@ -18,7 +18,7 @@
 } {5};
 
 
-#ALIAS {洛阳-天水} {#8 w;}
+#ALIAS {洛阳-天水} {#8 w;};
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
 #alias {洛阳-西夏} {
     洛阳-天水;
@@ -30,7 +30,7 @@
     };
 };
 
-#ALIAS {洛阳-开封} {#16 e;}
+#ALIAS {洛阳-开封} {#16 e;};
 #ALIAS {洛阳-东安门} {洛阳-开封;开封-东安门} {5};
 
 #ALIAS {洛阳-登封} {#7 e;#3 s} {5};
@@ -39,6 +39,17 @@
 
 #ALIAS {登封-大理} {#6 e;sw;#9 s} {5};
 #ALIAS {登封北街-开封} {#2 n;#9 e} {5};
+
+#ALIAS {登封北街-天贶殿} {
+    登封北街-开封;
+    #6 e;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "东安门"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            东安门-天贶殿;
+        };
+    };
+} {5};
 
 #alias {登封北街-大雄宝殿} {
 
@@ -64,21 +75,29 @@
         #RETURN {};
     };
 
-    sd;sd;s;s;sd;sd;s;s;s;sd;sd;se;s;wd;s;sd;se;
+    sd;sd;s;s;sd;sd;s;s;s;sd;sd;se;s;wd;s;sd;
     #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[room]" == "登封县北街"} {
+        #IF {"$env[room]" == "少室山山脚"} {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            #RETURN {};
+            #EVENT {VARIABLE UPDATED env[room_updated]} {
+                #IF {"$env[room]" == "官道"} {
+                    #regexp {$env[exits]} {southeast} {cmd {se}} {cmd {s}};
+                };
+                #ELSE {
+                    #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                    #RETURN {};
+                };
+            };
+            cmd {s};
         };
-        #regexp {$env[exits]} {southeast} {cmd {se}} {cmd {s}};
     };
-    s
+    cmd {se};
 } {5};
 
-#ALIAS {初生点-食物屋} {#5 s}
-#ALIAS {食物屋-龙门客栈} {#6 s;d}
-#ALIAS {龙门客栈-开封} {w;#5 n}
-#ALIAS {龙门客栈-大理} {w;#5 s;sw;#9 s}
+#ALIAS {初生点-食物屋} {#5 s};
+#ALIAS {食物屋-龙门客栈} {#6 s;d};
+#ALIAS {龙门客栈-开封} {w;#5 n};
+#ALIAS {龙门客栈-大理} {w;#5 s;sw;#9 s};
 
 
 #ALIAS {无锡-洛阳} {#3 s;e;s;sw;s;sw;se;sd;se;#4 s;#4 e;n;w;#7 n} {5};
@@ -86,18 +105,18 @@
 #ALIAS {npc副本-无锡} {#3 s;} {5};
 
 
-#ALIAS {龙门客栈-洛阳} {龙门客栈-开封;开封-洛阳;}
+#ALIAS {龙门客栈-洛阳} {龙门客栈-开封;开封-洛阳;};
 
-#ALIAS {天水-洛阳} {#8 e;}
-#ALIAS {洛阳-松鹤楼} {n;w;}
-#ALIAS {松鹤楼-洛阳} {e;s;}
+#ALIAS {天水-洛阳} {#8 e;};
+#ALIAS {洛阳-松鹤楼} {n;w;};
+#ALIAS {松鹤楼-洛阳} {e;s;};
 
 
 #ALIAS {npc-go} {
     松鹤楼-洛阳;
     洛阳-无锡;
     无锡-npc副本;
-}
+};
 
 #ALIAS {npc-back} {
     get sixhammer from guard;
@@ -259,7 +278,7 @@
             #ECHO {debug: **** 错误的房间。停止。***};
             #UNVARIABLE {env[odd]};
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
-        }
+        };
     } {5};
 
     #VARIABLE {env[odd]} {0};
@@ -286,6 +305,31 @@
                 se;e;#13 n;
                 cmd {nw;nw;nu;nu;n;nu;n;nu;n;nu;ne;nu};
                 init_task;              
+            };            
+        };
+    };
+    cmd {e};
+};
+
+#alias {东安门-天贶殿} {
+
+    #IF {!@AssertRoom{东安门;$env[room]}} {
+        #RETURN {};
+    };
+
+    #ACTION {^请不要一次输入太多的指令。$} {
+        #DELAY 12 {cmd {e}};
+    };
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[exits]" == " east 和 west"} {
+            #DELAY 0.1 {
+                cmd {e};
+            };
+        } {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #UNACTION {^请不要一次输入太多的指令。$};
+            #DELAY 12 {
+                se;e;#9 n;
             };            
         };
     };
@@ -322,3 +366,14 @@
         cmd {$callback};
     };    
 };
+
+#FUNCTION AssertRoom {
+    #LOCAL expected {%1};
+    #LOCAL actual {%2};
+
+    #IF {"$expected" != "$actual"} {
+        #ECHO {<fac>[DEBUG]: **** 起始房间 $expected 与预期房间不符。***};
+        #RETURN 0;
+    };
+    #RETURN 1;
+}
