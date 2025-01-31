@@ -1,5 +1,4 @@
-#CLASS stats OPEN;
-
+#NOP The vitals module
 #ACTION {^%s气血：%s%d/%s%d%s(%s%d%)%s内力：%s%d%s/%s%d%s(%*)} {
     #VARIABLE {vitals[气血]}{%3};
     #VARIABLE {vitals[气血_max]}{%5};
@@ -32,5 +31,3 @@
     #FORMAT {vitals[last_updated]}{%T};
     #VARIABLE {vitals[hook_downexp]}{1};
 } {5};
-
-#CLASS stats CLOSE;
