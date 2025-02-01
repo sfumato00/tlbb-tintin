@@ -21,6 +21,8 @@
     {beiming} {1M}
     {tangyuan} {100K}
     {羊年元宵-yuanxiao} {100K}
+    {万寿汤圆-tangyuan} {100K}
+    {群龙汤圆-tangyuan} {100K}
     {天山寿雪-wine} {100K}
     {云海听滔-wine} {1M}
     {落梅秋霞-wine} {100K}
@@ -74,11 +76,13 @@
     #FORMAT en_id {%l} {$en_id};
     
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
-    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$cn_name-$en_id] > 1} {
+    #LOCAL key {$cn_name-$en_id};
+
+    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$key] > 1} {
         #VARIABLE {valueble[$en_id]} {1};
     };
     
-    #IF {@IsItemSellable{$cn_name;$en_id}} {
+    #IF {$SELLABLE[$en_id] > 0 || $SELLABLE[$key] > 0} {
         #VARIABLE {sellable[$en_id]} {1};
     };
 
@@ -91,11 +95,19 @@
     #LOCAL cn {%1};
     #LOCAL en_id {%2};
     #FORMAT en_id {%l} {$en_id};
+    
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
-    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$cn_name-$en_id] > 1} {
+    #LOCAL key {$cn_name-$en_id};
+
+    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$key] > 1} {
         get $en_id;
     };
-    #IF {$IS_MONEY[$en_id] > 1 || @IsItemSellable{$cn_name;$en_id}} {
+
+    #IF {$SELLABLE[$en_id] > 0 || $SELLABLE[$key] > 0} {
+        get $en_id;
+    };
+
+    #IF {$IS_MONEY[$en_id] > 0} {
         get $en_id;
     };
 };
