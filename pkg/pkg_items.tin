@@ -8,18 +8,9 @@
     {tenthousand-cash} {1M}
 };
 
-#VARIABLE {VALUABLES} {
-    {coin} {1}
-    {silver} {100}
-    {gold} {10K}
-    {thousand-cash} {100K}
-    {tenthousand-cash} {1M}
-    {yijinjing} {10M}
-    {bag} {1M}
-    {book} {100}
-    {lingbo} {1M}
-    {beiming} {1M}
-    {tangyuan} {100K}
+#VARIABLE {IS_VALUABLES} {
+    {包裹-bag} {1M}
+    {布袋-bag} {1M}
     {羊年元宵-yuanxiao} {100K}
     {万寿汤圆-tangyuan} {100K}
     {群龙汤圆-tangyuan} {100K}
@@ -29,14 +20,13 @@
     {碧血金丹-dan} {100K}
 }
 
-#VARIABLE {SELLABLE} {
+#VARIABLE {IS_SELLABLE} {
     {茅台-wine} {1}
     {轩尼士XO-wine} {1}
     {鸡尾酒-wine} {1}
     {烤板筋-kbj} {500}
     {炸臭豆腐-cdf} {500}
     {红腰带-red belt} {500}
-    {卤煮火烧-luzhu} {500}
     {苹果派-apple pai} {500}
     {小笼包子-dumpling} {500}
     {糖纸-zhi} {500}
@@ -56,7 +46,7 @@
     #LOCAL cn_name {%1};
     #LOCAL en_id {%2};
     #LOCAL key {$cn_name-$en_id};
-    #IF {$SELLABLE[$key] > 0} {
+    #IF {$IS_SELLABLE[$key] > 0} {
         #RETURN {1};
     };
     #RETURN {0};
@@ -65,7 +55,7 @@
 #FUNCTION RemoveChineseQuantifier {
     #LOCAL text {%1};
     #NOP #ECHO {<acf>before: $text};
-    #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口){1}){1}}} {};
+    #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口|块){1}){1}}} {};
     #NOP #ECHO {<acf>after: $text};
     #RETURN $text;
 };
@@ -78,12 +68,12 @@
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
     #LOCAL key {$cn_name-$en_id};
 
-    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$key] > 1} {
-        #VARIABLE {valueble[$en_id]} {1};
+    #IF {"$IS_VALUABLES[$key]" != ""} {
+        #MATH {valuable[$en_id]} {$valuable[$en_id] + 1};
     };
     
-    #IF {$SELLABLE[$en_id] > 0 || $SELLABLE[$key] > 0} {
-        #VARIABLE {sellable[$en_id]} {1};
+    #IF {"$IS_SELLABLE[$key]" != "" } {
+        #MATH {sellable[$en_id]} {$sellable[$en_id] + 1};
     };
 
     #IF {$IS_MONEY[$en_id] > 0} {
@@ -99,11 +89,11 @@
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
     #LOCAL key {$cn_name-$en_id};
 
-    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$key] > 1} {
+    #IF {"$IS_VALUABLES[$key]" != ""} {
         get $en_id;
     };
 
-    #IF {$SELLABLE[$en_id] > 0 || $SELLABLE[$key] > 0} {
+    #IF {"$IS_SELLABLE[$key]" != "" } {
         get $en_id;
     };
 
@@ -115,7 +105,7 @@
 #ALIAS {update_items} {
     #VARIABLE {money} {};
     #VARIABLE {sellable} {};
-    #VARIABLE {valueble} {};
+    #VARIABLE {valuable} {};
     cmd {i};   
 } {5};
 
@@ -124,4 +114,17 @@
         cmd {sell $x};
     };
 };
+
+#ALIAS give_all {
+    #LOCAL o {%1};
+    #FOREACH {*sellable[%*]} {x} {
+        cmd {give $o $x};
+    };
+    #FOREACH {*valuable[%*]} {x} {
+        cmd {give $o $x};
+    };
+    #FOREACH {*money[%*]} {x} {
+        cmd {give $o $x};
+    };
+}
 
