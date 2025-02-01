@@ -1,3 +1,14 @@
 #CONFIG charset GBK1TOUTF8;
 #CONFIG history 9999;
-#SPLIT 2 2;
+#SPLIT;
+
+#CONFIG color_patch ON;
+
+#FUNCTION Timestamp {
+    #format {result} {%t} {%Y-%m-%d %H:%M:%S};
+};
+
+#EVENT {CATCH PROCESSED LINE} {
+    #LINE IGNORE #SHOWME {@Timestamp{} %0};
+};
+

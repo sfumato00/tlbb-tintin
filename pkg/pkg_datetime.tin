@@ -17,10 +17,8 @@
     #RETURN @ConvertEpochToTimeStr{@GetEpoch{}};
 };
 
-#FUNCTION timestamp {
-    #LOCAL utime {};
-    #format utime {%U};
-	#format result {%t} {%Y-%m-%d %H:%M:%S} {$utime % 1000000 / 100000}
+#FUNCTION Timestamp {
+    #format {result} {%t} {%Y-%m-%d %H:%M:%S};
 };
 
 #CLASS ddatetime CLOSE;

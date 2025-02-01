@@ -1,17 +1,7 @@
 #NOP death log module
 
-#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS logging READ {./pkg/pkg_logging.tin};
 
 #ACTION {^你死了。$} {
     buffer_dump {death};
-} {1};
-
-#ALIAS buffer_dump {
-    #LOCAL prefix {./log/};
-    #CAT prefix {%1};
-    #LIST file_name CREATE {$prefix;$username;@GetEpochAsDateTimeStr{}};
-    #LIST file_name COLLAPSE {_};
-    #CAT file_name {.log};
-    #ECHO {[DEBUG] Writing buffer to $file_name};
-    #BUFFER write $file_name;
 } {1};

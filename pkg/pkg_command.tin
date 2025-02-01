@@ -1,0 +1,54 @@
+#CLASS command OPEN;
+
+#LIST history_queue CREATE {};
+
+#ALIAS cmd {
+
+    #LOCAL ts {};
+    #FORMAT ts {%U};
+
+    #LOCAL h {@peek_cmd{}};
+    #WHILE {@history_size{} > 0 && $ts - h[timestamp] > 12M} {
+        #ECHO {dequeue: @dequeue_cmd{}};
+    };
+    #FOREACH {%1} {_cmd} {
+        #IF {@history_size{} >= 50} {
+            #ECHO {exceeding 50 commands per 12 seconds limit.Discard command $_cmd.};
+            #BREAK;
+        };
+        #ECHO {issue command: $_cmd};
+        $_cmd;
+        @enqueue_cmd{$_cmd};
+    };
+} {5};
+
+#FUNCTION enqueue_cmd {
+    #IF {"%1" == ""} {
+        #RETURN {0};
+    };
+    #LOCAL ts {};
+    #FORMAT ts {%U};
+    #LIST history_queue ADD {{{cmd}{%1}{timestamp}{$ts}}};
+    #RETURN {1};
+};
+
+#FUNCTION dequeue_cmd {
+    #LOCAL ret {};
+    #LIST history_queue GET 1 ret;
+    #LIST history_queue DELETE 1;
+    #RETURN $ret;
+}
+
+#FUNCTION peek_cmd {
+    #LOCAL ret {};
+    #LIST history_queue GET 1 ret;
+    #RETURN $ret;
+};
+
+#FUNCTION history_size {
+    #LOCAL size {};
+    #LIST history_queue SIZE size;
+    #RETURN $size;
+}
+
+#CLASS command CLOSE;

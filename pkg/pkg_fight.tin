@@ -2,6 +2,7 @@
 
 #CLASS const READ {./const.tin};
 #CLASS safety READ {./pkg/pkg_safety.tin};
+#CLASS logging READ {./pkg/pkg_logging.tin};
 
 #GAG {似乎有些疲惫，但是仍然十分有活力。 )};
 #GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};
@@ -14,12 +15,14 @@
 
 #VARIABLE {fight_stats} {
     {epoch} {
-        {start} {0};
-    };
+        {start} {0}
+    }
+    {log_file} {./log/fight_$username.log}
 };
 
 #VARIABLE {MIN_IN_SECOND} {60};
 #VARIABLE {MIN_IN_MICRO_SECOND} {60M};
+
 
 #ALIAS {feedback_loop} {
     cmd {say @CalNpcMsg{}};
@@ -35,11 +38,16 @@
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
     #IF {$vitals[气血%] < 30} {
+        #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
+            buffer_dump {fight};
+            #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
+        };
         
         #EVENT {SESSION DISCONNECTED} {
             buffer_dump {fight_low_hp};
             #UNTICKER {ticker_quit};
         };
+        
         quit;
         #ticker {ticker_quit} {
             quit;
@@ -54,6 +62,10 @@
         #ECHO {<faa>=====> 非正常状态, 紧急处理 <=======};
         #SHOW {<faa>=====> 非正常状态, 紧急处理 <=======} 2 10;
         cmd {surrender};
+        #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
+            buffer_dump {fight};
+            #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
+        };
     };
 
     #FORMAT time {%U};
@@ -133,6 +145,7 @@
         #SHOWME {$qn_msg};
     };
 };
+
 #ALIAS {fight_npcs} {
     #FOREACH {*npc_list[%*]} {x} {
         #FOREACH {*npc_list[$x][%*]} {i} {
@@ -143,6 +156,7 @@
 
 #ALIAS {init_fight} {
     #ECHO {开始练功};
+    #LINE LOG $fight_stats[log_file] {开始练功};
     remove cloth;
     drop cloth;
     wear cloth;
@@ -173,13 +187,19 @@
 };
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
-    #DELAY {15} {
+    #DELAY {60} {
         cmd {no};
     };
 };
+
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
     cmd {surrender};
+    #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
+        buffer_dump {fight};
+        #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
+    };
 };
+
 #ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #NOP #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list1: *npc_list[+1]};

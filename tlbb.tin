@@ -22,16 +22,6 @@
     #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
 }
 
-#NOP {common}
-#ALIAS {log} {
-    #LOG APPEND %1;
-    #DELAY {delay_log} {
-        #LOG OFF;
-    } {%2};
-};
-
-
-
 #ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%*} {
 
     #VARIABLE {skills[%4]} {

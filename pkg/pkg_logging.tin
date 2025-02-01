@@ -1,6 +1,10 @@
 #NOP logging
 
-#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#FUNCTION {InfoLine} {
+    #LOCAL path {%1};
+    #LOCAL level {%2};
+    #RETURN {@_logLine{$path;$level}};
+};
 
 #FUNCTION {Info} {
     #RETURN {@Log{%1;info;$username}};
@@ -15,24 +19,35 @@
 };
 
 #FUNCTION {Log} {
-    #LOCAL ts @timestamp{};
-    #ECHO {[LOG] %1 $ts};
-    #LOCAL filename {$LOG_DIRECTORY};
     #LOCAL msg %1;
     #LOCAL level %2;
-    #LOCAL filename %3;
-    #LOCAL file_path {};
-    #IF {"%2" == ""} {
-        #LOCAL msg {[LOG] $msg $ts};
-    } {
-        #LOCAL msg {[$level] $msg $ts};
-    };
-
-    #IF {"$filename" == ""} {
-        #LOCAL file_path {$LOG_DIRECTORY/log.log};
-    } {
-        #LOCAL file_path {$LOG_DIRECTORY/$filename.log};
-    };   
-    #LINE LOG {$file_path} {$msg};
-    #RETURN {$file_path};
+    #LOCAL file_path %3;
+    #RETURN {@_logMsg{$file_path;$level;$msg}};
 };
+
+#FUNCTION _logMsg {
+    #LOCAL path {%1};
+    #LOCAL level {%2};
+    #LOCAL msg {%3};
+    #LINE LOG $path {[$level] @timestamp{}};
+    #LINE LOG {$path} {$msg};
+    #RETURN {$msg};
+};
+
+#FUNCTION _logLine {
+    #LOCAL path {%1};
+    #LOCAL level {%2};
+    #LINE LOG $path {[$level] @timestamp{}};
+    #LINE LOG {$path};
+    #RETURN {1};
+};
+
+#ALIAS buffer_dump {
+    #LOCAL prefix {./log/};
+    #CAT prefix {%1};
+    #LIST file_name CREATE {$prefix;$username;@GetEpochAsDateTimeStr{}};
+    #LIST file_name COLLAPSE {_};
+    #CAT file_name {.log};
+    #ECHO {[DEBUG] Writing buffer to $file_name};
+    #BUFFER write $file_name;
+} {1};
