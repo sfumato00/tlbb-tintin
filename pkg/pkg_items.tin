@@ -1,24 +1,4 @@
-
-#ACTION {^  %u(%+)} {
-    #LOCAL cn {%1};
-    #LOCAL en_id {%2};
-    #FORMAT en_id {%l} {$en_id};
-    #LOCAL {quantity} {1};
-    #NOP #ECHO {<acf>$cn, $en_id};
-    #LOCAL q_cn {$cn};
-    #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
-    
-    
-    #ECHO {<acf>cn_name: $cn_name, en_id: $en_id, quantity: $q, q_cn: $q_cn, item to keep: @IsItemToKeep{$en;$name}};
-}
-
-#FUNCTION RemoveChineseQuantifier {
-    #LOCAL text {%1};
-    #NOP #ECHO {<acf>before: $text};
-    #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口){1}){1}}} {};
-    #NOP #ECHO {<acf>after: $text};
-    #RETURN $text;
-};
+#NOP 
 
 #VARIABLE {IS_MONEY} {
     {coin} {1}
@@ -40,17 +20,85 @@
     {lingbo} {1M}
     {beiming} {1M}
     {tangyuan} {100K}
-    {yuanxiao} {100K}
+    {羊年元宵-yuanxiao} {100K}
     {天山寿雪-wine} {100K}
     {云海听滔-wine} {1M}
     {落梅秋霞-wine} {100K}
-    {dan} {100K}
+    {碧血金丹-dan} {100K}
 }
 
 #VARIABLE {SELLABLE} {
-    {pikaqiu} {5000}
-    {music box} {5000}
-    {cake-奶油蛋糕} {5000}
-    {watch-钻石手表} {150K}
-    {yan hua} {10K}
+    {茅台-wine} {1}
+    {轩尼士XO-wine} {1}
+    {鸡尾酒-wine} {1}
+    {烤板筋-kbj} {500}
+    {炸臭豆腐-cdf} {500}
+    {红腰带-red belt} {500}
+    {卤煮火烧-luzhu} {500}
+    {苹果派-apple pai} {500}
+    {小笼包子-dumpling} {500}
+    {糖纸-zhi} {500}
+    {皮卡丘-pikaqiu} {5000}
+    {老唱机-music box} {5000}
+    {奶油蛋糕-cake} {5000}
+    {情人巧克力-valentine chocolate} {5000}
+    {钻石手表-watch} {150K}
+    {烟花-yan hua} {10K}
 };
+
+#FUNCTION IsItemSellable {
+    #LOCAL cn_name {%1};
+    #LOCAL en_id {%2};
+    #LOCAL key {$cn_name-$en_id};
+    #IF {$SELLABLE[$key] > 0} {
+        #RETURN {1};
+    };
+    #RETURN {0};
+};
+
+#FUNCTION RemoveChineseQuantifier {
+    #LOCAL text {%1};
+    #NOP #ECHO {<acf>before: $text};
+    #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口){1}){1}}} {};
+    #NOP #ECHO {<acf>after: $text};
+    #RETURN $text;
+};
+
+#ACTION {^  %S(%+)} {
+    #LOCAL cn {%1};
+    #LOCAL en_id {%2};
+    #FORMAT en_id {%l} {$en_id};
+    
+    #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
+    #ECHO {$cn_name($en_id)};
+    #IF {$IS_MONEY[$en_id] > 0} {
+        #VARIABLE {money[$en_id]} {1};
+    };
+    #ECHO {$cn_name($en_id): is it money: $IS_MONEY[$en_id], is it sellable: @IsItemSellable{$cn_name;$en_id}};
+    #ELSEIF {@IsItemSellable{$cn_name;$en_id}} {
+        #VARIABLE {sellable[$en_id]} {1};
+    };
+};
+
+#ACTION {^    %S(%+)} {
+    #LOCAL cn {%1};
+    #LOCAL en_id {%2};
+    #FORMAT en_id {%l} {$en_id};
+    #IF {$IS_MONEY[$en_id] > 1 || @IsItemSellable{$cn_name;$en_id}} {
+        get $en_id;
+    };
+};
+
+#ALIAS {update_items} {
+    #VARIABLE {money} {};
+    #VARIABLE {sellable} {};
+    
+    #DELAY 1 {
+        i;
+        #DELAY 3 {
+            #UNACTION {^  %u(%+)};
+        };
+    };
+    
+} {5};
+
