@@ -40,6 +40,7 @@
     {情人巧克力-valentine chocolate} {5000}
     {钻石手表-watch} {150K}
     {烟花-yan hua} {10K}
+    {节日烟花-yan hua} {10K}
 };
 
 #FUNCTION IsItemSellable {
