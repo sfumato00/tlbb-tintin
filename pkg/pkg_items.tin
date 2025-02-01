@@ -38,6 +38,10 @@
     {苹果派-apple pai} {500}
     {小笼包子-dumpling} {500}
     {糖纸-zhi} {500}
+    {馄饨面-htm} {500}
+    {烤羊肉串-yrc} {500}
+    {羊肉泡-paomo} {500}
+    {香酥鸡-chicken} {5000}
     {皮卡丘-pikaqiu} {5000}
     {老唱机-music box} {5000}
     {奶油蛋糕-cake} {5000}
@@ -70,13 +74,16 @@
     #FORMAT en_id {%l} {$en_id};
     
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
-    #ECHO {$cn_name($en_id)};
+    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$cn_name-$en_id] > 1} {
+        #VARIABLE {valueble[$en_id]} {1};
+    };
+    
+    #IF {@IsItemSellable{$cn_name;$en_id}} {
+        #VARIABLE {sellable[$en_id]} {1};
+    };
+
     #IF {$IS_MONEY[$en_id] > 0} {
         #VARIABLE {money[$en_id]} {1};
-    };
-    #ECHO {$cn_name($en_id): is it money: $IS_MONEY[$en_id], is it sellable: @IsItemSellable{$cn_name;$en_id}};
-    #ELSEIF {@IsItemSellable{$cn_name;$en_id}} {
-        #VARIABLE {sellable[$en_id]} {1};
     };
 };
 
@@ -84,6 +91,10 @@
     #LOCAL cn {%1};
     #LOCAL en_id {%2};
     #FORMAT en_id {%l} {$en_id};
+    #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
+    #IF {$VALUABLES[$en_id] > 1 || $VALUABLES[$cn_name-$en_id] > 1} {
+        get $en_id;
+    };
     #IF {$IS_MONEY[$en_id] > 1 || @IsItemSellable{$cn_name;$en_id}} {
         get $en_id;
     };
@@ -92,13 +103,13 @@
 #ALIAS {update_items} {
     #VARIABLE {money} {};
     #VARIABLE {sellable} {};
-    
-    #DELAY 1 {
-        i;
-        #DELAY 3 {
-            #UNACTION {^  %u(%+)};
-        };
-    };
-    
+    #VARIABLE {valueble} {};
+    cmd {i};   
 } {5};
+
+#ALIAS sell_all {
+    #FOREACH {*sellable[%*]} {x} {
+        cmd {sell $x};
+    };
+};
 
