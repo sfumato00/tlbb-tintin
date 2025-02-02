@@ -24,6 +24,14 @@
     {茅台-wine} {1}
     {轩尼士XO-wine} {1}
     {鸡尾酒-wine} {1}
+    {布鞋-shoes} {50}
+    {绣花鞋-shoes} {100}
+    {希尔登-yan} {500}
+    {万宝路-yan} {500}
+    {大前门-yan} {500}
+    {卤煮火烧-luzhu} {500}
+    {红塔山-yan} {500}
+    {５５５-yan} {500}
     {烤板筋-kbj} {500}
     {炸臭豆腐-cdf} {500}
     {红腰带-red belt} {500}
@@ -33,6 +41,8 @@
     {馄饨面-htm} {500}
     {烤羊肉串-yrc} {500}
     {羊肉泡-paomo} {500}
+    {淡烟秀才装-cloth} {1000}
+    {彩缎紧身袄-mini-ao} {2000}
     {香酥鸡-chicken} {5000}
     {皮卡丘-pikaqiu} {5000}
     {老唱机-music box} {5000}
@@ -101,6 +111,10 @@
     #IF {$IS_MONEY[$en_id] > 0} {
         get $en_id;
     };
+};
+
+#ACTION {^你捡起%*。$} {
+    #LINE LOG {./log/$username.log};
 };
 
 #ALIAS {update_items} {
