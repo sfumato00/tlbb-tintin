@@ -18,7 +18,8 @@
     Info {src: $src, dest: $dest};
     Info {stops: $conn[stops]};
     Info {path: $conn[path]};
-    Info {path: $conn[dist]};
+    Info {dist: $conn[dist]};
+    Info {is function?: $conn[function]};
 
     #VARIABLE travel[q] {$conn[stops]};
     #LIST travel[q] explode {;};
@@ -36,7 +37,7 @@
                 #RETURN {};
             };
             #LOCAL v {$travel[q][2]};
-            #ECHO {$u ==> $v: $MAP[$u][$v][path]};
+            Info {$u ==> $v: $MAP[$u][$v][path]};
             $MAP[$u][$v][path];
             #LIST travel[q] DELETE 1 1;
         };
@@ -67,6 +68,7 @@
             {path} {$MAP[$src][$dest][path]}
             {dist} {$MAP[$src][$dest][dist]}
             {stops} {$src;$dest}
+            {function} {$MAP[$src][$dest][function]}
         };
     };
 
@@ -74,6 +76,7 @@
     #LOCAL {visited} {};
     #LOCAL {_paths} {};
     #LOCAL {stops} {};
+    #LOCAL {is_function} {};
     #LOCAL {u} {};
 
     #FOREACH {*MAP[%*]} {u} {
@@ -110,8 +113,10 @@
             };
             #LOCAL d {};
             #MATH d {$dists[$u] + $MAP[$u][$v][dist]};
+            
             #IF {$d < $dists[$v]} {
                 #LOCAL {dists[$v]} {$d};
+                #MATH {is_function[$v]} {("$MAP[$u][$v][function]" == "1") || ("$is_function[$v]" == "1")};
                 #IF {"$_paths[$u]" == ""} {
                     #LOCAL {_paths[$v]} {$MAP[$u][$v][path]};
                 } {
@@ -134,10 +139,19 @@
         #NOP #ECHO {        stops: $stops[$x]};
     };
 
+    #IF {!$is_function[$dest]} {
+        #VARIABLE {MAP[$src][$dest]} {
+            {path} {$_paths[$dest]}
+            {dist} {$dists[$dest]}
+        };
+        #CLASS map WRITE {./pkg/pkg_map_cached.tin};
+    };
+
     #RETURN {
         {path} {$_paths[$dest]}
         {dist} {$dists[$dest]}
         {stops} {$stops[$dest]}
+        {function} {$is_function[$dest]}
     };
 }
 

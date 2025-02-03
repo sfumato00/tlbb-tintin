@@ -7,22 +7,8 @@
 #VARIABLE {username} {testgraph};
 #VARIABLE {password} {Abcd_124};
 
-#ALIAS test_2 {
-    #VARIABLE {test[name]} {欢迎来到天龙八部-洛阳中心};
-    #VARIABLE {test[expected_room]} {洛阳中心 south、north、east、west 和 up};
-    #VARIABLE {result} {@_dijkstra{欢迎来到天龙八部 south 和 down;洛阳中心 south、north、east、west 和 up}};
-    #ECHO {Result: $result};
-};
-
-#ALIAS test_3 {
-    #VARIABLE {test[name]} {欢迎来到天龙八部-黄土大道};
-    #VARIABLE {test[expected_room]} {黄土大道 southeast 和 west};
-    
-    #VARIABLE {result} {@_dijkstra{欢迎来到天龙八部 south 和 down;黄土大道 southeast 和 west}};
-    #ECHO {Result: $result};
-};
-
 #ALIAS Dijkstra_Test {
+    #CLASS graph READ {./pkg/pkg_graph.tin};
     #LOCAL src {%1};
     #LOCAL dest {%2};
 
@@ -33,24 +19,54 @@
 }
 
 #ALIAS Travel_Test {
+    #CLASS graph READ {./pkg/pkg_graph.tin};
     #LOCAL src {%1};
     #LOCAL dest {%2};
 
     #VARIABLE {test[name]} {$src-$dest};
     #VARIABLE {test[expected_room]} {$dest};
+    #VARIABLE {test[timeout]} {30};
 
     start_test;
     travel {$src} {$dest};
+    #ECHO {\n};
 };
+
+#ALIAS t1 {
+    Travel_Test {欢迎来到天龙八部 south 和 down} {皇宫大门 south、eastup 和 westup};
+};
+
+#ALIAS t1b {
+    Travel_Test {皇宫大门 south、eastup 和 westup} {龙门客栈 west 和 up};
+}
+
+#ALIAS t2 {
+    Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
+}
+
+#ALIAS t2b {
+    Travel_Test {西夏王陵 north 和 southup} {龙门客栈 west 和 up};
+}
+
+#ALIAS t3 {
+    Dijkstra_Test {欢迎来到天龙八部 south 和 down} {大道 north、east 和 northeast};
+    Dijkstra_Test {欢迎来到天龙八部 south 和 down} {登封县北街 north、south、east 和 northwest};
+    Dijkstra_Test {城隍庙 north} {神憩小舍 east、southdown、northwest 和 up};
+    Dijkstra_Test {城隍庙 north} {天贶殿 north、south、east 和 west};
+    #END {Bye!};
+}
 
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {汴梁城中心 north、south、east、west 和 up};
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {洛阳中心 south、north、east、west 和 up};
 
 #EVENT {VARIABLE UPDATED env[last_login]} {
-    Travel_Test {欢迎来到天龙八部 south 和 down} {大道 north、south 和 northeast};
+    t2;
 };
 
+
+
 conn;
+
 
 
 

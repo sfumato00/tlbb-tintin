@@ -47,6 +47,29 @@
     };
 }
 
+#ALIAS {小山坡-天水关} {
+    #IF {@_assertRoomExitsKey{小山坡 westdown、southdown 和 eastdown}} {
+        #VARIABLE {travel[started]} {1};
+        #ACTION {^请不要一次输入太多的指令。$} {
+            #delay 1 {
+                cmd {e};
+            };
+        };
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF @_assertRoomExitsKey{天水关 north、east 和 west} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #UNACTION {^请不要一次输入太多的指令。$};
+                #VARIABLE {travel[started]} {0};
+                RunCallback;
+            };
+            #ELSE {
+                cmd {e};
+            };
+        };
+        cmd {ed};
+    };
+} {5};
+
 #ALIAS {登封县北街-少室山山脚} {
     #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
         #VARIABLE {travel[started]} {1};

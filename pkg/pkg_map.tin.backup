@@ -19,16 +19,6 @@
             {dist} {6}
         }
     }
-    {城隍庙 north} {
-        {汴梁城中心 north、south、east、west 和 up} {
-            {path} {n;#5 w}
-            {dist} {6}
-        }
-        {东安门 east 和 west} {
-            {path} {n;e}
-            {dist} {2}
-        }
-    }
     {东安门 east 和 west} {
         {黄土大道 southeast 和 west} {
             {path} {东安门-黄土大道-southeast-west}
@@ -117,26 +107,6 @@
         {大路 south、north 和 southeast} {
             {path} {#3 w;nw}
             {dist} {4}
-        }
-    }
-    {大路 south、north 和 southeast} {
-        {洛阳中心 south、north、east、west 和 up} {
-            {path} {#6 n}
-            {dist} {6}
-        }
-        {大道 north、south 和 northeast} {
-            {path} {s;e;s;#4 w;#2 n}
-            {dist} {9}
-        }
-        {登封县中央广场 north、south、east、west 和 up} {
-            {path} {se;#3 e}
-            {dist} {4}
-        }
-    }
-    {大道 north、south 和 northeast} {
-        {大路 south、north 和 southeast} {
-            {path} {#2 s;#4 e;n;w;n}
-            {dist} {9}
         }
     }
     {洛阳中心 south、north、east、west 和 up} {
@@ -252,75 +222,25 @@
             {dist} {8}
             {function} {1}
         }
-        {兴庆城城门 north、south、eastup 和 westup} {
-            {path} {#2 n}
-            {dist} {2}
-        }
     }
-    {兴庆城城门 north、south、eastup 和 westup} {
-        {中心广场 north、south、east 和 west} {
-            {path} {#2 n}
-            {dist} {2}
+    {大路 south、north 和 southeast} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {#6 n}
+            {dist} {6}
         }
-        {大道 north、east 和 northeast} {
-            {path} {#2 s}
-            {dist} {2}
+        {大道 north、south 和 northeast} {
+            {path} {s;e;s;#4 w;#2 n}
+            {dist} {9}
         }
-    }
-    {中心广场 north、south、east 和 west} {
-        {皇宫大门 south、eastup 和 westup} {
-            {path} {#2 n}
-            {dist} {2}
-        }
-        {兴庆城城门 north、south、eastup 和 westup} {
-            {path} {#2 s}
-            {dist} {2}
-        }
-        {东门 northeast、west、southup 和 northup} {
-            {path} {#2 e}
-            {dist} {2}
-        }
-    }
-    {东门 northeast、west、southup 和 northup} {
-        {中心广场 north、south、east 和 west} {
-            {path} {#2 w}
-            {dist} {2}
-        }
-        {林中空地 northwest、southwest 和 enter} {
-            {path} {#3 ne;n;ne}
+        {登封县中央广场 north、south、east、west 和 up} {
+            {path} {se;#3 e}
             {dist} {4}
         }
     }
-    {林中空地 northwest、southwest 和 enter} {
-        {东门 northeast、west、southup 和 northup} {
-            {path} {sw;s;#3 sw}
-            {dist} {4}
-        }
-        {西夏王陵 north 和 southup} {
-            {path} {nw;nd}
-            {dist} {2}
-        }
-        {林中大屋 out} {
-            {path} {enter}
-            {dist} {1}
-        }
-    }
-    {林中大屋 out} {
-        {林中空地 northwest、southwest 和 enter} {
-            {path} {out}
-            {dist} {1}
-        }
-    }
-    {皇宫大门 south、eastup 和 westup} {
-        {中心广场 north、south、east 和 west} {
-            {path} {#2 s}
-            {dist} {2}
-        }
-    }
-    {西夏王陵 north 和 southup} {
-        {林中空地 northwest、southwest 和 enter} {
-            {path} {su;se}
-            {dist} {2}
+    {大道 north、south 和 northeast} {
+        {大路 south、north 和 southeast} {
+            {path} {#2 s;#4 e;n;w;n}
+            {dist} {9}
         }
     }
     {欢迎来到天龙八部 south 和 down} {
@@ -338,5 +258,5 @@
             {path} {w;#4 s}
             {dist} {5}
         }
-    }    
+    }
 };

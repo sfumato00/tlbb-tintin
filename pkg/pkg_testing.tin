@@ -47,15 +47,16 @@
     
     #FUNCTION Callback {
         #IF {_assertRoomExitsKey{$test[expected_room]}} {
-            #VARIABLE {test[complete]} {0};
+            #VARIABLE {test[complete]} {1};
         };
     };
-    #VARIABLE {test[complete]} {1};
-    #DELAY 0.1 {
-        #EVENT {VARIABLE UPDATED test[complete]} {
+    #VARIABLE {test[complete]} {0};
+    #EVENT {VARIABLE UPDATED test[complete]} {
+        #IF {$test[complete] == 1} {
             assert;
         };
     };
+    
     #LOCAL _delayInSec {};
     #IF {"$test[timeout]" == ""} {
         #LOCAL _delayInSec {30};
