@@ -30,14 +30,35 @@
 
         #LOCAL u {$travel[q][1]};
 
+        #FORMAT {travel[last_update]} {%T};
+        #VARIABLE {travel[cmd_cnt]} {0};
+
         #IF {@_assertRoomExitsKey{$u}} {
+            #VARIABLE {travel[started]} {0};
             #IF {"$u" == "$dest"} {
                 Info {Arrived Final Destination: $dest};
                 #UNEVENT {VARIABLE UPDATED env[room_update_hook]};
                 #RETURN {};
             };
             #LOCAL v {$travel[q][2]};
+            #LOCAL new_cmd_cnt {};
+            #LOCAL epoch @GetEpoch{};
+            #LOCAL lapse {};
+            #MATH lapse {$epoch - $travel[last_update]};
+            #MATH {new_cmd_cnt} {$travel[cmd_cnt] + $MAP[$u][$v][dist]};
+            #IF {$new_cmd_cnt > 45 && $lapse < 12} {
+                #LOCAL delay {};
+                #MATH delay {12 - $lapse};
+                Warn {移动速度过快。暂停 $delay 秒。};
+                #DELAY $delay {
+                    #VARIABLE {travel[cmd_cnt]} {0};
+                    #FORMAT {travel[last_update]} {%T};
+                    cmd {look};
+                };
+                #RETURN {};
+            };
             Info {$u ==> $v: $MAP[$u][$v][path]};
+            #VARIABLE {travel[started]} {1};
             $MAP[$u][$v][path];
             #LIST travel[q] DELETE 1 1;
         };

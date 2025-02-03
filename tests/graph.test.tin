@@ -42,6 +42,12 @@
 
 #ALIAS t2 {
     Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
+
+    #EVENT {VARIABLE UPDATED travel[started]} {
+        #IF {@_assertRoomExitsKey{西夏王陵 north 和 southup}} {
+            Travel_Test {西夏王陵 north 和 southup} {龙门客栈 west 和 up};
+        };
+    };
 }
 
 #ALIAS t2b {
