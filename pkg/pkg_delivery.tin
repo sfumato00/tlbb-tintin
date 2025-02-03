@@ -7,19 +7,20 @@
 #ACTION {^%*给你一位%u。$} {
     #LINE LOG {./log/delivery_$username.log};
 
-    #VARIABLE {npc} {$NPC_NAME_CN_EN[%2]};
+    #LOCAL {cn_name} {%2};
+    #VARIABLE {npc} {$NPC_NAME_CN_EN[$cn_name]};
     
     #IF {"$npc" == ""} {
-        #LOCAL msg {无法识别的NPC: %2};
+        #LOCAL msg {无法识别的NPC: $cn_name};
         #ECHO {msg};
         #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
             buffer_dump {delivery};
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
         };
     };
-    #SHOW {npc: $npc, weapon: NPC_WEAPON[%2]};
-    #IF {"$NPC_WEAPON[$npc]" != ""} {
-        cmd {get $NPC_WEAPON[$npc] from $npc};
+    #SHOW {npc: $npc, weapon: $NPC_WEAPON[$cn_name]};
+    #IF {"$NPC_WEAPON[$cn_name]" != ""} {
+        cmd {get $NPC_WEAPON[$cn_name] from $npc};
     };
     #ELSE {
         cmd {get all from $npc};
@@ -39,7 +40,11 @@
 
 #ACTION {%*慢慢睁开眼睛，清醒了过来。} {
     #LINE LOG {./log/delivery_$username.log};
-    quit};
+quit};
+
+#ACTION {^你身上没有这样东西。$} {
+    quit;
+};
 
 #EVENT {VARIABLE UPDATED env[room_updated]} {
     #IF {"$env[room]" == "城隍庙"} {
