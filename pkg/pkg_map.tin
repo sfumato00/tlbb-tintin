@@ -1,0 +1,173 @@
+#NOP TLBB MAP;
+
+#VARIABLE {MAP} {
+    {汴梁城中心 north、south、east、west 和 up} {
+        
+        {黄土大道 south、east 和 west} {
+            {path} {#9 w}
+            {dist} {9}
+        }
+        {黄土大道 north、west 和 southwest} {
+            {path} {#9 s}
+            {dist} {9}
+        }
+        {东安门 east 和 west} {
+            {path} {#6 e}
+            {dist} {6}
+        }
+    }
+    {东安门 east 和 west} {
+        {黄土大道 southeast 和 west} {
+            {path} {东安门-黄土大道-southeast-west}
+            {dist} {15}
+        }
+    }
+    {黄土大道 southeast 和 west} {
+        {东安门 east 和 west} {
+            {path} {黄土大道-southeast-west-东安门}
+            {dist} {15}
+        }
+        {黄土大道 north、northeast 和 west} {
+            {path} {se;e}
+            {dist} {2}
+        }
+    }
+    {黄土大道 north、northeast 和 west} {
+        {黄土大道 southeast 和 west} {
+            {path} {w;nw}
+            {dist} {2}
+        }
+        {天贶殿 north、south、east 和 west} {
+            {path} {#9 n}
+            {dist} {9}
+        }
+    }
+    {天贶殿 north、south、east 和 west} {
+        {神憩小舍 east、southdown、northwest 和 up} {
+            {path} {#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
+            {dist} {15}
+        }
+    }
+    {神憩小舍 east、southdown、northwest 和 up} {
+        {天贶殿 north、south、east 和 west} {
+            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s}
+            {dist} {15}
+        }
+    }
+    {黄土大道 south、east 和 west} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {#7 w}
+            {dist} {7}
+        }
+        {汴梁城中心 north、south、east、west 和 up} {
+            {path} {#16 e}
+            {dist} {16}
+        }
+        {登封县北街 north、south、east 和 northwest} {
+            {path} {#2 s}
+            {dist} {2}
+        }
+    }
+    {登封县北街 north、south、east 和 northwest} {
+        {登封县中央广场是 north、south、east、west 和 up} {
+            {path} {#1 s}
+            {dist} {1}
+        }
+        {黄土大道 south、east 和 west} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+        {少室山山脚 south 和 northwest} {
+            {path} {登封县北街-少室山山脚}
+            {dist} {4}
+        }
+    }
+    {少室山山脚 south 和 northwest} {
+        {登封县北街 north、south、east 和 northwest} {
+            {path} {少室山山脚-登封县北街}
+            {dist} {4}
+        }
+    }
+    {登封县中央广场是 north、south、east、west 和 up} {
+        {登封县北街 north、south、east 和 northwest} {
+            {path} {n}
+            {dist} {1}
+        }
+        {黄土大道 north、west 和 southwest} {
+            {path} {#6 e}
+            {dist} {6}
+        }
+        {大路 south、north 和 southeast} {
+            {path} {#3 w;nw}
+            {dist} {4}
+        }
+    }
+    {洛阳中心 south、north、east、west 和 up} {
+        {黄土大道 south、east 和 west} {
+            {path} {#7 e}
+            {dist} {7}
+        }
+        {天水关 north、east 和 west} {
+            {path} {#8 w}
+            {dist} {8}
+        }
+    }
+    {黄土大道 north、west 和 southwest} {
+        {十字广场 north、south、east、west 和 up} {
+            {path} {sw;#9 s}
+            {dist} {10}
+        }
+        {汴梁城中心 north、south、east、west 和 up} {
+            {path} {#9 n}
+            {dist} {9}
+        }
+        {登封县中央广场是 north、south、east、west 和 up} {
+            {path} {#6 w}
+            {dist} {6}
+        }
+    }
+    {十字广场 north、south、east、west 和 up} {
+        {黄土大道 north、west 和 southwest} {
+            {path} {#9 n;ne}
+            {dist} {10}
+        }
+    }
+    {天水关 north、east 和 west} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {#8 e}
+            {dist} {8}
+        }
+        {小山坡 westdown、southdown 和 eastdown} {
+            {path} {#2 w;wu}
+            {dist} {3}
+        }
+    }
+    {小山坡 westdown、southdown 和 eastdown} {
+        {天水关 north、east 和 west} {
+            {path} {eu;#2 e}
+            {dist} {3}
+        }
+    }
+    {大路 south、north 和 southeast} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {#6 n}
+            {dist} {6}
+        }
+        {大道 north、south 和 northeast} {
+            {path} {s;e;s;#4 w;#2 n}
+            {dist} {9}
+        }
+    }
+    {大道 north、south 和 northeast} {
+        {大路 south、north 和 southeast} {
+            {path} {#2 s;#4 e;n;w;n}
+            {dist} {9}
+        }
+    }
+    {欢迎来到天龙八部 south 和 down} {
+        {汴梁城中心 north、south、east、west 和 up} {
+            {path} {d;w;#5 n}
+            {dist} {7}
+        }
+    }
+};

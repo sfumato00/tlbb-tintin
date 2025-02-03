@@ -1,0 +1,94 @@
+#NOP map functions
+
+#ALIAS {东安门-黄土大道-southeast-west} {
+    #IF {@_assertRoomExitsKey{东安门 east 和 west}} {
+        #VARIABLE {travel[started]} {1};
+        #ACTION {^请不要一次输入太多的指令。$} {
+            #delay 1 {
+                cmd {e};
+            };
+        };
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF @_assertRoomExitsKey{黄土大道 southeast 和 west} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #UNACTION {^请不要一次输入太多的指令。$};
+                #VARIABLE {travel[started]} {0};
+                RunCallback;
+            };
+            #ELSE {
+                cmd {e};
+            };
+        };
+        cmd {e};
+    };
+};
+
+#ALIAS {黄土大道-southeast-west-东安门} {
+    #IF {@_assertRoomExitsKey{黄土大道 southeast 和 west}} {
+        #VARIABLE {travel[started]} {1};
+        #ACTION {^请不要一次输入太多的指令。$} {
+            #delay 1 {
+                cmd {w};
+            };
+        };
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF @_assertRoomExitsKey{东安门 east 和 west} {
+                #EVENT {VARIABLE UPDATED env[room_updated]};
+                #UNACTION {^请不要一次输入太多的指令。$};
+                #VARIABLE {travel[started]} {0};
+                RunCallback;
+            };
+            #ELSE {
+                cmd {w};
+            };
+        };
+        cmd {w};
+    };
+}
+
+#ALIAS {登封县北街-少室山山脚} {
+    #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+                RunCallback;
+            };
+            #ELSE {
+                #regexp {$env[exits]} {northwest} {cmd {nw}} {cmd {n}};
+            };
+        };
+        cmd {nw};
+    };
+}
+
+#ALIAS {少室山山脚-登封县北街} {
+    #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+                RunCallback;
+            };
+            #ELSE {
+                #regexp {$env[exits]} {southeast} {cmd {se}} {cmd {s}};
+            };
+        };
+        cmd {s};
+    };
+}
+
+#ALIAS {RunCallback} {
+    #LOCAL callbackResult {@Callback{}};
+    #IF {"$callbackResult" != "@Callback{}"} {
+        #ECHO {Callback Result: $callbackResult};
+    };
+} {5};
+
+#FUNCTION _assertRoomExitsKey {
+    #LOCAL {key} {$env[room]$env[exits]};
+    #IF {"$key" == "%1"} {
+        #RETURN 1;
+    };
+    #RETURN 0;
+}

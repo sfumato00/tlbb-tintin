@@ -11,9 +11,13 @@
 #alias {大理-登封} {#9 n;ne;#6 w};
 
 #ALIAS {大理驿站-开封} {w;#8 n;ne;#9 n} {5};
-#ALIAS {大理驿站-神憩小舍} {大理驿站-开封;#6 e;
-    #DELAY 3 {
-        东安门-神憩小舍
+#ALIAS {开封-神憩小舍} {大理驿站-开封;#6 e;
+
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" === "东安门"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            东安门-神憩小舍;
+        };
     };
 } {5};
 
@@ -27,6 +31,10 @@
         黑沼泽-西夏;
     };
 };
+
+#ALIAS {洛阳-小山坡} {
+    #8 w;#3 w;wu;
+} {5};
 
 #ALIAS {洛阳-开封} {#16 e;};
 #ALIAS {洛阳-东安门} {洛阳-开封;开封-东安门} {5};
@@ -160,9 +168,6 @@
     神憩小舍-天贶殿;w;n;
 };
 
-#ALIAS {天水-西夏-2} {
-    wu;wd;#3 w;s;n;w;#6 n;
-}
 
 #ALIAS {天水-西夏} {
     天水-黑沼泽;
@@ -400,17 +405,16 @@
                             #UNEVENT {VARIABLE UPDATED env[room_updated]};
                             sw;n;e;e;eu;
                             #EVENT {VARIABLE UPDATED env[room_updated]} {
-                                #IF {"$env[room]" === "大道" && "$env[exits]" === " east 和 westup"} {
+                                #IF {"$env[room]" === "大道"} {
                                     cmd {e};
                                 };
-                                #ELSEIF {"$env[room]" === "大道" && "$env[exits]" === " east 和 west"} {
+                                #ELSEIF {"$env[room]" === "天水关"} {
                                     #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                                    #EVENT {VARIABLE UPDATED env[room_updated]} {
-                                        #IF {"$env[room]" === "洛阳中心"} {
-                                            RunCallback;
-                                        };
-                                    };
-                                    cmd {e;e;e;e;e;e;e;e;e};
+                                    天水-洛阳;
+                                };
+                                #ELSEIF {"$env[room]" === "洛阳中心"} {
+                                    #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                                    RunCallback;
                                 };
                             };
                             ed;
@@ -480,3 +484,17 @@
     };
     e;
 } {5};
+
+#ALIAS {小山坡-天水} {
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" === "大道"} {
+            cmd {e};
+        };
+        #IF {"$env[room]" === "天水关"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            RunCallback;
+        };
+    };
+    ed;
+} {5};
+

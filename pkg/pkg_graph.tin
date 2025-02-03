@@ -1,0 +1,147 @@
+#NOP graph-based paths
+#CLASS utils READ {./pkg/pkg_utils.tin};
+#CLASS room READ {./pkg/pkg_room.tin};
+#CLASS map READ {./pkg/pkg_map.tin};
+#CLASS map_functions READ {./pkg/pkg_map_functions.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#ALIAS goto {
+    travel {$env[room]$env[exits]} {%1};
+}
+
+#ALIAS travel {
+    #LOCAL src {%1};
+    #LOCAL dest {%2};
+
+    #LOCAL conn {@_dijkstra{$src;$dest}};
+
+    #VARIABLE travel[q] {$conn[stops]};
+    #LIST travel[q] explode {;};
+
+    #EVENT {VARIABLE UPDATED env[room_update_hook]} {
+        #LOCAL n {};
+        #LIST travel[q] SIZE {n};
+
+        #LOCAL u {$travel[q][1]};
+
+        #IF {@_assertRoomExitsKey{$u}} {
+            #IF {"$u" == "$dest"} {
+                Info {Arrived Final Destination: $dest};
+                #UNEVENT {VARIABLE UPDATED env[room_update_hook]};
+                #RETURN {};
+            };
+            #LOCAL v {$travel[q][2]};
+            #ECHO {$u ==> $v: $MAP[$u][$v][path]};
+            $MAP[$u][$v][path];
+            #LIST travel[q] DELETE 1 1;
+        };
+    };
+    cmd {look};
+};
+
+#FUNCTION _dijkstra {
+    #LOCAL src %1;
+    #LOCAL dest %2;
+
+    #IF {"$src" == "$dest"} {
+        Info {终点已经抵达。};
+        #RETURN {
+            {path} {}
+            {dist} {0}
+            {stops} {$dest}
+        };
+    };
+
+    #IF {"$MAP[$src]" == ""} {
+        Warn {无法识别的房间: $src};
+        #RETURN {};
+    };
+
+    #IF {"$MAP[$src][$dest]" != ""} {
+        #RETURN {
+            {path} {$MAP[$src][$dest][path]}
+            {dist} {$MAP[$src][$dest][dist]}
+            {stops} {$src;$dest}
+        };
+    };
+
+    #LOCAL {dists} {};
+    #LOCAL {visited} {};
+    #LOCAL {_paths} {};
+    #LOCAL {stops} {};
+    #LOCAL {u} {};
+
+    #FOREACH {*MAP[%*]} {u} {
+        #LOCAL {dists[$u]} {999};
+        #LOCAL {visited[$u]} {0};
+    };
+    #LOCAL {dists[$src]} {0};
+    #LOCAL {stops[$src]} {$src};
+    #LOCAL {_paths[$src]} {};
+    
+    #FUNCTION _getNextNode {
+        #LOCAL _nextNode {};
+        #LOCAL _min_dist {999};
+        #LOCAL node {};
+        #FOREACH {*dists[%*]} {node} {
+            #NOP #ECHO {[DEBUG] node: $node, dists[node]: $dists[$node], visited: $visited[$node]};
+            #IF {!$visited[$node] && $dists[$node] < $_min_dist} {
+                
+                #LOCAL {_min_dist} {$dists[$node]};
+                #LOCAL {_nextNode} {$node};
+            };
+        };
+        #RETURN $_nextNode;
+    };
+
+    #LOCAL {u} {@_getNextNode{$dists;$visited}};
+
+    #WHILE {"$u" != "" && "$u" != "$dest"} {
+        #LOCAL {visited[$u]} {1};
+        #LOCAL v {};
+        #FOREACH {*MAP[$u][%*]} {v} {
+            #IF {$visited[$v]} {
+                #CONTINUE;
+            };
+            #LOCAL d {};
+            #MATH d {$dists[$u] + $MAP[$u][$v][dist]};
+            #IF {$d < $dists[$v]} {
+                #LOCAL {dists[$v]} {$d};
+                #IF {"$_paths[$u]" == ""} {
+                    #LOCAL {_paths[$v]} {$MAP[$u][$v][path]};
+                } {
+                    #LOCAL {_paths[$v]} {$_paths[$u]};
+                    #CAT {_paths[$v]} {;$MAP[$u][$v][path]};
+                };
+                #LOCAL {stops[$v]} {$stops[$u];$v};
+            };
+        };
+        #LOCAL {u} {@_getNextNode{}};
+    };
+
+    #LOCAL x {};
+    #NOP #ECHO {\n};
+    #NOP #ECHO {paths: \n};
+    #FOREACH {*_paths[%*]} {x} {
+        #NOP #ECHO {    $x:};
+        #NOP #ECHO {        distance: $dists[$x]};
+        #NOP #ECHO {        path: $_paths[$x]};
+        #NOP #ECHO {        stops: $stops[$x]};
+    };
+
+    #RETURN {
+        {path} {$_paths[$dest]}
+        {dist} {$dists[$dest]}
+        {stops} {$stops[$dest]}
+    };
+}
+
+#ALIAS Info {
+    #ECHO {@Timestamp{} <cfa>[导航] %1};
+}
+
+#ALIAS Warn {
+    #ECHO {@Timestamp{} <fca>[导航] %1};
+}
+
+
