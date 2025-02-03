@@ -54,7 +54,7 @@
 };
 
 #alias test_xx_ly {
-    #VARIABLE {test[name]} {测试};
+    #VARIABLE {test[name]} {西夏-洛阳中心};
     #VARIABLE {test[expected_room]} {洛阳中心};
 
     #EVENT {VARIABLE UPDATED env[last_login]} {
@@ -67,6 +67,22 @@
         西夏-洛阳;
     };
     conn $test[name];
+};
+
+#alias test_xx_xsp {
+    #VARIABLE {test[name]} {西夏-小山坡};
+    #VARIABLE {test[expected_room]} {小山坡};
+
+    #EVENT {VARIABLE UPDATED env[last_login]} {
+        set brief 1;
+        #FUNCTION Callback {
+            #IF {"$env[room]" === "小山坡"} {
+                give dhlb captain;
+            };
+        };
+        西夏-小山坡;
+    };
+    conn $test[name];
 }
 
-test_xx_ly;
+test_xx_xsp;

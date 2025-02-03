@@ -388,8 +388,6 @@
     #EVENT {VARIABLE UPDATED env[room_updated]} {
         #IF {"$env[room]" == "黑沼泽"} {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            #NOP 黑沼泽-小山坡;
-            
             #VARIABLE {env[odd]} {0};
             #ALIAS {local_helper} {
                 #IF {"$env[room]" == "黑沼泽"} {
@@ -416,6 +414,50 @@
                                 };
                             };
                             ed;
+                        };
+        
+                        #CASE {" south、north 和 west"} {
+                            cmd {s};
+                        };
+        
+                        #CASE {" south、north、east 和 west"} {
+                            #IF {$env[odd] == 0} {
+                                cmd {e};
+                            } {
+                                cmd {s};
+                            };
+                            #MATH {env[odd]} {1 - $env[odd]};
+                        };
+                    };
+                };
+            } {5};
+            local_helper;
+        };
+    };
+    e;
+} {5};
+
+#ALIAS {西夏-小山坡} {
+    #4 s;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "黑沼泽"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #VARIABLE {env[odd]} {0};
+            #ALIAS {local_helper} {
+                #IF {"$env[room]" == "黑沼泽"} {
+                    #EVENT {VARIABLE UPDATED env[room_updated]} {
+                        local_helper;
+                    };
+                    #SWITCH {"$env[exits]"} {
+                        #CASE {" north 和 southwest"} {
+                            #UNVARIABLE {env[odd]};
+                            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                            sw;n;e;e;eu;
+                            #EVENT {VARIABLE UPDATED env[room_updated]} {
+                                #IF {"$env[room]" === "小山坡"} {
+                                    RunCallback;
+                                };
+                            };
                         };
         
                         #CASE {" south、north 和 west"} {
