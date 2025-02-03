@@ -1,0 +1,72 @@
+#NOP paths tests
+
+#CLASS paths READ {./paths.tin};
+#CLASS testing READ {./pkg/pkg_testing.tin};
+
+#CLASS setup OPEN;
+
+#VARIABLE {username} {testpaths};
+#VARIABLE {password} {Abcd1234};
+
+
+
+#CLASS setup ClOSE;
+
+
+#CLASS teardown OPEN;
+
+#CLASS teardown CLOSE;
+
+#VARIABLE {TestCases} {
+    {测试} {test_0}
+};
+
+#ALIAS test_0 {
+    #VARIABLE {test[name]} {测试};
+    #VARIABLE {test[expected_room]} {洛阳中心};
+    #VARIABLE {test[delay]} {5};
+    #EVENT {VARIABLE UPDATED env[last_login]} {
+        set brief 1;
+        e;#2 n;
+        #delay $test[delay] {
+            assert;
+        };
+    };
+    conn $test[name];
+};
+
+#ALIAS test_ly_xx {
+    #VARIABLE {test[name]} {测试};
+    #VARIABLE {test[expected_room]} {中心广场};
+    #VARIABLE {test[delay]} {5};
+    #EVENT {VARIABLE UPDATED env[last_login]} {
+        set brief 1;
+        e;#2 n;
+
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF {"$env[room]" === "洛阳中心"} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                洛阳-西夏;
+            };
+        };
+    };
+    conn $test[name];
+};
+
+#alias test_xx_ly {
+    #VARIABLE {test[name]} {测试};
+    #VARIABLE {test[expected_room]} {洛阳中心};
+
+    #EVENT {VARIABLE UPDATED env[last_login]} {
+        set brief 1;
+        #FUNCTION Callback {
+            #IF {"$env[room]" === "洛阳中心"} {
+                give dhle captain;
+            };
+        };
+        西夏-洛阳;
+    };
+    conn $test[name];
+}
+
+test_xx_ly;

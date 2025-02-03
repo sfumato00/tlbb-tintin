@@ -22,11 +22,9 @@
 #ALIAS {洛阳-无锡} {#7 s;e;s;#4 w;#4 n;nw;nu;wd;ne;n;ne;n;w;#3 n} {5};
 #alias {洛阳-西夏} {
     洛阳-天水;
+    天水-黑沼泽;
     #DELAY {6} {
-        天水-黑沼泽;
-        #DELAY {6} {
-            黑沼泽-西夏;
-        };
+        黑沼泽-西夏;
     };
 };
 
@@ -210,7 +208,7 @@
                 #UNVARIABLE {env[odd]};
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #4 {cmd {n}};
-                cmd {$callback};
+                RunCallback;
             };
             #DEFAULT {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
@@ -241,7 +239,8 @@
 
 #ALIAS {兴庆城城门-黑沼泽} {#2 s;e;} {5};
 
-#ALIAS {黑沼泽-天水大道} {
+
+#ALIAS {黑沼泽-小山坡} {
     #ALIAS {local_helper} {
         #IF {"$env[room]" == "黑沼泽"} {
             #EVENT {VARIABLE UPDATED env[room_updated]} {
@@ -251,7 +250,7 @@
                 #CASE {" north 和 southwest"} {
                     #UNVARIABLE {env[odd]};
                     #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                    sw;n;e;e;eu;ed;
+                    sw;n;e;e;eu;
                     RunCallback;
                 };
 
@@ -368,12 +367,13 @@
 #alias RunCallback {
     #IF {"$callback" != ""} {
         cmd {$callback};
-    };    
+    };
+    #ECHO {@Callback{}};
 };
 
 #FUNCTION AssertRoom {
     #LOCAL expected {%1};
-    #LOCAL actual {%2};
+    #LOCAL actual {$env[room]};
 
     #IF {"$expected" != "$actual"} {
         #ECHO {<fac>[DEBUG]: **** 起始房间 $expected 与预期房间不符。***};
@@ -381,3 +381,60 @@
     };
     #RETURN 1;
 }
+
+
+#ALIAS {西夏-洛阳} {
+    #4 s;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {"$env[room]" == "黑沼泽"} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #NOP 黑沼泽-小山坡;
+            
+            #VARIABLE {env[odd]} {0};
+            #ALIAS {local_helper} {
+                #IF {"$env[room]" == "黑沼泽"} {
+                    #EVENT {VARIABLE UPDATED env[room_updated]} {
+                        local_helper;
+                    };
+                    #SWITCH {"$env[exits]"} {
+                        #CASE {" north 和 southwest"} {
+                            #UNVARIABLE {env[odd]};
+                            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                            sw;n;e;e;eu;
+                            #EVENT {VARIABLE UPDATED env[room_updated]} {
+                                #IF {"$env[room]" === "大道" && "$env[exits]" === " east 和 westup"} {
+                                    cmd {e};
+                                };
+                                #ELSEIF {"$env[room]" === "大道" && "$env[exits]" === " east 和 west"} {
+                                    #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                                    #EVENT {VARIABLE UPDATED env[room_updated]} {
+                                        #IF {"$env[room]" === "洛阳中心"} {
+                                            RunCallback;
+                                        };
+                                    };
+                                    cmd {e;e;e;e;e;e;e;e;e};
+                                };
+                            };
+                            ed;
+                        };
+        
+                        #CASE {" south、north 和 west"} {
+                            cmd {s};
+                        };
+        
+                        #CASE {" south、north、east 和 west"} {
+                            #IF {$env[odd] == 0} {
+                                cmd {e};
+                            } {
+                                cmd {s};
+                            };
+                            #MATH {env[odd]} {1 - $env[odd]};
+                        };
+                    };
+                };
+            } {5};
+            local_helper;
+        };
+    };
+    e;
+} {5};

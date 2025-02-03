@@ -1,0 +1,42 @@
+#NOP Testing module
+
+#CLASS config READ {./config.tin};
+#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
+
+#ALIAS {conn} {
+    #SESSION {$username} {103.10.85.133} {8888};
+};
+
+#ALIAS {assert} {
+    #IF {@AssertRoom{$test[expected_room]}} {
+        #ECHO {<cfa> Test: >> $test[name] << SUCCEEDED};
+    };
+    #ELSE {
+        #ECHO {<fac> Test: >> $test[name] << FAILED};
+    };
+} {5};
+
+#ALIAS {teardown} {
+    #ACTION {^你必须连线十秒后才能离开游戏。$} {
+        #delay 2 {quit};
+    } {1};
+    
+    #ACTION {^你正忙着呢，暂时无法离开游戏。$} {
+        #delay 2 {quit};
+    } {5};
+
+    #EVENT {SESSION DISCONNECTED} {
+        #UNACTION {^你必须连线十秒后才能离开游戏。$};
+        #UNACTION {^你正忙着呢，暂时无法离开游戏。$};
+    };
+
+    quit;
+};
+
+#EVENT {VARIABLE UPDATED env[last_reconnect]} {
+    teardown;
+};
+
+
+
