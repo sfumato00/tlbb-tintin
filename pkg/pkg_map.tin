@@ -15,6 +15,10 @@
             {path} {#6 e}
             {dist} {6}
         }
+        {龙门客栈 west 和 up} {
+            {path} {#5 s;e}
+            {dist} {6}
+        }
     }
     {东安门 east 和 west} {
         {黄土大道 southeast 和 west} {
@@ -69,7 +73,7 @@
         }
     }
     {登封县北街 north、south、east 和 northwest} {
-        {登封县中央广场是 north、south、east、west 和 up} {
+        {登封县中央广场 north、south、east、west 和 up} {
             {path} {#1 s}
             {dist} {1}
         }
@@ -88,7 +92,7 @@
             {dist} {4}
         }
     }
-    {登封县中央广场是 north、south、east、west 和 up} {
+    {登封县中央广场 north、south、east、west 和 up} {
         {登封县北街 north、south、east 和 northwest} {
             {path} {n}
             {dist} {1}
@@ -111,6 +115,10 @@
             {path} {#8 w}
             {dist} {8}
         }
+        {大路 south、north 和 southeast} {
+            {path} {#6 s}
+            {dist} {6}
+        }
     }
     {黄土大道 north、west 和 southwest} {
         {十字广场 north、south、east、west 和 up} {
@@ -121,9 +129,13 @@
             {path} {#9 n}
             {dist} {9}
         }
-        {登封县中央广场是 north、south、east、west 和 up} {
+        {登封县中央广场 north、south、east、west 和 up} {
             {path} {#6 w}
             {dist} {6}
+        }
+        {龙门客栈 west 和 up} {
+            {path} {#4 n;e}
+            {dist} {5}
         }
     }
     {十字广场 north、south、east、west 和 up} {
@@ -147,6 +159,52 @@
             {path} {eu;#2 e}
             {dist} {3}
         }
+        {青海草原 north、south、east 和 west} {
+            {path} {wd;w}
+            {dist} {3}
+        }
+    }
+    {青海草原 north、south、east 和 west} {
+        {青海草原 north、south、east、west 和 northwest} {
+            {path} {w}
+            {dist} {1}
+        }
+    }
+    {青海草原 north、south、east、west 和 northwest} {
+        {青海草原 north、south、east 和 west} {
+            {path} {e}
+            {dist} {1}
+        }
+        {黑沼泽 north 和 southwest} {
+            {path} {w;s;n;w}
+            {dist} {4}
+        }
+    }
+    {黑沼泽 north 和 southwest} {
+        {青海草原 north、south、east、west 和 northwest} {
+            {path} {n}
+            {dist} {1}
+        }
+        {黑沼泽 south、north 和 west} {
+            {path} {黑沼泽-n-sw-黑沼泽-s-n-se}
+            {dist} {4}
+        }
+    }
+    {黑沼泽 south、north 和 west} {
+        {黑沼泽 north 和 southwest} {
+            {path} {s}
+            {dist} {1}
+        }
+        {大道 north、east 和 northeast} {
+            {path} {黑沼泽-大道}
+            {dist} {8}
+        }
+    }
+    {大道 north、east 和 northeast} {
+        {黑沼泽 south、north 和 west} {
+            {path} {大道-黑沼泽}
+            {dist} {8}
+        }
     }
     {大路 south、north 和 southeast} {
         {洛阳中心 south、north、east、west 和 up} {
@@ -157,6 +215,10 @@
             {path} {s;e;s;#4 w;#2 n}
             {dist} {9}
         }
+        {登封县中央广场 north、south、east、west 和 up} {
+            {path} {se;#3 e}
+            {dist} {4}
+        }
     }
     {大道 north、south 和 northeast} {
         {大路 south、north 和 southeast} {
@@ -165,9 +227,19 @@
         }
     }
     {欢迎来到天龙八部 south 和 down} {
+        {龙门客栈 west 和 up} {
+            {path} {d}
+            {dist} {1}
+        }
+    }
+    {龙门客栈 west 和 up} {
         {汴梁城中心 north、south、east、west 和 up} {
-            {path} {d;w;#5 n}
-            {dist} {7}
+            {path} {w;#5 n}
+            {dist} {6}
+        }
+        {黄土大道 north、west 和 southwest} {
+            {path} {w;#4 s}
+            {dist} {5}
         }
     }
 };

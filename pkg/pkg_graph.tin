@@ -15,6 +15,11 @@
 
     #LOCAL conn {@_dijkstra{$src;$dest}};
 
+    Info {src: $src, dest: $dest};
+    Info {stops: $conn[stops]};
+    Info {path: $conn[path]};
+    Info {path: $conn[dist]};
+
     #VARIABLE travel[q] {$conn[stops]};
     #LIST travel[q] explode {;};
 
@@ -96,7 +101,7 @@
 
     #LOCAL {u} {@_getNextNode{$dists;$visited}};
 
-    #WHILE {"$u" != "" && "$u" != "$dest"} {
+    #WHILE {"$u" != ""} {
         #LOCAL {visited[$u]} {1};
         #LOCAL v {};
         #FOREACH {*MAP[$u][%*]} {v} {

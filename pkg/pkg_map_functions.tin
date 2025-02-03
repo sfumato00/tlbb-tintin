@@ -26,6 +26,7 @@
 #ALIAS {黄土大道-southeast-west-东安门} {
     #IF {@_assertRoomExitsKey{黄土大道 southeast 和 west}} {
         #VARIABLE {travel[started]} {1};
+        #VARIABLE {travel[started]} {1};
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 1 {
                 cmd {w};
@@ -48,6 +49,7 @@
 
 #ALIAS {登封县北街-少室山山脚} {
     #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
+        #VARIABLE {travel[started]} {1};
         #EVENT {VARIABLE UPDATED env[room_updated]} {
             #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
@@ -64,6 +66,7 @@
 
 #ALIAS {少室山山脚-登封县北街} {
     #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
+        #VARIABLE {travel[started]} {1};
         #EVENT {VARIABLE UPDATED env[room_updated]} {
             #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
@@ -75,6 +78,72 @@
             };
         };
         cmd {s};
+    };
+}
+
+#ALIAS {黑沼泽-n-sw-黑沼泽-s-n-se} {
+    #IF {@_assertRoomExitsKey{黑沼泽 north 和 southwest}} {
+        #VARIABLE {travel[started]} {1};
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+                RunCallback;
+            };
+            #ELSE {
+                cmd {n};
+            };
+        };
+        cmd {n};
+    };
+} {5};
+
+#ALIAS {黑沼泽-大道} {
+    #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
+        #VARIABLE {travel[started]} {1};
+        #VARIABLE {travel[odd]} {1};
+        
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{大道 north、east 和 northeast}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+                #UNVARIABLE {travel[odd]};
+                RunCallback;
+            };
+            #ELSEIF {$travel[odd] == 1} {
+                cmd {s};
+                #MATH travel[odd] {1 - $travel[odd]};
+            };
+            #ELSE {
+                cmd {w};
+                #MATH travel[odd] {1 - $travel[odd]};
+            };
+        };
+        cmd {w};
+    };
+}
+
+#ALIAS {大道-黑沼泽} {
+    #IF {@_assertRoomExitsKey{大道 north、east 和 northeast}} {
+        #VARIABLE {travel[started]} {1};
+        #VARIABLE {travel[odd]} {1};
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+                #UNVARIABLE {travel[odd]};
+                RunCallback;
+            };
+            #ELSEIF {$travel[odd] == 1} {
+                cmd {s};
+                #MATH travel[odd] {1 - $travel[odd]};
+            };
+            #ELSE {
+                cmd {e};
+                #MATH travel[odd] {1 - $travel[odd]};
+            };
+        };
+        cmd {e};
     };
 }
 

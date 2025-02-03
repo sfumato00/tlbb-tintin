@@ -1,14 +1,16 @@
 temp*
-test*
+test_*
 template*
 dev_*
 profiles_*
 
 backup_*
 
+dev/
 dev_pkg/
 db/
 profiles/
+log/
 
 *.log
 
