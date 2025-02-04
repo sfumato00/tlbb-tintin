@@ -10,10 +10,13 @@
     #VARIABLE {env[exits]} {%2};
     #VARIABLE {env[room_updated]} {@GetEpoch{}};
     #VARIABLE {env[room_update_hook]} {1};
+    #VARIABLE {env[travel_callback_hook]} {1};
 } {1};
 
 #ACTION {    这里没有明显的出口。} {
     #VARIABLE {env[exits]} {};
     #VARIABLE {env[room_updated]} {@GetEpoch{}};
     #VARIABLE {env[room_update_hook]} {1};
+    #VARIABLE {env[travel_callback_hook]} {1};
 } {1};
+

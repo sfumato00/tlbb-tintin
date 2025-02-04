@@ -175,9 +175,7 @@
 
 #ALIAS {RunCallback} {
     #LOCAL callbackResult {@Callback{}};
-    #IF {"$callbackResult" != "@Callback{}"} {
-        #ECHO {Callback Result: $callbackResult};
-    };
+    #ECHO {Callback Result: $callbackResult};
 } {5};
 
 #FUNCTION _assertRoomExitsKey {

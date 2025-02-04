@@ -200,6 +200,15 @@
     };
 };
 
+#ACTION {^%u将%u从背上放了下来，躺在地上。} {
+    #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
+    #IF {"*npc_list[+1]" == "$npc_id"} {
+        #LOCAL filename {./log/npc_$username.log};
+        @LogLine{$filename;info};
+    };
+};
+
+
 #ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #NOP #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list1: *npc_list[+1]};

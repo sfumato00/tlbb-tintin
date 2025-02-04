@@ -1,6 +1,6 @@
 #NOP logging
 
-#FUNCTION {InfoLine} {
+#FUNCTION {LogLine} {
     #LOCAL path {%1};
     #LOCAL level {%2};
     #RETURN {@_logLine{$path;$level}};
