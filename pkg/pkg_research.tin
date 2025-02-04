@@ -65,7 +65,7 @@
 } {5}; 
 
 #ALIAS {stop} {
-    #ECHO {关闭 学习 模块};
+    #ECHO {关闭 研究 模块};
     feedback_loop_idle;
     #CLASS research kill;
 } {5};

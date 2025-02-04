@@ -29,5 +29,4 @@
 
     #VARIABLE {vitals[经验]}{%8};
     #FORMAT {vitals[last_updated]}{%T};
-    #VARIABLE {vitals[hook_downexp]}{1};
 } {5};

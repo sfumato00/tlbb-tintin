@@ -3,6 +3,7 @@
 #CLASS const READ {./const.tin};
 #CLASS safety READ {./pkg/pkg_safety.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 
 #GAG {似乎有些疲惫，但是仍然十分有活力。 )};
 #GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};
@@ -10,8 +11,6 @@
 #GAG {看起来可能有些累了。 )};
 #GAG {看起来充满活力，一点也不累。 )};
 #GAG {拿起水桶咕噜噜地喝了几口凉水。};
-
-#TICKER {ticker_feedback_loop} {hp} {15};
 
 #VARIABLE {fight_stats} {
     {epoch} {
@@ -144,6 +143,8 @@
         #SHOWME {$exp_msg};
         #SHOWME {$qn_msg};
     };
+
+    #VARIABLE {vitals[hook_downexp]}{1};
 };
 
 #ALIAS {fight_npcs} {
@@ -156,7 +157,7 @@
 
 #ALIAS {init_fight} {
     #ECHO {开始练功};
-    #LINE LOG $fight_stats[log_file] {开始练功};
+    #LINE LOG $fight_stats[log_file] {@Timestamp{} 开始练功};
     remove cloth;
     drop cloth;
     wear cloth;
