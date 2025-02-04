@@ -9,7 +9,7 @@
             #CONTINUE;
         };
         #ECHO {输入指令: $_last_cmd};
-        #SEND {$_last_cmd};
+        $_last_cmd;
         #VARIABLE {env[last_cmd]} {%U};
     };
 } {5};

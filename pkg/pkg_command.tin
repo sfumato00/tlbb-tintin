@@ -1,54 +1,47 @@
-#CLASS command OPEN;
+#NOP Command Engine
 
-#LIST history_queue CREATE {};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 
-#ALIAS cmd {
+#LIST {Command[history][q]} CREATE {};
+#VARIABLE {Travel[history][cnt]} {0};
 
-    #LOCAL ts {};
-    #FORMAT ts {%U};
-
-    #LOCAL h {@peek_cmd{}};
-    #WHILE {@history_size{} > 0 && $ts - h[timestamp] > 12M} {
-        #ECHO {dequeue: @dequeue_cmd{}};
+#ALIAS Cmd {
+    #LOCAL commands {%1};
+    #LOCAL epoch @GetEpoch{};
+    #LOCAL cnt {0};
+    #FOREACH $commands _c {
+        #IF {"$_c" == ""} {
+            #CONTINUE:
+        };
+        #ECHO {@Timestamp{} 输入指令: $_c};
+        $_c;
+        #MATH cnt {$cnt + 1};
     };
-    #FOREACH {%1} {_cmd} {
-        #IF {@history_size{} >= 50} {
-            #ECHO {exceeding 50 commands per 12 seconds limit.Discard command $_cmd.};
+    #LIST {Command[history][q]} ADD {
+        {
+            {epoch} {$epoch}
+            {cnt} {$cnt}
+        }
+    };
+    #MATH Travel[history][cnt] {$Travel[history][cnt] + $cnt};
+};
+
+#ALIAS PurgeHistory {
+    #LOCAL n {};
+    #LOCAL head {0};
+    #LOCAL next {1};
+    #LIST Command[history][q] SIZE n;
+    #LOCAL epoch @GetEpoch{};
+    #WHILE {$head < $n} {
+        #LOCAL c {$Command[history][q][$next]};
+        #IF {$epoch - $c[epoch] < 12} {
             #BREAK;
         };
-        #ECHO {issue command: $_cmd};
-        $_cmd;
-        @enqueue_cmd{$_cmd};
+        #MATH Command[history][q][cnt] {$Command[history][q][cnt] - $c[cnt]};
+        #MATH head {$head + 1};
+        #MATH next {$next + 1};
     };
-} {5};
-
-#FUNCTION enqueue_cmd {
-    #IF {"%1" == ""} {
-        #RETURN {0};
+    #IF {$head > 0} {
+        #LIST Command[history][q] DELETE 1 $head;
     };
-    #LOCAL ts {};
-    #FORMAT ts {%U};
-    #LIST history_queue ADD {{{cmd}{%1}{timestamp}{$ts}}};
-    #RETURN {1};
 };
-
-#FUNCTION dequeue_cmd {
-    #LOCAL ret {};
-    #LIST history_queue GET 1 ret;
-    #LIST history_queue DELETE 1;
-    #RETURN $ret;
-}
-
-#FUNCTION peek_cmd {
-    #LOCAL ret {};
-    #LIST history_queue GET 1 ret;
-    #RETURN $ret;
-};
-
-#FUNCTION history_size {
-    #LOCAL size {};
-    #LIST history_queue SIZE size;
-    #RETURN $size;
-}
-
-#CLASS command CLOSE;

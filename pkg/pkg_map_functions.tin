@@ -1,11 +1,14 @@
 #NOP map functions
 
-#ALIAS {东安门-黄土大道-southeast-west} {
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS commands READ {./pkg/pkg_command.tin};
+
+#ALIAS {东安门-黄土大道} {
     #IF {@_assertRoomExitsKey{东安门 east 和 west}} {
         #VARIABLE {travel[started]} {1};
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 1 {
-                cmd {e};
+                #VARIABLE {env[room_updated]} {@GetEpoch{}};
             };
         };
         #EVENT {VARIABLE UPDATED env[room_updated]} {
@@ -16,10 +19,10 @@
                 RunCallback;
             };
             #ELSE {
-                cmd {e};
+                Cmd {e};
             };
         };
-        cmd {e};
+        Cmd {e};
     };
 };
 
@@ -29,7 +32,7 @@
         #VARIABLE {travel[started]} {1};
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 1 {
-                cmd {w};
+                #VARIABLE {env[room_updated]} {@GetEpoch{}};
             };
         };
         #EVENT {VARIABLE UPDATED env[room_updated]} {
@@ -40,10 +43,10 @@
                 RunCallback;
             };
             #ELSE {
-                cmd {w};
+                Cmd {w};
             };
         };
-        cmd {w};
+        Cmd {w};
     };
 }
 
@@ -52,7 +55,7 @@
         #VARIABLE {travel[started]} {1};
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 1 {
-                cmd {e};
+                #VARIABLE {env[room_updated]} {@GetEpoch{}};
             };
         };
         #EVENT {VARIABLE UPDATED env[room_updated]} {
@@ -63,10 +66,10 @@
                 RunCallback;
             };
             #ELSE {
-                cmd {e};
+                Cmd {e};
             };
         };
-        cmd {ed};
+        Cmd {ed};
     };
 } {5};
 
@@ -80,10 +83,10 @@
                 RunCallback;
             };
             #ELSE {
-                #regexp {$env[exits]} {northwest} {cmd {nw}} {cmd {n}};
+                #regexp {$env[exits]} {northwest} {Cmd {nw}} {Cmd {n}};
             };
         };
-        cmd {nw};
+        Cmd {nw};
     };
 }
 
@@ -97,10 +100,10 @@
                 RunCallback;
             };
             #ELSE {
-                #regexp {$env[exits]} {southeast} {cmd {se}} {cmd {s}};
+                #regexp {$env[exits]} {southeast} {Cmd {se}} {Cmd {s}};
             };
         };
-        cmd {s};
+        Cmd {s};
     };
 }
 
@@ -114,10 +117,10 @@
                 RunCallback;
             };
             #ELSE {
-                cmd {n};
+                Cmd {n};
             };
         };
-        cmd {n};
+        Cmd {n};
     };
 } {5};
 
@@ -134,15 +137,15 @@
                 RunCallback;
             };
             #ELSEIF {$travel[odd] == 1} {
-                cmd {s};
+                Cmd {s};
                 #MATH travel[odd] {1 - $travel[odd]};
             };
             #ELSE {
-                cmd {w};
+                Cmd {w};
                 #MATH travel[odd] {1 - $travel[odd]};
             };
         };
-        cmd {w};
+        Cmd {w};
     };
 }
 
@@ -158,15 +161,15 @@
                 RunCallback;
             };
             #ELSEIF {$travel[odd] == 1} {
-                cmd {s};
+                Cmd {s};
                 #MATH travel[odd] {1 - $travel[odd]};
             };
             #ELSE {
-                cmd {e};
+                Cmd {e};
                 #MATH travel[odd] {1 - $travel[odd]};
             };
         };
-        cmd {e};
+        Cmd {e};
     };
 }
 

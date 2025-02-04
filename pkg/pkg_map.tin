@@ -31,7 +31,7 @@
     }
     {东安门 east 和 west} {
         {黄土大道 southeast 和 west} {
-            {path} {东安门-黄土大道-southeast-west}
+            {path} {东安门-黄土大道}
             {dist} {15}
             {function} {1}
         }
@@ -231,7 +231,7 @@
         }
         {黑沼泽 south、north 和 west} {
             {path} {黑沼泽-n-sw-黑沼泽-s-n-se}
-            {dist} {4}
+            {dist} {12}
             {function} {1}
         }
     }
@@ -242,14 +242,14 @@
         }
         {大道 north、east 和 northeast} {
             {path} {黑沼泽-大道}
-            {dist} {8}
+            {dist} {10}
             {function} {1}
         }
     }
     {大道 north、east 和 northeast} {
         {黑沼泽 south、north 和 west} {
             {path} {大道-黑沼泽}
-            {dist} {8}
+            {dist} {10}
             {function} {1}
         }
         {兴庆城城门 north、south、eastup 和 westup} {
