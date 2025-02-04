@@ -3,19 +3,18 @@
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 
 #LIST {Command[history][q]} CREATE {};
-#VARIABLE {Travel[history][cnt]} {0};
+#VARIABLE {Command[history][cnt]} {0};
 
 #ALIAS Cmd {
     #LOCAL commands {%1};
+    #LOCAL cnt {%2};
     #LOCAL epoch @GetEpoch{};
-    #LOCAL cnt {0};
     #FOREACH $commands _c {
         #IF {"$_c" == ""} {
-            #CONTINUE:
+            #CONTINUE;
         };
         #ECHO {@Timestamp{} 输入指令: $_c};
         $_c;
-        #MATH cnt {$cnt + 1};
     };
     #LIST {Command[history][q]} ADD {
         {
@@ -23,7 +22,7 @@
             {cnt} {$cnt}
         }
     };
-    #MATH Travel[history][cnt] {$Travel[history][cnt] + $cnt};
+    #MATH Command[history][cnt] {$Command[history][cnt] + $cnt};
 };
 
 #ALIAS PurgeHistory {
@@ -34,14 +33,22 @@
     #LOCAL epoch @GetEpoch{};
     #WHILE {$head < $n} {
         #LOCAL c {$Command[history][q][$next]};
-        #IF {$epoch - $c[epoch] < 12} {
+        #IF {$epoch - $c[epoch] < 10} {
             #BREAK;
         };
-        #MATH Command[history][q][cnt] {$Command[history][q][cnt] - $c[cnt]};
+        #MATH Command[history][cnt] {$Command[history][cnt] - $c[cnt]};
         #MATH head {$head + 1};
         #MATH next {$next + 1};
     };
     #IF {$head > 0} {
         #LIST Command[history][q] DELETE 1 $head;
     };
+};
+
+#FUNCTION GetCommandCnt {
+    #LOCAL total_cnt {0};
+    #FOREACH *Command[history][q][%*] {x} {
+        #MATH {total_cnt} {$total_cnt + $Command[history][q][$x][cnt]};
+    };
+    #RETURN $total_cnt;
 };

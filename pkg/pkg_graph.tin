@@ -26,7 +26,7 @@
     #LIST Travel[stops] explode {;};
 
     #EVENT {VARIABLE UPDATED env[room_update_hook]} {
-
+        #ECHO {@Timestamp{} [DEBUG]  env[room_update_hook] updated!};
         #LOCAL u {$Travel[stops][1]};
 
         PurgeHistory;
@@ -41,23 +41,29 @@
             };
 
             #LOCAL v {$Travel[stops][2]};
-            #IF {$Travel[history][cnt] > 0} {
-                #IF {$MAP[$u][$v][function] && $Travel[history][cnt] > 25
-                    || $Travel[history][cnt] + $MAP[$u][$v][dist] > 45} {
+            #LOCAL count @GetCommandCnt{};
+            Warn {$MAP[$u][$v][function], $Command[history][cnt], $count, $MAP[$u][$v][dist]};
+            #IF {$count > 0} {
+                #IF {"$MAP[$u][$v][function]" == "1" && $Command[history][cnt] > 11
+                    || $Command[history][cnt] + $MAP[$u][$v][dist] > 21} {
                     #DELAY 2 {
                         #VARIABLE {env[room_update_hook]} {1};
                     };
                     #RETURN {};
                 };
             };
-
             Info {$u ==> $v: $MAP[$u][$v][path]};
-            #VARIABLE {travel[started]} {1};
-            Cmd {$MAP[$u][$v][path]};
+            #IF {"$MAP[$u][$v][function]" == ""} {
+                Cmd {$MAP[$u][$v][path]} {$MAP[$u][$v][dist]};
+            };
+            #ELSE {
+                $MAP[$u][$v][path];
+            };            
+            Warn {Commands in rate limiting window: $Command[history][cnt]};
             #LIST Travel[stops] DELETE 1 1;
         };
     };
-    Cmd {look};
+    Cmd {look} {1};
 };
 
 

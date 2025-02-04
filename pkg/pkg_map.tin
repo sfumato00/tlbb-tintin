@@ -204,8 +204,8 @@
             {dist} {1}
         }
         {小山坡 westdown、southdown 和 eastdown} {
-            {path} {#2 e;eu}
-            {dist} {3}
+            {path} {e;eu}
+            {dist} {2}
         }
     }
     {青海草原 north、south、east、west 和 northwest} {

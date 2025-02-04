@@ -45,6 +45,13 @@
 
     #EVENT {VARIABLE UPDATED travel[started]} {
         #IF {@_assertRoomExitsKey{西夏王陵 north 和 southup}} {
+            #UNEVENT {VARIABLE UPDATED travel[started]};
+            #EVENT {VARIABLE UPDATED travel[started]} {
+                #IF {@_assertRoomExitsKey{欢迎来到天龙八部 south 和 down}} {
+                    #UNEVENT {VARIABLE UPDATED travel[started]};
+                    Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
+                };
+            };
             Travel_Test {西夏王陵 north 和 southup} {龙门客栈 west 和 up};
         };
     };
@@ -71,7 +78,7 @@
 
 
 
-#NOP conn;
+conn;
 
 
 
