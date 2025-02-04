@@ -36,7 +36,8 @@
     #LOCAL {hp_percentage} {0};
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
-    #IF {$vitals[气血%] < 30} {
+    #IF {$vitals[气血%] < 50} {
+        
         #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
             buffer_dump {fight};
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
@@ -139,6 +140,9 @@
     #FORMAT {exp_msg} {经验增速: %d (最大 %d // 平均 %d)} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
     #FORMAT {qn_msg} {潜能增速: %d  (最大 %d // 平均 %d)} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
 
+    Log {exp_msg} {Info} {$fight_stats[log_file]};
+    Log {qn_msg} {Info} {$fight_stats[log_file]};
+
     #DELAY {0.1} {
         #SHOWME {$exp_msg};
         #SHOWME {$qn_msg};
@@ -157,7 +161,7 @@
 
 #ALIAS {init_fight} {
     #ECHO {开始练功};
-    #LINE LOG $fight_stats[log_file] {@Timestamp{} 开始练功};
+    Log {开始练功} {Info} {$fight_stats[log_file]}; 
     remove cloth;
     drop cloth;
     wear cloth;
@@ -176,7 +180,7 @@
 } {5};
 
 #ACTION {^看起来%u想杀死你！$} {
-    
+    Log {%0} {Warn} {$fight_stats[log_file]};
     #EVENT {SESSION DISCONNECTED} {
         buffer_dump {kill};
         #UNTICKER {ticker_quit};
@@ -189,12 +193,12 @@
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
     #DELAY {60} {
-        cmd {no};
+        no;
     };
 };
 
 #ACTION {^( 你摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上。 )} {
-    cmd {surrender};
+    Cmd {surrender} {1};
     #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
         buffer_dump {fight};
         #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
@@ -204,8 +208,7 @@
 #ACTION {^%u将%u从背上放了下来，躺在地上。} {
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
-        #LOCAL filename {./log/npc_$username.log};
-        @LogLine{$filename;info};
+        Log {%0} {LOG} {./log/npc_$username.log};
     };
 };
 

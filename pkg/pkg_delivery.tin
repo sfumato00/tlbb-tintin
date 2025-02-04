@@ -1,31 +1,37 @@
 #NOP Delivery Module
 
 #CLASS consts READ {./const.tin};
+#CLASS graph READ {./pkg/pkg_graph.tin};
 #CLASS safety READ {./pkg/pkg_safety.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS map_functions READ {./pkg/pkg_map_functions.tin};
 
 #ACTION {^%*给你一位%u。$} {
-    #LINE LOG {./log/delivery_$username.log};
 
     #LOCAL {cn_name} {%2};
-    #VARIABLE {npc} {$NPC_NAME_CN_EN[$cn_name]};
-    
-    #IF {"$npc" == ""} {
+    #VARIABLE {Delivery[npc]} {$NPC_NAME_CN_EN[$cn_name]};
+    Log {%0} {Info} {./log/delivery_$username.log}; 
+    #IF {"$Delivery[npc]" == ""} {
         #LOCAL msg {无法识别的NPC: $cn_name};
+        Log {$msg} {DEBUG} {./log/delivery_$username.log};
         #ECHO {msg};
         #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
-            buffer_dump {delivery};
+            buffer_dump {delivery_unknown_npc};
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
         };
+        Cmd {drop all} {1};
+        #RETURN {};
     };
-    #SHOW {npc: $npc, weapon: $NPC_WEAPON[$cn_name]};
+
+    #SHOW {npc: $Delivery[npc], weapon: $NPC_WEAPON[$cn_name]};
     #IF {"$NPC_WEAPON[$cn_name]" != ""} {
-        cmd {get $NPC_WEAPON[$cn_name] from $npc};
+        Cmd {get $NPC_WEAPON[$cn_name] from $Delivery[npc]} {1};
     };
     #ELSE {
-        cmd {get all from $npc};
+        Cmd {get all from $Delivery[npc]} {1};
         #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 120} {
-            buffer_dump {delivery};
+            buffer_dump {delivery_unknown_weapon};
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
         };
     };
@@ -39,8 +45,9 @@
 #ACTION {^你必须连线十秒后才能离开游戏。$} {#DELAY {1} {quit}};
 
 #ACTION {%*慢慢睁开眼睛，清醒了过来。} {
-    #LINE LOG {./log/delivery_$username.log};
-quit};
+    Log {%0} {Info} {./log/delivery_$username.log}; 
+    Cmd {quit} {1};
+};
 
 #ACTION {^你身上没有这样东西。$} {
     quit;
@@ -54,13 +61,12 @@ quit};
     };
 
     #IF {"$env[room]" == "鬼门关"} {
-        #2 n;w;
-        ask $username about 回家;
+        Cmd {#2 n;w;ask $username about 回家} {4};
     };
 };
 
 #ACTION {^你给%*一位%*。} {
-    #LINE LOG {./log/delivery_$username.log};
+    Log {%0} {Info} {./log/delivery_$username.log}; 
     quit;
 };
 
@@ -70,5 +76,18 @@ quit};
         #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
     };
 };
+
+#ALIAS {go_deliver} {
+    #VARIABLE {Delivery[next_guy]} {%1};
+    #VARIABLE {Delivery[room_key]} {%2};
+
+    #EVENT {VARIABLE UPDATED env[travel_callback_hook]} {
+        #IF {@_assertRoomExitsKey{$Delivery[room_key]}} {
+            #UNEVENT {VARIABLE UPDATED env[travel_callback_hook]};
+            Cmd {give $Delivery[next_guy] $Delivery[npc]} {1};
+        };
+    };
+    goto {$Delivery[room_key]};
+} {5};
 
 #TICKER {发呆} {i;} {120};

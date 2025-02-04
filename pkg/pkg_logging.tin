@@ -1,10 +1,29 @@
 #NOP logging
 
-#FUNCTION {LogLine} {
-    #LOCAL path {%1};
-    #LOCAL level {%2};
-    #RETURN {@_logLine{$path;$level}};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#ALIAS {Log} {
+    #LOCAL msg %1;
+    #LOCAL level %2;
+    #LOCAL file_path %3;
+    #ECHO {@Timestamp{} [%2] $msg [$file_path] [@_logMsg{$file_path;$level;$msg}] };
 };
+
+#ALIAS {LogLine} {
+    #LOCAL level {%1};
+    #LOCAL file_path {%2};
+    #ECHO {@Timestamp{} [%2] $msg [$file_path] [@_logLine{$file_path;$level}] };
+}
+
+#ALIAS buffer_dump {
+    #LOCAL prefix {./log/};
+    #CAT prefix {%1};
+    #LIST file_name CREATE {$prefix;$username;@GetEpochAsDateTimeStr{}};
+    #LIST file_name COLLAPSE {_};
+    #CAT file_name {.log};
+    #ECHO {[DEBUG] Writing buffer to $file_name};
+    #BUFFER write $file_name;
+} {1};
 
 #FUNCTION {Info} {
     #RETURN {@Log{%1;info;$username}};
@@ -18,18 +37,10 @@
     #RETURN {@Log{%1;error;$username}};
 };
 
-#FUNCTION {Log} {
-    #LOCAL msg %1;
-    #LOCAL level %2;
-    #LOCAL file_path %3;
-    #RETURN {@_logMsg{$file_path;$level;$msg}};
-};
-
 #FUNCTION _logMsg {
     #LOCAL path {%1};
     #LOCAL level {%2};
-    #LOCAL msg {%3};
-    #LINE LOG $path {[$level] @timestamp{}};
+    #LOCAL msg {@Timestamp{} [$level] %3};
     #LINE LOG {$path} {$msg};
     #RETURN {$msg};
 };
@@ -37,17 +48,8 @@
 #FUNCTION _logLine {
     #LOCAL path {%1};
     #LOCAL level {%2};
-    #LINE LOG $path {[$level] @timestamp{}};
+    #LINE LOG $path {@Timestamp{} [$level]};
     #LINE LOG {$path};
     #RETURN {1};
 };
 
-#ALIAS buffer_dump {
-    #LOCAL prefix {./log/};
-    #CAT prefix {%1};
-    #LIST file_name CREATE {$prefix;$username;@GetEpochAsDateTimeStr{}};
-    #LIST file_name COLLAPSE {_};
-    #CAT file_name {.log};
-    #ECHO {[DEBUG] Writing buffer to $file_name};
-    #BUFFER write $file_name;
-} {1};
