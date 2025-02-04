@@ -1,4 +1,6 @@
-#CLASS utils OPEN;
+#NOP utils
+
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 
 #VARIABLE LOG_DIRECTORY {./log};
 
@@ -8,46 +10,16 @@
         #IF {"$_last_cmd" == ""} {
             #CONTINUE;
         };
+<<<<<<< HEAD
         #ECHO {输入指令: $_last_cmd};
         $_last_cmd;
+=======
+        #ECHO {@Timestamp{} 输入指令: $_last_cmd};
+        #SEND {$_last_cmd};
+>>>>>>> feature/downexp
         #VARIABLE {env[last_cmd]} {%U};
     };
 } {5};
-
-#FUNCTION {Info} {
-    #RETURN {@Log{%1;info;$username}};
-};
-
-#FUNCTION {Debug} {
-    #RETURN {@Log{%1;debug;$username}};
-};
-
-#FUNCTION {Error} {
-    #RETURN {@Log{%1;error;$username}};
-};
-
-#FUNCTION {Log} {
-    #LOCAL ts @timestamp{};
-    #ECHO {[LOG] %1 $ts};
-    #LOCAL filename {$LOG_DIRECTORY};
-    #LOCAL msg %1;
-    #LOCAL level %2;
-    #LOCAL filename %3;
-    #LOCAL file_path {};
-    #IF {"%2" == ""} {
-        #LOCAL msg {[LOG] $msg $ts};
-    } {
-        #LOCAL msg {[$level] $msg $ts};
-    };
-
-    #IF {"$filename" == ""} {
-        #LOCAL file_path {$LOG_DIRECTORY/log.log};
-    } {
-        #LOCAL file_path {$LOG_DIRECTORY/$filename.log};
-    };   
-    #LINE LOG {$file_path} {$msg};
-    #RETURN {$file_path};
-};
 
 #FUNCTION ParseFlakyNumber {
     #LOCAL res {0};
@@ -92,18 +64,3 @@
     #MATH ret {$multiple * 20};
     #RETURN $ret;
 };
-
-#FUNCTION GetTimeAsString {
-    #LOCAL ts %1;
-    #LOCAL time_str {};
-    #format {time_str} {%t} {{%H:%M:%S}{$ts}};
-    #RETURN {$time_str};
-};
-
-#FUNCTION timestamp {
-    #LOCAL utime {};
-    #format utime {%U};
-	#format result {%t.%m} {%Y-%m-%d %H:%M:%S} {$utime % 1000000 / 100000}
-};
-
-#CLASS utils CLOSE;

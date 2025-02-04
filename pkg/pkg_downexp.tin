@@ -3,12 +3,12 @@
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS room READ {./pkg/pkg_room.tin};
 
-#VARIABLE downexp[last_attempt] {0}; #NOP 这个变量的作用是防止在启动降经验模块的过程中卡住。
+#TICKER {ticker_feedback_loop} {cmd {hp}} {15};
 
-#ALIAS {返回战斗地点} {
+#ALIAS {move_back_to_fight_room_handler} {
     
     #ECHO {返回战斗地点};
-    stop_stuck_check
+    stop_stuck_check;
     #ECHO {距离返回战斗地点还有 18 秒};
     #DELAY {6} {
         #ECHO {距离返回战斗地点还有 12 秒};
@@ -16,15 +16,18 @@
             #ECHO {距离返回战斗地点还有 6 秒};
             #DELAY {6} {
                 start_stuck_check;
-                城隍庙-练功房间; #NOP 需要在角色profile里单独设置从城隍庙回到练功房间的路径。
-                
+                城隍庙-练功房间;
+                #CLASS state OPEN;
+                #VARIABLE {state[downexp_on]} {0};
+                #CLASS state CLOSE;
+                #CLASS state WRITE {state_$username.state};
+                #NOP 需要在角色profile里单独设置从城隍庙回到练功房间的路径。;
             };
         };
     };
 } {5};
 
-#ALIAS {你死了} {
-    #ECHO {debug: 鬼门关触发};
+#ALIAS {death_handler} {
     #LOCAL {exp_to_erase} {0};
     #IF {$downexp[target_exp]} {
         #MATH {exp_to_erase} {$vitals[经验] - $downexp[target_exp]};
@@ -41,27 +44,43 @@
 
 
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
+    #ECHO {[DEBUG] $state[downexp_on]};
+    #IF {$state[downexp_on]} {
+        #RETURN {};
+    };
     #LOCAL current_epoch {@GetEpoch{}};
-    
-    #IF {$vitals[经验] >= $downexp[threshold_exp] 
-        && ("$downexp[last_attempt]" == "" 
-            || @GetEpoch{} - $downexp[last_attempt] >= 120)} {
+    #IF {$vitals[经验] >= $downexp[threshold_exp]} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
-        #VARIABLE {downexp[last_attempt]} {@GetEpoch{}};
+        
+        #CLASS state OPEN;
+        #VARIABLE {state[downexp_on]} {1};
+        #CLASS state CLOSE;
+        #CLASS state WRITE {state_$username.state};
+
         stop;
         quit;
     };
 }
 
+
+
 #EVENT {VARIABLE UPDATED env[last_login]} {
+    #CLASS state READ {state_$username.state};
+    #IF {!$state[downexp_on]} {
+        #RETURN {};
+    };
     #EVENT {VARIABLE UPDATED env[room_updated]} {
         #IF {"$env[room]" == "驿站" && "$env[exits]" == " west"} {
+            hp;
             #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            
             #ECHO {[Debug]: 开始自杀。};
             enable dodge duan-steps;
             enable move duan-steps;
-            hp;
-            w;s;大理-跳崖;
+            #DELAY 15 {
+                w;s;
+                大理-跳崖;
+            };            
         };
     };
     start_stuck_check;
@@ -94,12 +113,12 @@
                 #EVENT {VARIABLE UPDATED env[room_updated]} {
                     #SWITCH {"$env[room]"} {
                         #CASE {"鬼门关"} {
-                            你死了;
+                            death_handler;
                         };
                         #CASE {"城隍庙"} {
                             #UNEVENT {VARIABLE UPDATED env[room_updated]};
                             drink tong;
-                            返回战斗地点;
+                            move_back_to_fight_room_handler;
                         };
                     };                    
                 };
@@ -109,9 +128,7 @@
             };                        
         };
     };
-    #delay {0.2} {
-        nu;wu;
-    };
+    nu;wu;
 } {1};
 
 

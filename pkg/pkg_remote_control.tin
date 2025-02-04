@@ -29,7 +29,7 @@
 
 
 #ACTION {(%1)告诉你：tellmeexpqn} {
-    @Info{%0};
+    @LogLine{./log/remove_control_$username.log;LOG};
     #LOCAL msg {};
     #LOCAL key {};
 
