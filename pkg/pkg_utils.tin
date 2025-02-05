@@ -10,13 +10,8 @@
         #IF {"$_last_cmd" == ""} {
             #CONTINUE;
         };
-<<<<<<< HEAD
-        #ECHO {输入指令: $_last_cmd};
-        $_last_cmd;
-=======
         #ECHO {@Timestamp{} 输入指令: $_last_cmd};
         #SEND {$_last_cmd};
->>>>>>> feature/downexp
         #VARIABLE {env[last_cmd]} {%U};
     };
 } {5};

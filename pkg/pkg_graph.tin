@@ -26,7 +26,6 @@
     #LIST Travel[stops] explode {;};
 
     #EVENT {VARIABLE UPDATED env[room_update_hook]} {
-        #ECHO {@Timestamp{} [DEBUG]  env[room_update_hook] updated!};
         #LOCAL u {$Travel[stops][1]};
 
         PurgeHistory;
@@ -37,6 +36,7 @@
             #IF {"$u" == "$dest"} {
                 Info {Arrived Final Destination: $dest};
                 #UNEVENT {VARIABLE UPDATED env[room_update_hook]};
+                #VARIABLE {Travel[trip_complete]} {1};
                 #RETURN {};
             };
 
@@ -44,8 +44,8 @@
             #LOCAL count @GetCommandCnt{};
             Warn {$MAP[$u][$v][function], $Command[history][cnt], $count, $MAP[$u][$v][dist]};
             #IF {$count > 0} {
-                #IF {"$MAP[$u][$v][function]" == "1" && $Command[history][cnt] > 11
-                    || $Command[history][cnt] + $MAP[$u][$v][dist] > 21} {
+                #IF {"$MAP[$u][$v][function]" == "1" && $Command[history][cnt] > 23
+                    || $Command[history][cnt] + $MAP[$u][$v][dist] > 23} {
                     #DELAY 2 {
                         #VARIABLE {env[room_update_hook]} {1};
                     };
@@ -63,7 +63,10 @@
             #LIST Travel[stops] DELETE 1 1;
         };
     };
-    Cmd {look} {1};
+    #IF {"$env[room]" == ""} {
+        Cmd {look} {1};
+    };
+    #ELSE {#VARIABLE env[room_update_hook] {1}};    
 };
 
 

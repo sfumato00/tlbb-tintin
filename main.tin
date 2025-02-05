@@ -1,7 +1,5 @@
 #NOP 
 
-
-
 #ALIAS {conn} {
     #VARIABLE {env} {
         {profile} {./profiles/profile_%1.tin}
@@ -12,17 +10,11 @@
 };
 
 #EVENT {SESSION DISCONNECTED} {
-    #gts #DELAY {3} {
-        conn $username;
-    };
+    conn $username;
 }
 
 #EVENT {SESSION TIMED OUT} {
-    #LOCAL delay {@Ran{10}};
-    #ECHO {Delay $delay seconds before reconnecting...};
-    #gts #DELAY {0.1} {
-        conn $username;
-    };
+    conn $username;
 };
 
 #FUNCTION Ran {

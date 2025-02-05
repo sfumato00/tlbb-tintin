@@ -16,7 +16,6 @@
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #UNACTION {^请不要一次输入太多的指令。$};
                 #VARIABLE {travel[started]} {0};
-                RunCallback;
             };
             #ELSE {
                 Cmd {e} {1};
@@ -29,7 +28,6 @@
 #ALIAS {黄土大道-southeast-west-东安门} {
     #IF {@_assertRoomExitsKey{黄土大道 southeast 和 west}} {
         #VARIABLE {travel[started]} {1};
-        #VARIABLE {travel[started]} {1};
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
                 #VARIABLE {env[room_updated]} {@GetEpoch{}};
@@ -37,10 +35,9 @@
         };
         #EVENT {VARIABLE UPDATED env[room_updated]} {
             #IF @_assertRoomExitsKey{东安门 east 和 west} {
-                #EVENT {VARIABLE UPDATED env[room_updated]};
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #UNACTION {^请不要一次输入太多的指令。$};
                 #VARIABLE {travel[started]} {0};
-                RunCallback;
             };
             #ELSE {
                 Cmd {w} {1};
@@ -63,7 +60,6 @@
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #UNACTION {^请不要一次输入太多的指令。$};
                 #VARIABLE {travel[started]} {0};
-                RunCallback;
             };
             #ELSE {
                 Cmd {e} {1};
@@ -80,7 +76,6 @@
             #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #VARIABLE {travel[started]} {0};
-                RunCallback;
             };
             #ELSE {
                 #regexp {$env[exits]} {northwest} {Cmd {nw} {1}} {Cmd {n} {1}};
@@ -97,7 +92,6 @@
             #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #VARIABLE {travel[started]} {0};
-                RunCallback;
             };
             #ELSE {
                 #regexp {$env[exits]} {southeast} {Cmd {se} {1}} {Cmd {s} {1}};
@@ -114,7 +108,6 @@
             #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #VARIABLE {travel[started]} {0};
-                RunCallback;
             };
             #ELSE {
                 Cmd {n} {1};
@@ -134,7 +127,6 @@
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #VARIABLE {travel[started]} {0};
                 #UNVARIABLE {travel[odd]};
-                RunCallback;
             };
             #ELSEIF {$travel[odd] == 1} {
                 Cmd {s} {1};
@@ -158,7 +150,6 @@
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
                 #VARIABLE {travel[started]} {0};
                 #UNVARIABLE {travel[odd]};
-                RunCallback;
             };
             #ELSEIF {$travel[odd] == 1} {
                 Cmd {s} {1};

@@ -32,7 +32,7 @@
     {东安门 east 和 west} {
         {黄土大道 southeast 和 west} {
             {path} {东安门-黄土大道}
-            {dist} {15}
+            {dist} {10}
             {function} {1}
         }
     }
@@ -75,8 +75,8 @@
             {dist} {7}
         }
         {汴梁城中心 north、south、east、west 和 up} {
-            {path} {#16 e}
-            {dist} {16}
+            {path} {#9 e}
+            {dist} {9}
         }
         {登封县北街 north、south、east 和 northwest} {
             {path} {#2 s}

@@ -20,5 +20,3 @@
 #FUNCTION Timestamp {
     #format {result} {%t} {%Y-%m-%d %H:%M:%S};
 };
-
-#CLASS ddatetime CLOSE;

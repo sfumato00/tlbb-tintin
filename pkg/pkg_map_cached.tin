@@ -6,7 +6,7 @@
     {
         {黄土大道 southeast 和 west} 
         {
-            {dist} {15}
+            {dist} {10}
             {function} {1}
             {path} {东安门-黄土大道}
         }
@@ -389,8 +389,8 @@
     {
         {汴梁城中心 north、south、east、west 和 up} 
         {
-            {dist} {16}
-            {path} {#16 e}
+            {dist} {9}
+            {path} {#9 e}
         }
         {洛阳中心 south、north、east、west 和 up} 
         {

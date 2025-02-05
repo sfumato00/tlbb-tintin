@@ -18,7 +18,7 @@
 
 #EVENT {SESSION CONNECTED} {
     #ECHO {SESSION CONNECTED};
-    #DELAY {delay_connection_timeout} {
+    #gts #DELAY {delay_connection_timeout} {
         #IF {"$env[conn_update]" == ""} {
             #ECHO {Cannot establish connection. Abort.};
             #zap;

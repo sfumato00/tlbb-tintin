@@ -2,10 +2,20 @@
 
 #CLASS consts READ {./const.tin};
 #CLASS graph READ {./pkg/pkg_graph.tin};
-#CLASS safety READ {./pkg/pkg_safety.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS map_functions READ {./pkg/pkg_map_functions.tin};
+
+#ALIAS {go_deliver} {
+    #EVENT {VARIABLE UPDATED env[travel_callback_hook]} {
+        #IF {@_assertRoomExitsKey{$Delivery[room_key]}} {
+            #UNEVENT {VARIABLE UPDATED env[travel_callback_hook]};
+            Cmd {give $Delivery[next_guy] $Delivery[npc]} {1};
+        };
+    };
+    goto {$Delivery[room_key]};
+} {5};
+
 
 #ACTION {^%*给你一位%u。$} {
 
@@ -49,20 +59,12 @@
     Cmd {quit} {1};
 };
 
-#ACTION {^你身上没有这样东西。$} {
-    quit;
+#ACTION {^$Delivery[next_guy_cn]走了过来。$} {
+    give $Delivery[next_guy] $Delivery[npc];
 };
 
-#EVENT {VARIABLE UPDATED env[room_updated]} {
-    #IF {"$env[room]" == "城隍庙"} {
-        buffer_dump {delivery};
-        #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
-        quit;
-    };
-
-    #IF {"$env[room]" == "鬼门关"} {
-        Cmd {#2 n;w;ask $username about 回家} {4};
-    };
+#ACTION {^你身上没有这样东西。$} {
+    quit;
 };
 
 #ACTION {^你给%*一位%*。} {
@@ -77,17 +79,27 @@
     };
 };
 
-#ALIAS {go_deliver} {
-    #VARIABLE {Delivery[next_guy]} {%1};
-    #VARIABLE {Delivery[room_key]} {%2};
 
-    #EVENT {VARIABLE UPDATED env[travel_callback_hook]} {
-        #IF {@_assertRoomExitsKey{$Delivery[room_key]}} {
-            #UNEVENT {VARIABLE UPDATED env[travel_callback_hook]};
-            Cmd {give $Delivery[next_guy] $Delivery[npc]} {1};
-        };
+#EVENT {VARIABLE UPDATED env[room_updated]} {
+    #IF {"$env[room]" == "城隍庙"} {
+        buffer_dump {delivery};
+        #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
+        quit;
     };
-    goto {$Delivery[room_key]};
-} {5};
+
+    #IF {"$env[room]" == "鬼门关"} {
+        Cmd {#2 n;w;ask $username about 回家} {4};
+    };
+};
+
+#EVENT {VARIABLE UPDATED env[last_reconnect]} {
+    Cmd {look} {1};
+};
+
 
 #TICKER {发呆} {i;} {120};
+
+
+#ALIAS {ttt} {
+    #SHOW {守卫给你一位守卫。};
+} {5};
