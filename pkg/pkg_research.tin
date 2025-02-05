@@ -1,7 +1,5 @@
 #NOP learn
 
-#CLASS research OPEN;
-
 #ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
     score;
 };
@@ -14,7 +12,7 @@
         #RETURN {};
     };
 
-    #IF {$vitals[内力] < $vitals[内力_max]} {
+    #IF {$vitals[内力] < 6000} {
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
         #IF {$xiqi > 0} {
             cmd {xiqi $xiqi};
@@ -23,7 +21,7 @@
         #IF {$yunqi > 0} {
             cmd {yunqi $yunqi};
         };
-        busy_dazuo $vitals[气血_max];
+        busy_dazuo @Min{$vitals[气血_max];9000};
         #RETURN {};
     };
 
@@ -44,7 +42,7 @@
     #ECHO {DEBUG: ================> research skill: $sk, desired level: $target_lv};
 
     #IF {$skills[$sk][lv] + 1 < $target_lv} {
-        cmd {research $sk $max_qn_to_spend};
+        busy_research {$sk} {$max_qn_to_spend};
         #RETURN {};
     };
     
@@ -52,15 +50,15 @@
     #ECHO {DEBUG: ================> m: $m, max_qn_to_spend: $max_qn_to_spend, min_qn_before_level: $min_qn_before_level};
     
     #IF {$min_qn_before_level > $m} {
-        cmd {research $sk $max_qn_to_spend};
+        busy_research {$sk} {$max_qn_to_spend};
     };
     #ELSEIF {$min_qn_before_level > 0} {
         #LOCAL qn_to_spend {};
         #MATH qn_to_spend {$min_qn_before_level * 5};
-        cmd {research $sk $qn_to_spend};
+        busy_research {$sk} {$qn_to_spend};
     };
     #ELSE {
-        cmd {research $sk 5};
+        busy_research {$sk} {5};
     };
 } {5}; 
 
@@ -112,5 +110,3 @@
 };
 
 #PROMPT {^你目前至少要用 %d 点潜能。$} {RES潜能: >> %1 <<} 0 ;
-
-#CLASS research CLOSE;

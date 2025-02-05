@@ -11,7 +11,10 @@ dev_pkg/
 db/
 profiles/
 log/
+hello*
 
 *.log
 
 .idea/
+
+state_*

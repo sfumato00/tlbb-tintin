@@ -1,4 +1,6 @@
-#CLASS busy_check open;
+#NOP Busy Mododule
+
+#CLASS command READ {./pkg/pkg_command.tin};
 
 #VARIABLE {busy} {
     {until} {}
@@ -40,7 +42,7 @@
     #LOCAL next_check {};
     #MATH next_check {$time + 1};
     #VARIABLE {busy[next_check]} {$next_check};
-    cmd {dazuo 1};
+    Cmd {dazuo 1};
 }
 
 #ALIAS {update_busy_until} {
@@ -70,17 +72,17 @@
 
 #ALIAS {busy_dazuo} {
     update_busy_until 8;
-    cmd {dazuo %1};
+    Cmd {dazuo %1} {1};
 } {5};
 
 #ALIAS {busy_research} {
     update_busy_until 1;
-    cmd {research %1 %2};
+    Cmd {research %1 %2} {1};
 } {5};
 
 #ALIAS {busy_du} {
     update_busy_until 1;
-    cmd {du %1 %2};
+    Cmd {du %1 %2} {1};
 } {5};
 
 #CLASS busy_check close;

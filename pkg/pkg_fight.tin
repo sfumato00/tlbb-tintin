@@ -140,8 +140,7 @@
     #FORMAT {exp_msg} {经验增速: %d (最大 %d // 平均 %d)} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
     #FORMAT {qn_msg} {潜能增速: %d  (最大 %d // 平均 %d)} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
 
-    Log {exp_msg} {Info} {$fight_stats[log_file]};
-    Log {qn_msg} {Info} {$fight_stats[log_file]};
+    Log {经验: $vitals[经验] $exp_msg $qn_msg} {Info} {$fight_stats[log_file]};
 
     #DELAY {0.1} {
         #SHOWME {$exp_msg};
