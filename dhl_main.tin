@@ -6,7 +6,7 @@
 
 #ALIAS {conn} {
     #VARIABLE {env} {
-        {profile} {./profiles/delivery_%1.tin}
+        {profile} {./profiles/dhl/%1.tin}
     };
 
     #CLASS delivery read {./pkg/pkg_delivery.tin};

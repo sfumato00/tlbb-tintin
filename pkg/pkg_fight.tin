@@ -151,6 +151,7 @@
 };
 
 #ALIAS {fight_npcs} {
+    #LOCAL npc_list {$Fight[npc_list]};
     #FOREACH {*npc_list[%*]} {x} {
         #FOREACH {*npc_list[$x][%*]} {i} {
             cmd {fight $x $npc_list[$x][$i]};
@@ -169,10 +170,15 @@
     set mute2;
     enable dodge none;
     enable move none;
+    #IF {"$Fight[downexp]" == "1"} {
+        #CLASS downexp READ {./pkg/pkg_downexp.tin};
+    };
 };
+
 #ALIAS {stop} {
     #ECHO {关闭 fight 模块};
-    #CLASS fight kill;
+    #CLASS downexp KILL;
+    #CLASS fight KILL;
     #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
     cmd {surrender};
     unset no_give;
@@ -206,6 +212,7 @@
 
 #ACTION {^%u将%u从背上放了下来，躺在地上。} {
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
+    #LOCAL npc_list {$Fight[npc_list]};#LOCAL npc_list {$Fight[npc_list]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
         Log {%0} {LOG} {./log/npc_$username.log};
     };
@@ -214,6 +221,7 @@
 
 #ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
+    #LOCAL npc_list {$Fight[npc_list]};
     #NOP #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list1: *npc_list[+1]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
         cmd {surrender};
@@ -233,6 +241,7 @@
 
 #FUNCTION CalNpcMsg {
     #LOCAL {msg} {};
+    #LOCAL npc_list {$Fight[npc_list]};
     #FOREACH {*npc_list[%*]} {x} {
         #LOCAL m {$x: $npc_list[$x][+1]-$npc_list[$x][-1]};
         #LIST msg ADD $m;

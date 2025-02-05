@@ -57,6 +57,11 @@
     }
     {十字广场 north、south、east、west 和 up} 
     {
+        {戏院 south} 
+        {
+            {dist} {2}
+            {path} {w;n}
+        }
         {黄土大道 north、west 和 southwest} 
         {
             {dist} {10}
@@ -145,15 +150,18 @@
             {function} {1}
             {path} {小山坡-天水关}
         }
-        {洛阳中心 south、north、east、west 和 up} 
-        {
-            {dist} {11}
-            {path} {小山坡-天水关;#8 e}
-        }
         {青海草原 north、south、east 和 west} 
         {
             {dist} {3}
             {path} {wd;w}
+        }
+    }
+    {小木间 south} 
+    {
+        {戏院 south} 
+        {
+            {dist} {2}
+            {path} {s;e}
         }
     }
     {少室山山脚 south 和 northwest} 
@@ -163,6 +171,19 @@
             {dist} {4}
             {function} {1}
             {path} {少室山山脚-登封县北街}
+        }
+    }
+    {戏院 south} 
+    {
+        {十字广场 north、south、east、west 和 up} 
+        {
+            {dist} {2}
+            {path} {s;e}
+        }
+        {小木间 south} 
+        {
+            {dist} {4}
+            {path} {open 门帘;w;open 木板;n}
         }
     }
     {林中大屋 out} 
@@ -193,6 +214,11 @@
     }
     {欢迎来到天龙八部 south 和 down} 
     {
+        {天贶殿 north、south、east 和 west} 
+        {
+            {dist} {34}
+            {path} {d;w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n}
+        }
         {龙门客栈 west 和 up} 
         {
             {dist} {1}
