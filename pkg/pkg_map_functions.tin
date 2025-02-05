@@ -164,11 +164,6 @@
     };
 }
 
-#ALIAS {RunCallback} {
-    #LOCAL callbackResult {@Callback{}};
-    #ECHO {Callback Result: $callbackResult};
-} {5};
-
 #FUNCTION _assertRoomExitsKey {
     #LOCAL {key} {$env[room]$env[exits]};
     #IF {"$key" == "%1"} {

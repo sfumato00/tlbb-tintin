@@ -1,10 +1,17 @@
 #NOP 
-#CLASS tlbb READ {./tlbb.tin};
+
+#CLASS config READ {./config.tin};
+#CLASS login READ {./pkg/pkg_login.tin};
+
+
 #ALIAS {conn} {
     #VARIABLE {env} {
-        {profile} {./profiles/profile_%1.tin}
+        {profile} {./profiles/delivery_%1.tin}
     };
+
+    #CLASS delivery read {./pkg/pkg_delivery.tin};
     #CLASS profile read {$env[profile]};
+    
     #SESSION {$username} {103.10.85.133} {8888};
 };
 

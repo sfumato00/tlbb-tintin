@@ -36,11 +36,6 @@
             {dist} {2}
             {path} {#2 s}
         }
-        {小山坡 westdown、southdown 和 eastdown} 
-        {
-            {dist} {20}
-            {path} {#2 s;#2 s;大道-黑沼泽;s;sw;n;e;e;eu}
-        }
         {皇宫大门 south、eastup 和 westup} 
         {
             {dist} {2}
@@ -149,6 +144,11 @@
             {dist} {3}
             {function} {1}
             {path} {小山坡-天水关}
+        }
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {11}
+            {path} {小山坡-天水关;#8 e}
         }
         {青海草原 north、south、east 和 west} 
         {
