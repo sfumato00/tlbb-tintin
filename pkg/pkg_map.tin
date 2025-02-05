@@ -176,6 +176,26 @@
             {path} {#9 n;ne}
             {dist} {10}
         }
+        {戏院 south} {
+            {path} {w;n}
+            {dist} {2}
+        }
+    }
+    {戏院 south} {
+        {十字广场 north、south、east、west 和 up} {
+            {path} {s;e}
+            {dist} {2}
+        }
+        {小木间 south} {
+            {path} {open 门帘;w;open 木板;n}
+            {dist} {4}
+        }
+    }
+    {小木间 south} {
+        {戏院 south} {
+            {path} {s;e}
+            {dist} {2}
+        }
     }
     {天水关 north、east 和 west} {
         {洛阳中心 south、north、east、west 和 up} {

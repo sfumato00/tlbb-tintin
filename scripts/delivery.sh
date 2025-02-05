@@ -24,14 +24,3 @@ for file in "$DIRECTORY"/delivery_*.tin; do
         session_names+=("$session_name")
     fi
 done
-
-sleep 3
-
-if [ ${#session_names[@]} -gt 0 ]; then
-    echo "Extracted parts:"
-    for session in "${session_names[@]}"; do
-        screen -X -S "$session" -p 0 -X stuff "y\n"
-    done
-else
-    echo "No extracted parts to process."
-fi
