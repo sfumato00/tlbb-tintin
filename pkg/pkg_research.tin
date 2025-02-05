@@ -12,7 +12,7 @@
         #RETURN {};
     };
 
-    #IF {$vitals[内力] < 6000} {
+    #IF {$vitals[内力] < $vitals[内力_max] / 2} {
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
         #IF {$xiqi > 0} {
             cmd {xiqi $xiqi};
@@ -29,7 +29,8 @@
     #LOCAL m {};
     #MATH m {$vitals[精神_max] / 20};
     #LOCAL max_qn_to_spend {};
-    #MATH max_qn_to_spend {$m * 5};
+    #MATH max_qn_to_spend {$vitals[精神_max] / 3 / 5 * 5};
+    #NOP #MATH max_qn_to_spend {$m * 5};
 
     
     #IF {$xiqi > 0} {
