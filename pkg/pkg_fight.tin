@@ -249,10 +249,10 @@
     feedback_loop;
 };
 
-#EVENT {VARIABLE UPDATED env[last_login]} {
+#EVENT {VARIABLE UPDATED env[last_reconnect]} {
     init_fight;
-    #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
-    cmd {hp};
+    #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
+    Cmd {hp} {1};
 }
 
 #FUNCTION CalNpcMsg {
