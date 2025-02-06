@@ -1,0 +1,50 @@
+#NOP Storage
+#CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+
+#ACTION {(%1)告诉你：(%2) (%3) (%4)} {
+    LogLine {LOG} {./log/remote_control_@GetDate{}_$username.log};
+    #VARIABLE {Remote[player]} {%1};
+    #VARIABLE {Remote[query]} {%4};
+    #VARIABLE {Remote[cmd]} {%3};
+
+    
+    #IF {"%2" == "aBcd1234" && "$Remote[cmd]" == "check" && "$Remote[query]" == "list"} {
+        #LOCAL msg {目前可供查询的道具有以下几种： };
+        #LIST str_builder CREATE {};
+        #FOREACH {*STORAGE[%*]} {item_name} {
+            #LIST str_builder ADD {$item_name($STORAGE[$item_name][id])};
+        };
+        #LIST str_builder COLLAPSE {, };
+        #CAT msg $str_builder;
+        #ECHO {$msg};
+        Cmd {reply $msg} {1};
+    };
+
+    #ELSEIF {"%2" == "aBcd1234" && "$STORAGE[$Remote[query]]" != ""} {
+        #LOG APPEND {./log/tangyuan_@GetDate{}_$username.log};
+        #LOCAL item {$STORAGE[$Remote[query]][id]};
+        #LOCAL bag {$STORAGE[$Remote[query]][bag]};
+        
+        #SWITCH {"%3"} {
+            #CASE {"get"} {
+                Cmd {get $item from bag $bag} {1};
+                Cmd {give %1 $item} {1};
+                Cmd {put $item in bag $bag} {1};
+            };
+            #CASE {"check"} {
+                #VARIABLE Remote[storage] {0};
+                #ACTION {^      $Remote[query](%+)} {
+                    #MATH Remote[storage] {$Remote[storage] + 1};
+                };
+                Cmd {l bag $bag};
+                #DELAY 2 {
+                    Cmd {reply $Remote[query] 还有 $Remote[storage] 个。} {1};
+                    #UNACTION {#ACTION {^      $Remote[query](%+)}};
+                    #UNVARIABLE {Remote};
+                };
+            };            
+        };
+    };
+    
+} {1};

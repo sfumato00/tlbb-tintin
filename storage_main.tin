@@ -1,0 +1,32 @@
+#NOP Fight 
+
+#CLASS config READ {./config.tin};
+#CLASS login READ {./pkg/pkg_login.tin};
+
+#ALIAS {conn} {
+    #VARIABLE {env} {
+        {profile} {./profiles/storage/%1.tin}
+    };
+    #CLASS profile read {$env[profile]};
+    
+    #CLASS storage read {./pkg/pkg_storage.tin};
+    #SESSION {$username} {103.10.85.133} {8888};
+};
+
+#EVENT {SESSION DISCONNECTED} {
+    #gts #DELAY 3 {
+        conn $username;
+    };    
+}
+
+#EVENT {SESSION TIMED OUT} {
+    conn $username;
+};
+
+#EVENT {VARIABLE UPDATED env[last_login]} {
+    #TICKER {ticker_stay} {hp} {300};
+}
+
+#EVENT {VARIABLE UPDATED env[last_reconnect]} {
+    #TICKER {ticker_stay} {hp} {300};
+}

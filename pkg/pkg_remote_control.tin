@@ -1,13 +1,13 @@
 #NOP remote control module
-#CLASS utils READ {./pkg/pkg_utils.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
 
 #ACTION {(%w)告诉你：(%a) "%a"} {
     LogLine {LOG} {./log/remote_control_@GetDate{}_$username.log};
     #IF {"%2" == "$password"} {
         #ECHO {%3};
-        cmd {%3};
-        cmd {tell %1 {已经执行: %3}};
+        Cmd {%3} {1};
+        Cmd {tell %1 {已经执行: %3}} {1};
     };
 };
 #ACTION {(%1)告诉你：(%2) set var %3 "%4"} {
@@ -44,78 +44,3 @@
 };
 
 
-#ACTION {(%1)告诉你：(%2) (%3) (%4)} {
-    LogLine {LOG} {./log/remote_control_@GetDate{}_$username.log};
-    #VARIABLE {Remote[player]} {%1};
-    #VARIABLE {Remote[query]} {%4};
-
-    #IF {"%2" == "aBcd1234" && "$STORAGE[$Remote[query]]" != ""} {
-
-        #LOG APPEND {./log/tangyuan_{Timestamp{}}_$username.log};
-
-        #LOCAL item {$STORAGE[$Remote[query]][id]};
-        #LOCAL bag {$STORAGE[$Remote[query]][bag]};
-        
-        #IF {"%3" == "get"} {
-            Cmd {get $item from bag $bag} {1};
-            Cmd {give %1 $item} {1};
-            Cmd {put $item in bag $bag} {1};
-        };
-        #ELSEIF {"%3" == "check"} {
-            #VARIABLE Remote[storage] {0};
-            #ACTION {^      $Remote[query](%+)} {
-                #MATH Remote[storage] {$Remote[storage] + 1};
-            };
-            Cmd {l bag $bag};
-            #DELAY 2 {
-                Cmd {tell $Remote[player] $Remote[query] 还有 $Remote[storage] 个。} {1};
-                #UNACTION {#ACTION {^      $Remote[query](%+)}};
-                #UNVARIABLE {Remote};
-            };
-        };
-    };
-} {1};
-
-
-#VARIABLE {STORAGE} {
-    {碧血金丹} {
-        {id} {dan}
-        {bag} {2}
-    }
-    {云海听滔} {
-        {id} {wine}
-        {bag} {3}
-    }
-    {落梅秋霞} {
-        {id} {wine}
-        {bag} {4}
-    }
-    {万寿汤圆} {
-        {id} {tangyuan}
-        {bag} {5}
-    }
-    {群龙汤圆} {
-        {id} {tangyuan}
-        {bag} {6}
-    }
-    {羊年元宵} {
-        {id} {yuanxiao}
-        {bag} {7}
-    }
-    {天山寿雪} {
-        {id} {wine}
-        {bag} {8}
-    }
-    {开胃小手枪} {
-        {id} {gun}
-        {bag} {9}
-    }
-    {小还丹} {
-        {id} {dan}
-        {bag} {10}
-    }
-    {九转回还丹} {
-        {id} {elixir}
-        {bag} {10}
-    }
-};

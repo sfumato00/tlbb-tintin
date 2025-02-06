@@ -35,6 +35,10 @@
             {dist} {10}
             {function} {1}
         }
+        {汴梁城中心 north、south、east、west 和 up} {
+            {path} {#6 w}
+            {dist} {6}
+        };
     }
     {黄土大道 southeast 和 west} {
         {东安门 east 和 west} {
@@ -61,6 +65,10 @@
         {神憩小舍 east、southdown、northwest 和 up} {
             {path} {#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
             {dist} {15}
+        }
+        {黄土大道 southeast 和 west} {
+            {path} {#9 s}
+            {dist} {9}
         }
     }
     {神憩小舍 east、southdown、northwest 和 up} {
@@ -103,6 +111,26 @@
             {path} {少室山山脚-登封县北街}
             {dist} {4}
             {function} {1}
+        }
+        {山道 southeast、southwest 和 northup} {
+            {path} {nw;nu;n;eu;n;nw}
+            {dist} {6}
+        }
+    }
+    {山道 southeast、southwest 和 northup} {
+        {少室山山脚 south 和 northwest} {
+            {path} {se;s;wd;s;sd;se}
+            {dist} {6}
+        }
+        {二祖庵庵门 south 和 east} {
+            {path} {sw;wu;su;sw;su;w}
+            {dist} {6}
+        }
+    }
+    {二祖庵庵门 south 和 east} {
+        {山道 southeast、southwest 和 northup} {
+            {path} {e;nd;ne;nd;ed;ne}
+            {dist} {6}
         }
     }
     {登封县中央广场 north、south、east、west 和 up} {
@@ -245,6 +273,7 @@
             {path} {wd;w}
             {dist} {3}
         }
+        
     }
     {青海草原 north、south、east 和 west} {
         {青海草原 north、south、east、west 和 northwest} {
@@ -265,6 +294,13 @@
             {path} {w;s;n;w}
             {dist} {4}
         }
+        {虎跳溪 east 和 southdown} {
+            {path} {nw;#2 nu}
+            {dist} {3}
+        }
+    }
+    {虎跳溪 east 和 southdown} {
+        
     }
     {青海草原 north、south 和 west} {
         {青海草原 north、south、east、west 和 northwest} {

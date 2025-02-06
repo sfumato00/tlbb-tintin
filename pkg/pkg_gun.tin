@@ -1,0 +1,60 @@
+#NOP gun
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS check_busy READ {./pkg/pkg_checkbusy.tin};
+
+#VARIABLE {Gun[book]} {parrybook};
+#VARIABLE {Gun[count]} {0};
+
+#ALIAS {feedback_loop_gun} {
+
+    #10 {
+        Cmd {shoot doge} {1};
+        #2 Cmd {
+            drink longyin;
+            tuna $vitals[精神_max];
+        } {2};
+    };    
+};
+
+#ALIAS {feedback_loop_1} {
+    #IF {!($Gun[count] % 2)} {
+        Cmd {shoot doge} {1};
+        #VARIABLE {Gun[count]} {0};
+    };
+    Cmd {
+        drink longyin;
+        du $Gun[book] $vitals[精神_max];
+        skills;
+        enable;
+    } {2};
+   
+    #MATH Gun[count] {$Gun[count] + 1};
+} {5};
+
+#Ticker {ticker_du} {feedback_loop_gun} {12};
+
+
+#ACTION {^  才智 (literate)     ： %S              有效等级：%s%*$} {
+    
+    #VARIABLE {enables[literate]} {@ParseFlakyNumber{%3}};
+};
+
+#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%*} {
+    
+    #LOCAL v $skills[%4][prof];
+    #LOCAL new_v @ParseFlakyNumber{%11};
+    #MATH v {$new_v - $v};
+    
+    #VARIABLE {skills[%4]} {
+        {lv} {%9}
+        {prof} {@ParseFlakyNumber{%11}}
+    };
+    #IF {$v > 0} {
+        #Show {%0} {%1%2%3(%4)%5-%6%7%8%9/%10$skills[%4][prof]  <fca>+{$v}} 0 0;
+    };
+} {1};
+
+
+#ALIAS {name} {
+    commands
+} {5};

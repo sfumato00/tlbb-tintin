@@ -1,0 +1,28 @@
+#NOP Check busy
+
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#ACTION {^你最少要花 10 点「气」才能练功。$} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {0};
+} {1};
+
+#ACTION {^你必须先用 enable 选择你要用的内功心法。$} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {0};
+} {1};
+
+#ACTION {^你上一个动作还没有完成} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {1};
+};
+
+#ACTION {^( 你上一个动作还没有完成，不能施用内功。)$} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {1};
+} {5};
+
+#ACTION {^你正忙着呢} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {1};
+} {5};

@@ -4,6 +4,11 @@
 {
     {东安门 east 和 west} 
     {
+        {汴梁城中心 north、south、east、west 和 up} 
+        {
+            {dist} {6}
+            {path} {#6 w}
+        }
         {黄土大道 southeast 和 west} 
         {
             {dist} {10}
@@ -85,11 +90,6 @@
             {dist} {6}
             {path} {n;#5 w}
         }
-        {神憩小舍 east、southdown、northwest 和 up} 
-        {
-            {dist} {38}
-            {path} {n;e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
-        }
     }
     {大路 south、north 和 southeast} 
     {
@@ -151,6 +151,11 @@
             {dist} {15}
             {path} {#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
+        {黄土大道 southeast 和 west} 
+        {
+            {dist} {9}
+            {path} {#9 s}
+        }
     }
     {小山坡 westdown、southdown 和 eastdown} 
     {
@@ -176,11 +181,24 @@
     }
     {少室山山脚 south 和 northwest} 
     {
+        {山道 southeast、southwest 和 northup} 
+        {
+            {dist} {6}
+            {path} {nw;nu;n;eu;n;nw}
+        }
         {登封县北街 north、south、east 和 northwest} 
         {
             {dist} {4}
             {function} {1}
             {path} {少室山山脚-登封县北街}
+        }
+    }
+    {山道 southeast、southwest 和 northup} 
+    {
+        {少室山山脚 south 和 northwest} 
+        {
+            {dist} {6}
+            {path} {se;s;wd;s;sd;se}
         }
     }
     {戏院 south} 
@@ -244,6 +262,11 @@
         {
             {dist} {6}
             {path} {#6 e}
+        }
+        {山道 southeast、southwest 和 northup} 
+        {
+            {dist} {21}
+            {path} {#9 w;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw}
         }
         {黄土大道 north、west 和 southwest} 
         {

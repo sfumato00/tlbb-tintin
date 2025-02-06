@@ -55,18 +55,6 @@
 
 #ACTION {^你的「%u」进步了！$} {cmd {skills};}
 
-
-#nop 练功模块
-
-#ALIAS {练功} {
-
-    #ECHO {开启 fight 模块};
-    #CLASS fight kill;
-    #CLASS fight read {./pkg/pkg_fight.tin};
-    #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
-    cmd {hp};
-} {5};
-
 #NOP 九阳
 #ALIAS {九阳} {
 
