@@ -62,6 +62,11 @@
             {dist} {2}
             {path} {w;n}
         }
+        {驿站 west} 
+        {
+            {dist} {2}
+            {path} {n;e}
+        }
         {黄土大道 north、west 和 southwest} 
         {
             {dist} {10}
@@ -79,6 +84,11 @@
         {
             {dist} {6}
             {path} {n;#5 w}
+        }
+        {神憩小舍 east、southdown、northwest 和 up} 
+        {
+            {dist} {38}
+            {path} {n;e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
     }
     {大路 south、north 和 southeast} 
@@ -149,11 +159,6 @@
             {dist} {3}
             {function} {1}
             {path} {小山坡-天水关}
-        }
-        {洛阳中心 south、north、east、west 和 up} 
-        {
-            {dist} {11}
-            {path} {小山坡-天水关;#8 e}
         }
         {青海草原 north、south、east 和 west} 
         {
@@ -374,6 +379,19 @@
             {path} {w;s;n;w}
         }
     }
+    {驿站 west} 
+    {
+        {十字广场 north、south、east、west 和 up} 
+        {
+            {dist} {2}
+            {path} {w;s}
+        }
+        {黄土大道 north、west 和 southwest} 
+        {
+            {dist} {10}
+            {path} {w;#8 n;ne}
+        }
+    }
     {黄土大道 north、northeast 和 west} 
     {
         {天贶殿 north、south、east 和 west} 
@@ -403,6 +421,11 @@
         {
             {dist} {6}
             {path} {#6 w}
+        }
+        {驿站 west} 
+        {
+            {dist} {10}
+            {path} {sw;#8 s;e}
         }
         {龙门客栈 west 和 up} 
         {

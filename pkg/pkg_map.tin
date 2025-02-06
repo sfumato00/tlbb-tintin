@@ -180,6 +180,10 @@
             {path} {#4 n;e}
             {dist} {5}
         }
+        {驿站 west} {
+            {path} {sw;#8 s;e}
+            {dist} {10}
+        }
     }
     {十字广场 north、south、east、west 和 up} {
         {黄土大道 north、west 和 southwest} {
@@ -189,6 +193,20 @@
         {戏院 south} {
             {path} {w;n}
             {dist} {2}
+        }
+        {驿站 west} {
+            {path} {n;e}
+            {dist} {2}
+        }
+    }
+    {驿站 west} {
+        {十字广场 north、south、east、west 和 up} {
+            {path} {w;s}
+            {dist} {2}
+        }
+        {黄土大道 north、west 和 southwest} {
+            {path} {w;#8 n;ne}
+            {dist} {10}
         }
     }
     {戏院 south} {

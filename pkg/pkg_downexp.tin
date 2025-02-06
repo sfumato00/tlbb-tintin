@@ -2,8 +2,31 @@
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS room READ {./pkg/pkg_room.tin};
+#CLASS graph READ {./pkg/pkg_graph.tin};
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 
-#TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+
+#TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
+
+#EVENT {VARIABLE UPDATED env[last_login]} {
+    hp;
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {@_assertRoomExitsKey{驿站 west}} {
+            #ECHO {[Debug]: 开始自杀。};
+            stop;
+            enable dodge duan-steps;
+            enable move duan-steps;
+            #CLASS safety KILL;
+            start_stuck_check;
+            Cmd {w;s} {2};
+            大理-跳崖;
+        };
+    };    
+} {1};
+
 
 #ALIAS {move_back_to_fight_room_handler} {
     
@@ -16,12 +39,12 @@
             #ECHO {距离返回战斗地点还有 6 秒};
             #DELAY {6} {
                 start_stuck_check;
-                城隍庙-练功房间;
-                #CLASS state OPEN;
-                #VARIABLE {state[downexp_on]} {0};
-                #CLASS state CLOSE;
-                #CLASS state WRITE {state_$username.state};
-                #NOP 需要在角色profile里单独设置从城隍庙回到练功房间的路径。;
+                #CLASS graph READ {./pkg/pkg_graph.tin};
+                #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+                    #CLASS graph KILL;
+                    init_fight;
+                };
+                goto {$Fight[room]};
             };
         };
     };
@@ -29,62 +52,31 @@
 
 #ALIAS {death_handler} {
     #LOCAL {exp_to_erase} {0};
-    #IF {$downexp[target_exp]} {
+    #IF {"$downexp[target_exp]" != ""} {
         #MATH {exp_to_erase} {$vitals[经验] - $downexp[target_exp]};
     };
 
     #ECHO {降 $exp_to_erase 经验};
-    鬼门关-黑店;
+    Cmd {#2 n;e} {3};
     #ECHO {tell qian $exp_to_erase};
-    tell qian $exp_to_erase;
-    y;
-    #2 w;
-    ask $username about 回家;
+    Cmd {
+        tell qian $exp_to_erase;
+        y;
+        #2 w;
+        ask $username about 回家;
+    } {5};
 } {5};
 
-
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
-    #ECHO {[DEBUG] $state[downexp_on]};
-    #IF {$state[downexp_on]} {
+    #IF {"$state[downexp_on]" == "1"} {
         #RETURN {};
     };
-    #LOCAL current_epoch {@GetEpoch{}};
     #IF {$vitals[经验] >= $downexp[threshold_exp]} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
-        
-        #CLASS state OPEN;
-        #VARIABLE {state[downexp_on]} {1};
-        #CLASS state CLOSE;
-        #CLASS state WRITE {state_$username.state};
-
-        stop;
+        update_state 1;
         quit;
     };
 }
-
-
-
-#EVENT {VARIABLE UPDATED env[last_login]} {
-    #CLASS state READ {state_$username.state};
-    #IF {!$state[downexp_on]} {
-        #RETURN {};
-    };
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[room]" == "驿站" && "$env[exits]" == " west"} {
-            hp;
-            #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            
-            #ECHO {[Debug]: 开始自杀。};
-            enable dodge duan-steps;
-            enable move duan-steps;
-            #DELAY 15 {
-                w;s;
-                大理-跳崖;
-            };            
-        };
-    };
-    start_stuck_check;
-};
 
 #ACTION {^你必须连线十秒后才能离开游戏。$} {
     #delay 2 {quit};
@@ -102,33 +94,35 @@
         #SWITCH {"$env[room]"} {
             #CASE {"山路"} {
                 #SWITCH {"$env[exits]"} {
-                    #CASE {" southdown 和 northup"} {cmd {nu}};
-                    #CASE {" northeast 和 southdown"} {cmd {climb mountain}};
-                    #CASE {" north 和 southdown"} {cmd {climb mountain}};
+                    #CASE {" southdown 和 northup"} {Cmd {nu} {1}};
+                    #CASE {" northeast 和 southdown"} {Cmd {climb mountain} {1}};
+                    #CASE {" north 和 southdown"} {Cmd {climb mountain} {1}};
                 };                
             };
             #CASE {"山顶"} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                n;e;n;n;e;e;s;s;
+                Cmd {n;e;n;n;e;e;s;s} {8};
                 #EVENT {VARIABLE UPDATED env[room_updated]} {
                     #SWITCH {"$env[room]"} {
                         #CASE {"鬼门关"} {
+                            update_state 0;
                             death_handler;
                         };
                         #CASE {"城隍庙"} {
+                            update_state 0;
                             #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                            drink tong;
+                            Cmd {drink tong} {1};
                             move_back_to_fight_room_handler;
                         };
                     };                    
                 };
                 #delay {0.2} {
-                    jump down;
+                    Cmd {jump down} {1};
                 };
             };                        
         };
     };
-    nu;wu;
+    Cmd {nu;wu} {2};
 } {1};
 
 
@@ -157,35 +151,9 @@
     #UNTICKER {ticker_stuck_check};
 } {5};
 
-
-#ALIAS {练功-城隍庙-神憩小舍} {
-    n;
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {"$env[room]" == "东安门"} {
-            #UNEVENT {VARIABLE UPDATED env[room_updated]};
-            #ACTION {^请不要一次输入太多的指令。$} {
-                #DELAY 12 {cmd {e}};
-            };
-            #EVENT {VARIABLE UPDATED env[room_updated]} {
-                #IF {"$env[exits]" == " east 和 west"} {
-                    #DELAY 0.1 {
-                        cmd {e};
-                    };
-                } {
-                    #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                    #UNACTION {^请不要一次输入太多的指令。$};
-                    #DELAY 12 {
-                        se;e;#13 n;
-                        cmd {nw;nw;nu;nu;n;nu;n;nu;n;nu;ne;nu};
-                        #DELAY 5 {
-                            stop_stuck_check;
-                            练功;
-                        };
-                    };            
-                };
-            };
-            cmd {e};
-        };
-    };
-    cmd {e};
-} {5};
+#ALIAS update_state {
+    #CLASS state OPEN;
+    #VARIABLE {state[downexp_on]} {%1};
+    #CLASS state CLOSE;
+    #CLASS state WRITE {./state/state_$username.state};
+}

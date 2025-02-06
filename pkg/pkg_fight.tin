@@ -3,11 +3,18 @@
 #CLASS const READ {./const.tin};
 
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
-#CLASS safety READ {./pkg/pkg_safety.tin};
+
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS remote_control READ {./pkg/pkg_remote_control.tin};
+
+#IF {"$Fight[downexp]" == "1"} {
+    #CLASS downexp READ {./pkg/pkg_downexp.tin};
+};
+#IF {"$Fight[jiuyang]" == "1"} {
+    #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
+};
 
 #GAG {似乎有些疲惫，但是仍然十分有活力。 )};
 #GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};
@@ -25,7 +32,6 @@
 
 #VARIABLE {MIN_IN_SECOND} {60};
 #VARIABLE {MIN_IN_MICRO_SECOND} {60M};
-
 
 #ALIAS {feedback_loop} {
     Cmd {say @CalNpcMsg{}} {1};
@@ -151,7 +157,7 @@
         #SHOWME {$qn_msg};
     };
 
-    #VARIABLE {vitals[hook_downexp]}{1};
+    #VARIABLE {vitals[hook_downexp]} {1};
 };
 
 #ALIAS {fight_npcs} {
@@ -166,6 +172,12 @@
 #ALIAS {init_fight} {
     #ECHO {开始练功};
     Log {开始练功} {Info} {$fight_stats[log_file]}; 
+    #CLASS safety READ {./pkg/pkg_safety.tin};
+
+    #EVENT {VARIABLE UPDATED vitals[经验]} {
+        feedback_loop;
+    };
+    
     Cmd {
         remove cloth;
         drop cloth;
@@ -175,37 +187,17 @@
         set mute2;
         enable dodge none;
         enable move none;
+        hp;
     } {8};
-    #IF {"$Fight[downexp]" == "1"} {
-        #CLASS downexp READ {./pkg/pkg_downexp.tin};
-    };
-    #IF {"$Fight[jiuyang]" == "1"} {
-        #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
-    };
 };
 
 #ALIAS {stop} {
-    #ECHO {关闭 fight 模块};
-    #CLASS downexp KILL;
-    #CLASS jiuyang KILL;
-    #CLASS fight KILL;
-    #TICKER {ticker_feedback_loop} {cmd {hp}} {60};
+    #ECHO {暂停练功};
+    #UNEVENT {VARIABLE UPDATED vitals[经验]};
+    #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {60};
     Cmd {surrender} {1};
     unset no_give;
 } {5};
-
-
-#ACTION {^看起来%u想杀死你！$} {
-    Log {%0} {Warn} {$fight_stats[log_file]};
-    #EVENT {SESSION DISCONNECTED} {
-        buffer_dump {kill};
-        #UNTICKER {ticker_quit};
-    };
-    quit;
-    #ticker {ticker_quit} {
-        quit;
-    } {1};
-};
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
     #DELAY {60} {
@@ -217,7 +209,7 @@
     Cmd {surrender} {1};
     #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
         buffer_dump {fight};
-        #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
+        #VARIABLE {env[last_buffer_dump]} {@Timestamp{}};
     };
 };
 
@@ -245,14 +237,12 @@
     };
 };
 
-#EVENT {VARIABLE UPDATED vitals[经验]} {
-    feedback_loop;
-};
+
 
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {
-    init_fight;
+    Cmd {look;hp} {2};
     #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
-    Cmd {hp} {1};
+    init_fight;
 }
 
 #FUNCTION CalNpcMsg {

@@ -12,6 +12,7 @@ db/
 profiles/
 log/
 scripts/
+state/
 
 *.log
 
