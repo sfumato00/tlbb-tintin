@@ -7,6 +7,7 @@
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS remote_control READ {./pkg/pkg_remote_control.tin};
 
 #GAG {似乎有些疲惫，但是仍然十分有活力。 )};
 #GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};

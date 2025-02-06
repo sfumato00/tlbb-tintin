@@ -20,3 +20,7 @@
 #FUNCTION Timestamp {
     #format {result} {%t} {%Y-%m-%d %H:%M:%S};
 };
+
+#FUNCTION GetDate {
+    #format {result} {%t} {%Y-%m-%d};
+};
