@@ -1,9 +1,9 @@
 temp*
 test_*
-template*
-dev_*
-profiles_*
+hello*
 
+profiles_*
+dev_*
 backup_*
 
 dev/
@@ -11,10 +11,9 @@ dev_pkg/
 db/
 profiles/
 log/
-hello*
+scripts/
 
 *.log
 
 .idea/
-
 state_*
