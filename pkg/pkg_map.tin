@@ -152,6 +152,16 @@
             {path} {#6 s}
             {dist} {6}
         }
+        {松鹤楼 east 和 up} {
+            {path} {n;w}
+            {dist} {2}
+        }
+    }
+    {松鹤楼 east 和 up} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {e;s}
+            {dist} {2}
+        }
     }
     {黄土大道 north、west 和 southwest} {
         {十字广场 north、south、east、west 和 up} {

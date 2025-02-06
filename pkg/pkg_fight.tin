@@ -1,9 +1,12 @@
 #NOP 练功模块
 
 #CLASS const READ {./const.tin};
+
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
 #CLASS safety READ {./pkg/pkg_safety.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
 
 #GAG {似乎有些疲惫，但是仍然十分有活力。 )};
 #GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};
@@ -24,13 +27,13 @@
 
 
 #ALIAS {feedback_loop} {
-    cmd {say @CalNpcMsg{}};
+    Cmd {say @CalNpcMsg{}} {1};
     #IF {$vitals[饮水] < $vitals[饮水_max]} {
-        cmd {drink tong};
+        Cmd {drink tong} {1};
     };
 
     #IF {$vitals[食物] < $vitals[食物_max]} {
-        cmd {eat pig};
+        Cmd {eat pig} {1};
     };
 
     #LOCAL {hp_percentage} {0};
@@ -54,14 +57,14 @@
         } {1};
     };
 
-    #IF {$vitals[气血%] == 100 && $hp_percentage >= 70 && $vitals[饮水] > 0} {
+    #IF {$vitals[气血%] >= 100 && $hp_percentage >= 70 && $vitals[饮水] > 0} {
         fight_npcs;
     };
         
     #IF {$vitals[气血%] < 95 || $hp_percentage < 50} {
         #ECHO {<faa>=====> 非正常状态, 紧急处理 <=======};
         #SHOW {<faa>=====> 非正常状态, 紧急处理 <=======} 2 10;
-        cmd {surrender};
+        Cmd {surrender} {1};
         #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
             buffer_dump {fight};
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
@@ -154,7 +157,7 @@
     #LOCAL npc_list {$Fight[npc_list]};
     #FOREACH {*npc_list[%*]} {x} {
         #FOREACH {*npc_list[$x][%*]} {i} {
-            cmd {fight $x $npc_list[$x][$i]};
+            Cmd {fight $x $npc_list[$x][$i]} {1};
         };
     };
 } {5};
@@ -162,14 +165,16 @@
 #ALIAS {init_fight} {
     #ECHO {开始练功};
     Log {开始练功} {Info} {$fight_stats[log_file]}; 
-    remove cloth;
-    drop cloth;
-    wear cloth;
-    set no_give 1;
-    set no_msg 1;
-    set mute2;
-    enable dodge none;
-    enable move none;
+    Cmd {
+        remove cloth;
+        drop cloth;
+        wear cloth;
+        set no_give 1;
+        set no_msg 1;
+        set mute2;
+        enable dodge none;
+        enable move none;
+    } {8};
     #IF {"$Fight[downexp]" == "1"} {
         #CLASS downexp READ {./pkg/pkg_downexp.tin};
     };
@@ -180,7 +185,7 @@
     #CLASS downexp KILL;
     #CLASS fight KILL;
     #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
-    cmd {surrender};
+    Cmd {surrender} {1};
     unset no_give;
 } {5};
 
@@ -218,15 +223,14 @@
     };
 };
 
-
 #ACTION {^%u慢慢睁开眼睛，清醒了过来。} {
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #LOCAL npc_list {$Fight[npc_list]};
     #NOP #ECHO {[DEBUG] match: %1, npc_id: $npc_id, npc_list1: *npc_list[+1]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
-        cmd {surrender};
+        Cmd {surrender} {1};
         #DELAY {3.1} {
-            hp;
+            Cmd {hp} {1};
         };
     };
 
@@ -249,3 +253,5 @@
     #LIST msg COLLAPSE {, };
     #RETURN {$msg};
 };
+
+#TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};

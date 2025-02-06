@@ -1,4 +1,4 @@
-#NOP 
+#NOP Fight 
 
 #CLASS config READ {./config.tin};
 #CLASS login READ {./pkg/pkg_login.tin};

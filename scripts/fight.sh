@@ -4,6 +4,7 @@ main_file="fight_main.tin"
 
 sessions=(
     "doge"
+    "nip"
 )
 
 for session in "${sessions[@]}"; do

@@ -5,9 +5,10 @@ main_file="dhl_main.tin"
 sessions=(
     "dhla" # 西夏中心
     "dhlb" # 小山坡
+    "dhlc" # 西夏大道-松鹤楼
     "dhld" # 开封东
     "dhle" # 洛阳中心
-    "dhlh" # 大理戏院
+    # "dhlh" # 大理戏院
 )
 
 for session in "${sessions[@]}"; do

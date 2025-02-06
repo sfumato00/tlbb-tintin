@@ -150,6 +150,11 @@
             {function} {1}
             {path} {小山坡-天水关}
         }
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {11}
+            {path} {小山坡-天水关;#8 e}
+        }
         {青海草原 north、south、east 和 west} 
         {
             {dist} {3}
@@ -186,6 +191,14 @@
             {path} {open 门帘;w;open 木板;n}
         }
     }
+    {松鹤楼 east 和 up} 
+    {
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {2}
+            {path} {e;s}
+        }
+    }
     {林中大屋 out} 
     {
         {林中空地 northwest、southwest 和 enter} 
@@ -214,11 +227,6 @@
     }
     {欢迎来到天龙八部 south 和 down} 
     {
-        {天贶殿 north、south、east 和 west} 
-        {
-            {dist} {34}
-            {path} {d;w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n}
-        }
         {龙门客栈 west 和 up} 
         {
             {dist} {1}
@@ -259,6 +267,11 @@
         {
             {dist} {8}
             {path} {#8 w}
+        }
+        {松鹤楼 east 和 up} 
+        {
+            {dist} {2}
+            {path} {n;w}
         }
         {黄土大道 south、east 和 west} 
         {
