@@ -41,6 +41,7 @@
                 start_stuck_check;
                 #CLASS graph READ {./pkg/pkg_graph.tin};
                 #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+                    stop_stuck_check;
                     #CLASS graph KILL;
                     init_fight;
                 };
@@ -68,10 +69,7 @@
 } {5};
 
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
-    #IF {"$state[downexp_on]" == "1"} {
-        #RETURN {};
-    };
-    #IF {$vitals[经验] >= $downexp[threshold_exp]} {
+    #IF {"$state[downexp_on]" != "1" && $vitals[经验] >= $downexp[threshold_exp]} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
         update_state 1;
         quit;
