@@ -1,6 +1,7 @@
 #NOP Check busy
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
 
 #ACTION {^你最少要花 10 点「气」才能练功。$} {
     #VARIABLE {Busy[last_check]} {@GetEpoch{}};
@@ -26,3 +27,15 @@
     #VARIABLE {Busy[last_check]} {@GetEpoch{}};
     #VARIABLE {Busy[busy]} {1};
 } {5};
+
+#ALIAS CheckBusy {
+    #VARIABLE Busy[cmds] {%1};
+    #VARIABLE Busy[n_cmds] {%2};
+    #EVENT {VARIABLE UPDATED Busy[busy]} {
+        #IF {!$Busy[busy]} {
+            #UNEVENT {VARIABLE UPDATED Busy[busy]};
+            Cmd $Busy[cmds] $Busy[n_cmds];
+        };
+    };
+    dazuo 1;
+};

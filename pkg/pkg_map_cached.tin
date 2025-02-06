@@ -47,6 +47,14 @@
             {path} {#2 n}
         }
     }
+    {二祖庵庵门 south 和 east} 
+    {
+        {山道 southeast、southwest 和 northup} 
+        {
+            {dist} {6}
+            {path} {e;nd;ne;nd;ed;ne}
+        }
+    }
     {兴庆城城门 north、south、eastup 和 westup} 
     {
         {中心广场 north、south、east 和 west} 
@@ -195,6 +203,11 @@
     }
     {山道 southeast、southwest 和 northup} 
     {
+        {二祖庵庵门 south 和 east} 
+        {
+            {dist} {6}
+            {path} {sw;wu;su;sw;su;w}
+        }
         {少室山山脚 south 和 northwest} 
         {
             {dist} {6}
@@ -250,6 +263,11 @@
     }
     {欢迎来到天龙八部 south 和 down} 
     {
+        {神憩小舍 east、southdown、northwest 和 up} 
+        {
+            {dist} {49}
+            {path} {d;w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
+        }
         {龙门客栈 west 和 up} 
         {
             {dist} {1}
@@ -262,11 +280,6 @@
         {
             {dist} {6}
             {path} {#6 e}
-        }
-        {山道 southeast、southwest 和 northup} 
-        {
-            {dist} {21}
-            {path} {#9 w;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw}
         }
         {黄土大道 north、west 和 southwest} 
         {
@@ -360,6 +373,7 @@
             {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s}
         }
     }
+    {虎跳溪 east 和 southdown} {}
     {西夏王陵 north 和 southup} 
     {
         {林中空地 northwest、southwest 和 enter} 
@@ -391,6 +405,11 @@
     }
     {青海草原 north、south、east、west 和 northwest} 
     {
+        {虎跳溪 east 和 southdown} 
+        {
+            {dist} {3}
+            {path} {nw;#2 nu}
+        }
         {青海草原 north、south、east 和 west} 
         {
             {dist} {1}

@@ -1,9 +1,10 @@
 #NOP Storage
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS items READ {./pkg/pkg_items.tin};
 
 #ACTION {(%1)告诉你：(%2) (%3) (%4)} {
-    LogLine {LOG} {./log/remote_control_@GetDate{}_$username.log};
+    Log {%0} {Info} {./log/remote_control_@GetDate{}_$username.log};
     #VARIABLE {Remote[player]} {%1};
     #VARIABLE {Remote[query]} {%4};
     #VARIABLE {Remote[cmd]} {%3};
@@ -48,3 +49,16 @@
     };
     
 } {1};
+
+#ACTION {^%*给你%u。$} {
+    Log {%0} {Info} {./log/remote_control_@GetDate{}_$username.log};
+    #LOCAL cn {%2};
+    #LOCAL item_name {@RemoveChineseQuantifier{$cn}};
+
+    #IF {"$STORAGE[$item_name]" != ""} {
+        #LOCAL item {$STORAGE[$item_name]};
+        #LOCAL id {$item[id]};
+        #LOCAL bag {$item[bag]};
+        Cmd {put $id in $bag} {1};
+    };
+};

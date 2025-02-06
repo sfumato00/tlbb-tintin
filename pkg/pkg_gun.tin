@@ -2,10 +2,10 @@
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS check_busy READ {./pkg/pkg_checkbusy.tin};
 
-#VARIABLE {Gun[book]} {parrybook};
+#VARIABLE {Gun[book]} {changquan-book2};
 #VARIABLE {Gun[count]} {0};
 
-#ALIAS {feedback_loop_gun} {
+#ALIAS {feedback_loop_tuna} {
 
     #10 {
         Cmd {shoot doge} {1};
@@ -16,9 +16,9 @@
     };    
 };
 
-#ALIAS {feedback_loop_1} {
+#ALIAS {feedback_loop_du} {
     #IF {!($Gun[count] % 2)} {
-        Cmd {shoot doge} {1};
+        Cmd shoot doge {1};
         #VARIABLE {Gun[count]} {0};
     };
     Cmd {
@@ -26,12 +26,16 @@
         du $Gun[book] $vitals[精神_max];
         skills;
         enable;
-    } {2};
-   
+    } {4};
+    
     #MATH Gun[count] {$Gun[count] + 1};
 } {5};
 
-#Ticker {ticker_du} {feedback_loop_gun} {12};
+#Ticker {ticker_du} {
+    CheckBusy {
+        feedback_loop_du;
+    } {0};
+} {2};
 
 
 #ACTION {^  才智 (literate)     ： %S              有效等级：%s%*$} {
