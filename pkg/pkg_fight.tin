@@ -179,16 +179,21 @@
     #IF {"$Fight[downexp]" == "1"} {
         #CLASS downexp READ {./pkg/pkg_downexp.tin};
     };
+    #IF {"$Fight[jiuyang]" == "1"} {
+        #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
+    };
 };
 
 #ALIAS {stop} {
     #ECHO {关闭 fight 模块};
     #CLASS downexp KILL;
+    #CLASS jiuyang KILL;
     #CLASS fight KILL;
-    #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+    #TICKER {ticker_feedback_loop} {cmd {hp}} {60};
     Cmd {surrender} {1};
     unset no_give;
 } {5};
+
 
 #ACTION {^看起来%u想杀死你！$} {
     Log {%0} {Warn} {$fight_stats[log_file]};
@@ -243,6 +248,12 @@
 #EVENT {VARIABLE UPDATED vitals[经验]} {
     feedback_loop;
 };
+
+#EVENT {VARIABLE UPDATED env[last_login]} {
+    init_fight;
+    #TICKER {ticker_feedback_loop} {cmd {hp};} {15};
+    cmd {hp};
+}
 
 #FUNCTION CalNpcMsg {
     #LOCAL {msg} {};
