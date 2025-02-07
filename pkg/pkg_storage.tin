@@ -5,16 +5,16 @@
 
 #ACTION {(%1)告诉你：(%2) (%3) (%4)} {
     Log {%0} {Info} {./log/remote_control_@GetDate{}_$username.log};
-    #VARIABLE {Remote[player]} {%1};
-    #VARIABLE {Remote[query]} {%4};
-    #VARIABLE {Remote[cmd]} {%3};
+    #VARIABLE {Storage[q][player]} {%1};
+    #VARIABLE {Storage[q][query]} {%4};
+    #VARIABLE {Storage[q][cmd]} {%3};
 
     
-    #IF {"%2" == "aBcd1234" && "$Remote[cmd]" == "check" && "$Remote[query]" == "list"} {
+    #IF {"%2" == "$Storage[access_code]" && "$Storage[q][cmd]" == "check" && "$Storage[q][query]" == "list"} {
         #LOCAL msg {目前可供查询的道具有以下几种： };
         #LIST str_builder CREATE {};
-        #FOREACH {*STORAGE[%*]} {item_name} {
-            #LIST str_builder ADD {$item_name($STORAGE[$item_name][id])};
+        #FOREACH {*Storage[inventory][%*]} {item_name} {
+            #LIST str_builder ADD {$item_name($Storage[inventory][$item_name][id])};
         };
         #LIST str_builder COLLAPSE {, };
         #CAT msg $str_builder;
@@ -22,10 +22,10 @@
         Cmd {reply $msg} {1};
     };
 
-    #ELSEIF {"%2" == "aBcd1234" && "$STORAGE[$Remote[query]]" != ""} {
+    #ELSEIF {"%2" == "$Storage[access_code]" && "$Storage[inventory][$Storage[q][query]]" != ""} {
         #LOG APPEND {./log/tangyuan_@GetDate{}_$username.log};
-        #LOCAL item {$STORAGE[$Remote[query]][id]};
-        #LOCAL bag {$STORAGE[$Remote[query]][bag]};
+        #LOCAL item {$Storage[inventory][$Storage[q][query]][id]};
+        #LOCAL bag {$Storage[inventory][$Storage[q][query]][bag]};
         
         #SWITCH {"%3"} {
             #CASE {"get"} {
@@ -34,15 +34,15 @@
                 Cmd {put $item in bag $bag} {1};
             };
             #CASE {"check"} {
-                #VARIABLE Remote[storage] {0};
-                #ACTION {^      $Remote[query](%+)} {
-                    #MATH Remote[storage] {$Remote[storage] + 1};
+                #VARIABLE Storage[q][storage] {0};
+                #ACTION {^      $Storage[q][query](%+)} {
+                    #MATH Storage[q][storage] {$Storage[q][storage] + 1};
                 };
                 Cmd {l bag $bag};
                 #DELAY 2 {
-                    Cmd {reply $Remote[query] 还有 $Remote[storage] 个。} {1};
-                    #UNACTION {#ACTION {^      $Remote[query](%+)}};
-                    #UNVARIABLE {Remote};
+                    Cmd {reply $Storage[q][query] 还有 $Storage[q][storage] 个。} {1};
+                    #UNACTION {#ACTION {^      $Storage[q][query](%+)}};
+                    #UNVARIABLE {Storage[q]};
                 };
             };            
         };
@@ -55,8 +55,8 @@
     #LOCAL cn {%2};
     #LOCAL item_name {@RemoveChineseQuantifier{$cn}};
 
-    #IF {"$STORAGE[$item_name]" != ""} {
-        #LOCAL item {$STORAGE[$item_name]};
+    #IF {"$Storage[inventory][$item_name]" != ""} {
+        #LOCAL item {$Storage[inventory][$item_name]};
         #LOCAL id {$item[id]};
         #LOCAL bag {$item[bag]};
         Cmd {put $id in $bag} {1};

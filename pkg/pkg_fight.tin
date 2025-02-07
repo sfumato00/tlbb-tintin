@@ -162,6 +162,7 @@
 
 #ALIAS {fight_npcs} {
     #LOCAL npc_list {$Fight[npc_list]};
+    
     #FOREACH {*npc_list[%*]} {x} {
         #FOREACH {*npc_list[$x][%*]} {i} {
             Cmd {fight $x $npc_list[$x][$i]} {1};
