@@ -1,9 +1,12 @@
 #NOP graph-based paths
 #CLASS room READ {./pkg/pkg_room.tin};
-#CLASS map READ {./pkg/pkg_map.tin};
-#CLASS map_functions READ {./pkg/pkg_map_functions.tin};
-#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
 #CLASS commands READ {./pkg/pkg_command.tin};
+
+#CLASS map READ {./pkg/pkg_map.tin};
+#CLASS map_common READ {./pkg/pkg_map_common.tin};
+#CLASS map_functions READ {./pkg/pkg_map_functions.tin};
+
 
 #VARIABLE {Travel[THROTTLE]} {23};
 
@@ -190,12 +193,5 @@
     };
 }
 
-#ALIAS Info {
-    #ECHO {@Timestamp{} <cfa>[导航] %1};
-}
-
-#ALIAS Warn {
-    #ECHO {@Timestamp{} <fca>[导航] %1};
-}
 
 

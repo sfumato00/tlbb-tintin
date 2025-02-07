@@ -1,14 +1,14 @@
 #NOP graph tests.;
 
 #CLASS testing READ {./pkg/pkg_testing.tin};
-#CLASS graph READ {./pkg/pkg_graph.tin};
+#CLASS graph read {./pkg/pkg_map_graph.tin};
 #CLASS login READ {./pkg/pkg_login.tin};
 
 #VARIABLE {username} {testgraph};
 #VARIABLE {password} {Abcd_124};
 
 #ALIAS Dijkstra_Test {
-    #CLASS graph READ {./pkg/pkg_graph.tin};
+    #CLASS graph read {./pkg/pkg_map_graph.tin};
     #LOCAL src {%1};
     #LOCAL dest {%2};
 
@@ -19,7 +19,7 @@
 }
 
 #ALIAS Travel_Test {
-    #CLASS graph READ {./pkg/pkg_graph.tin};
+    #CLASS graph read {./pkg/pkg_map_graph.tin};
     #LOCAL src {%1};
     #LOCAL dest {%2};
 

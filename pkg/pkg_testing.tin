@@ -3,7 +3,7 @@
 #CLASS config READ {./config.tin};
 #CLASS login READ {./pkg/pkg_login.tin};
 #CLASS utils READ {./pkg/pkg_utils.tin};
-#CLASS graph READ {./pkg/pkg_graph.tin};
+#CLASS graph read {./pkg/pkg_map_graph.tin};
 
 #ALIAS {conn} {
     #SESSION {$username} {103.10.85.133} {8888};

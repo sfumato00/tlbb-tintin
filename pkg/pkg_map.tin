@@ -331,6 +331,16 @@
             {path} {#2 s}
             {dist} {2}
         }
+        {茶馆 east 和 up} {
+            {path} {w}
+            {dist} {1}
+        }
+    }
+    {茶馆 east 和 up} {
+        {谷场 north、south、east 和 west} {
+            {path} {e}
+            {dist} {1}
+        }
     }
     {虎跳溪 east 和 southdown} {
         {青海草原 north、south、east、west 和 northwest} {

@@ -1,0 +1,19 @@
+#NOP common utils for the mapping module
+
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#ALIAS Info {
+    #ECHO {@Timestamp{} <cfa>[Info] %1};
+}
+
+#ALIAS Warn {
+    #ECHO {@Timestamp{} <fca>[Warn] %1};
+}
+
+#FUNCTION _assertRoomExitsKey {
+    #LOCAL {key} {$env[room]$env[exits]};
+    #IF {"$key" == "%1"} {
+        #RETURN 1;
+    };
+    #RETURN 0;
+}

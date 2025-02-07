@@ -4,6 +4,8 @@
 #CLASS commands READ {./pkg/pkg_command.tin};
 #CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 
+#CLASS map_common READ {./pkg/pkg_map_common.tin};
+
 #ALIAS {东安门-黄土大道} {
     #IF {@_assertRoomExitsKey{东安门 east 和 west}} {
         #VARIABLE {travel[started]} {1};
@@ -258,10 +260,3 @@
     };
 };
 
-#FUNCTION _assertRoomExitsKey {
-    #LOCAL {key} {$env[room]$env[exits]};
-    #IF {"$key" == "%1"} {
-        #RETURN 1;
-    };
-    #RETURN 0;
-}
