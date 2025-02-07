@@ -55,10 +55,12 @@
     #LOCAL cn {%2};
     #LOCAL item_name {@RemoveChineseQuantifier{$cn}};
 
+    #ECHO {$cn, $item_name};
+
     #IF {"$Storage[inventory][$item_name]" != ""} {
         #LOCAL item {$Storage[inventory][$item_name]};
         #LOCAL id {$item[id]};
         #LOCAL bag {$item[bag]};
-        Cmd {put $id in $bag} {1};
+        Cmd {put $id in bag $bag} {1};
     };
 };

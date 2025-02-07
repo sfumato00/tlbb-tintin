@@ -677,6 +677,11 @@
     }
     {龙门客栈 west 和 up} 
     {
+        {十字广场 north、south、east、west 和 up} 
+        {
+            {dist} {15}
+            {path} {w;#4 s;sw;#9 s}
+        }
         {汴梁城中心 north、south、east、west 和 up} 
         {
             {dist} {6}

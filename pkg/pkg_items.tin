@@ -64,7 +64,7 @@
 #FUNCTION RemoveChineseQuantifier {
     #LOCAL text {%1};
     #NOP #ECHO {<acf>before: $text};
-    #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口|块){1}){1}}} {};
+    #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口|块|粒){1}){1}}} {};
     #NOP #ECHO {<acf>after: $text};
     #RETURN $text;
 };
