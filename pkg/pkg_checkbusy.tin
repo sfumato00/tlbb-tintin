@@ -28,14 +28,25 @@
     #VARIABLE {Busy[busy]} {1};
 } {5};
 
+#ACTION {^请不要在公用频道上一次贴出太多的内容！} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {1};
+};
+
+#ACTION {^你现在忙得很，不能移动。$} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {1};
+} {5};
+
 #ALIAS CheckBusy {
     #VARIABLE Busy[cmds] {%1};
     #VARIABLE Busy[n_cmds] {%2};
     #EVENT {VARIABLE UPDATED Busy[busy]} {
         #IF {!$Busy[busy]} {
             #UNEVENT {VARIABLE UPDATED Busy[busy]};
-            Cmd $Busy[cmds] $Busy[n_cmds];
+            #UNTICKER {tkr_checkbusy};
+            Cmd {$Busy[cmds]} {$Busy[n_cmds]};
         };
     };
-    dazuo 1;
+    #TICKER {tkr_checkbusy} {dazuo 1} {1};
 };

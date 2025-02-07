@@ -273,7 +273,6 @@
             {path} {wd;w}
             {dist} {3}
         }
-        
     }
     {青海草原 north、south、east 和 west} {
         {青海草原 north、south、east、west 和 northwest} {
@@ -294,13 +293,108 @@
             {path} {w;s;n;w}
             {dist} {4}
         }
+        {山脚 southeast、northeast 和 northup} {
+            {path} {nw}
+            {dist} {1}
+        }
+    }
+    {山脚 southeast、northeast 和 northup} {
         {虎跳溪 east 和 southdown} {
-            {path} {nw;#2 nu}
-            {dist} {3}
+            {path} {#2 nu}
+            {dist} {2}
+        }
+        {青海草原 north、south、east、west 和 northwest} {
+            {path} {se}
+            {dist} {1}
+        }
+        {山脚 north、east、west 和 southup} {
+            {path} {ne;nu;#4 nd}
+            {dist} {1}
+        }
+    }
+    {山脚 north、east、west 和 southup} {
+        {谷场 north、south、east 和 west} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+        {黄土大道 south、east 和 west} {
+            {path} {#3 e;eu;#4 n;#2 w}
+            {dist} {10}
+        }
+        {汴梁城中心 north、south、east、west 和 up} {
+            {path} {#3 e;eu;#4 n;#7 e}
+            {dist} {15}
+        }
+    }
+    {谷场 north、south、east 和 west} {
+        {山脚 north、east、west 和 southup} {
+            {path} {#2 s}
+            {dist} {2}
         }
     }
     {虎跳溪 east 和 southdown} {
-        
+        {青海草原 north、south、east、west 和 northwest} {
+            {path} {sd;sd;se}
+            {dist} {3}
+        }
+        {断魂崖 north、east、southdown 和 west} {
+            {path} {虎跳溪-断魂崖}
+            {dist} {5}
+            {function} {1}
+        }
+        {山脚 southeast、northeast 和 northup} {
+            {path} {#2 sd}
+            {dist} {2}
+        }
+    }
+    {断魂崖 north、east、southdown 和 west} {
+        {屏风壁 westup} {
+            {path} {断魂崖-屏风壁}
+            {function} {1}
+            {dist} {1}
+        }
+        {虎跳溪 east 和 southdown} {
+            {path} {sd}
+            {dist} {1}
+        }
+    }
+    {屏风壁 westup} {
+        {销魂台 north 和 southdown} {
+            {path} {屏风壁-销魂台}
+            {function} {1}
+            {dist} {1}
+        }
+        {断魂崖 north、east、southdown 和 west} {
+            {path} {wu}
+            {dist} {1}
+        }
+    }
+    {销魂台 north 和 southdown} {
+        {缥缈峰半山腰 southdown 和 northup} {
+            {path} {销魂台-缥缈峰半山腰}
+            {function} {1}
+            {dist} {14}
+        }
+        {屏风壁 westup} {
+            {path} {sd}
+            {dist} {1}
+        }
+    }
+    {缥缈峰半山腰 southdown 和 northup} {
+        {小院 south、north、east 和 west} {
+            {path} {缥缈峰半山腰-小院}
+            {dist} {1}
+        }
+        {销魂台 north 和 southdown} {
+            {path} {sd}
+            {dist} {1}
+        }
+    }
+    {小院 south、north、east 和 west} {
+        {缥缈峰半山腰 southdown 和 northup} {
+            {path} {s;sw;#5 s}
+            {dist} {7}
+        }
     }
     {青海草原 north、south 和 west} {
         {青海草原 north、south、east、west 和 northwest} {

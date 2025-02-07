@@ -2,6 +2,7 @@
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 
 #ALIAS {东安门-黄土大道} {
     #IF {@_assertRoomExitsKey{东安门 east 和 west}} {
@@ -163,6 +164,99 @@
         Cmd {e} {1};
     };
 }
+
+#ALIAS {虎跳溪-断魂崖} {
+    #IF {@_assertRoomExitsKey{虎跳溪 east 和 southdown}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{断魂崖 north、east、southdown 和 west}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #UNACTION {^你一提丹田气，凌空拔起，可是身体一晃，掉进了小溪。$};
+                #UNACTION {^你正忙着呢，做不了任何事！};
+                #UNACTION {^请不要在公用频道上一次贴出太多的内容！};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        #ACTION {^你一提丹田气，凌空拔起，可是身体一晃，掉进了小溪。$} {
+            CheckBusy {jump over 小溪} {1};
+        } {5};        
+        Cmd {jump over 小溪} {1};
+    }
+}
+
+#ALIAS {断魂崖-屏风壁} {
+    #IF {@_assertRoomExitsKey{断魂崖 north、east、southdown 和 west}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{屏风壁 westup}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {climb down} {1};
+    };
+};
+
+#ALIAS {屏风壁-销魂台} {
+    #IF {@_assertRoomExitsKey{屏风壁 westup}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{销魂台 north 和 southdown}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        CheckBusy {l 石壁;climb up} {2};
+    };
+};
+
+#ALIAS {销魂台-缥缈峰半山腰} {
+    #IF {@_assertRoomExitsKey{销魂台 north 和 southdown}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{缥缈峰半山腰 southdown 和 northup}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        CheckBusy {n;l 云雾;l 云雾;l 黑影;run to 主峰} {5};
+    };
+};
+
+#ALIAS {缥缈峰半山腰-小院} {
+    #IF {@_assertRoomExitsKey{缥缈峰半山腰 southdown 和 northup}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+
+            #IF {@_assertRoomExitsKey{{ 小院 south、north、east 和 west}}} {
+                Info {Arrived  小院 south、north、east 和 west};
+                #VARIABLE env[room] {小院};
+                #UNACTION {^程青霜对你说道：你要进宫切记福无双至。$};
+                #UNACTION {^程青霜对你说道：你要进宫切记祸不单行。$};
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+            #ELSEIF {@_assertRoomExitsKey{灵鹫宫宫门 south 和 north}} {
+                #IF {$Travel[enter]} {
+                    #UNVARIABLE {Travel[enter]};
+                    Cmd {n} {1};
+                };
+                #ELSE {
+                    Cmd {s;n} {2};
+                }
+            };
+        };
+        #ACTION {^程青霜对你说道：你要进宫切记福无双至。$} {
+            #VARIABLE {Travel[enter]} {1};
+            Cmd {step 双数} {1};
+        };
+        #ACTION {^程青霜对你说道：你要进宫切记祸不单行。$} {
+            #VARIABLE {Travel[enter]} {1};
+            Cmd {step 单数} {1};
+        };
+        CheckBusy {#2 {nu;e};nu;#4 n} {9};
+    };
+};
 
 #FUNCTION _assertRoomExitsKey {
     #LOCAL {key} {$env[room]$env[exits]};

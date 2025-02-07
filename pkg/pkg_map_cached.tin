@@ -187,6 +187,19 @@
             {path} {s;e}
         }
     }
+    {小院 south、north、east 和 west} 
+    {
+        {汴梁城中心 north、south、east、west 和 up} 
+        {
+            {dist} {31}
+            {path} {s;sw;#5 s;sd;sd;wu;sd;#2 sd;ne;nu;#4 nd;#3 e;eu;#4 n;#9 e}
+        }
+        {缥缈峰半山腰 southdown 和 northup} 
+        {
+            {dist} {7}
+            {path} {s;sw;#5 s}
+        }
+    }
     {少室山山脚 south 和 northwest} 
     {
         {山道 southeast、southwest 和 northup} 
@@ -199,6 +212,61 @@
             {dist} {4}
             {function} {1}
             {path} {少室山山脚-登封县北街}
+        }
+    }
+    {屏风壁 westup} 
+    {
+        {断魂崖 north、east、southdown 和 west} 
+        {
+            {dist} {1}
+            {path} {wu}
+        }
+        {销魂台 north 和 southdown} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {屏风壁-销魂台}
+        }
+    }
+    {山脚 north、east、west 和 southup} 
+    {
+        {汴梁城中心 north、south、east、west 和 up} 
+        {
+            {dist} {17}
+            {path} {#3 e;eu;#4 n;#9 e}
+        }
+        {谷场 north、south、east 和 west} 
+        {
+            {dist} {2}
+            {path} {#2 n}
+        }
+        {黄土大道 south、east 和 west} 
+        {
+            {dist} {10}
+            {path} {#3 e;eu;#4 n;#2 w}
+        }
+    }
+    {山脚 southeast、northeast 和 northup} 
+    {
+        {山脚 north、east、west 和 southup} 
+        {
+            {dist} {1}
+            {path} {ne;nu;#4 nd}
+        }
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {15}
+            {path} {se;e;e;eu;小山坡-天水关;#8 e}
+        }
+        {虎跳溪 east 和 southdown} 
+        {
+            {dist} {2}
+            {path} {#2 nu}
+        }
+        {青海草原 north、south、east、west 和 northwest} 
+        {
+            {dist} {1}
+            {path} {se}
         }
     }
     {山道 southeast、southwest 和 northup} 
@@ -225,6 +293,20 @@
         {
             {dist} {4}
             {path} {open 门帘;w;open 木板;n}
+        }
+    }
+    {断魂崖 north、east、southdown 和 west} 
+    {
+        {屏风壁 westup} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {断魂崖-屏风壁}
+        }
+        {虎跳溪 east 和 southdown} 
+        {
+            {dist} {1}
+            {path} {sd}
         }
     }
     {松鹤楼 east 和 up} 
@@ -263,11 +345,6 @@
     }
     {欢迎来到天龙八部 south 和 down} 
     {
-        {神憩小舍 east、southdown、northwest 和 up} 
-        {
-            {dist} {49}
-            {path} {d;w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
-        }
         {龙门客栈 west 和 up} 
         {
             {dist} {1}
@@ -280,6 +357,11 @@
         {
             {dist} {6}
             {path} {#6 e}
+        }
+        {山脚 southeast、northeast 和 northup} 
+        {
+            {dist} {32}
+            {path} {#9 w;#7 w;#8 w;#2 w;wu;wd;w;w;nw}
         }
         {黄土大道 north、west 和 southwest} 
         {
@@ -308,6 +390,11 @@
         {
             {dist} {8}
             {path} {#8 w}
+        }
+        {小院 south、north、east 和 west} 
+        {
+            {dist} {40}
+            {path} {#8 w;#2 w;wu;wd;w;w;nw;#2 nu;虎跳溪-断魂崖;断魂崖-屏风壁;屏风壁-销魂台;销魂台-缥缈峰半山腰;缥缈峰半山腰-小院}
         }
         {松鹤楼 east 和 up} 
         {
@@ -373,13 +460,66 @@
             {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s}
         }
     }
-    {虎跳溪 east 和 southdown} {}
+    {缥缈峰半山腰 southdown 和 northup} 
+    {
+        {小院 south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {缥缈峰半山腰-小院}
+        }
+        {销魂台 north 和 southdown} 
+        {
+            {dist} {1}
+            {path} {sd}
+        }
+    }
+    {虎跳溪 east 和 southdown} 
+    {
+        {山脚 southeast、northeast 和 northup} 
+        {
+            {dist} {2}
+            {path} {#2 sd}
+        }
+        {断魂崖 north、east、southdown 和 west} 
+        {
+            {dist} {5}
+            {function} {1}
+            {path} {虎跳溪-断魂崖}
+        }
+        {青海草原 north、south、east、west 和 northwest} 
+        {
+            {dist} {3}
+            {path} {sd;sd;se}
+        }
+    }
     {西夏王陵 north 和 southup} 
     {
         {林中空地 northwest、southwest 和 enter} 
         {
             {dist} {2}
             {path} {su;se}
+        }
+    }
+    {谷场 north、south、east 和 west} 
+    {
+        {山脚 north、east、west 和 southup} 
+        {
+            {dist} {2}
+            {path} {#2 s}
+        }
+    }
+    {销魂台 north 和 southdown} 
+    {
+        {屏风壁 westup} 
+        {
+            {dist} {1}
+            {path} {sd}
+        }
+        {缥缈峰半山腰 southdown 和 northup} 
+        {
+            {dist} {14}
+            {function} {1}
+            {path} {销魂台-缥缈峰半山腰}
         }
     }
     {青海草原 north、south 和 west} 
@@ -405,10 +545,10 @@
     }
     {青海草原 north、south、east、west 和 northwest} 
     {
-        {虎跳溪 east 和 southdown} 
+        {山脚 southeast、northeast 和 northup} 
         {
-            {dist} {3}
-            {path} {nw;#2 nu}
+            {dist} {1}
+            {path} {nw}
         }
         {青海草原 north、south、east 和 west} 
         {

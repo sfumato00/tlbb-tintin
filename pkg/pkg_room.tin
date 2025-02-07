@@ -1,6 +1,7 @@
 #NOP Room module
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS logging READ {./pkg/pkg_logging.tin};
 
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};

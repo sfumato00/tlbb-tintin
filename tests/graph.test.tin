@@ -74,12 +74,15 @@
 
 #EVENT {VARIABLE UPDATED env[last_login]} {
     #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #UNEVENT {VARIABLE UPDATED env[room_updated]};
-        goto {小山坡 westdown、southdown 和 eastdown};
+        #IF {@_assertRoomExitsKey{洛阳中心 south、north、east、west 和 up}} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            goto {小院 south、north、east 和 west};
+        };
     };
+    e;#2 n;
 };
 
-
+#VARIABLE {THROTTLE} {45};
 
 conn;
 

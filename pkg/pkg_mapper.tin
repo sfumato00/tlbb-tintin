@@ -1,0 +1,5 @@
+#NOP Mapper
+
+#EVENT {VARIABLE UPDATED env[exits]} {
+    
+}

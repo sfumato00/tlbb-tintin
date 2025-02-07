@@ -8,7 +8,16 @@
 #VARIABLE {Travel[THROTTLE]} {23};
 
 #ALIAS goto {
-    travel {$env[room]$env[exits]} {%1};
+    #IF {"$env[room]" == ""} {
+        #EVENT {VARIABLE UPDATED env[room_updated]} {
+            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            travel {$env[room]$env[exits]} {%1};
+        };
+        Cmd {look} {1};
+    };
+    #ELSE {
+        travel {$env[room]$env[exits]} {%1};
+    };
 }
 
 #ALIAS travel {
@@ -43,7 +52,7 @@
 
             #LOCAL v {$Travel[stops][2]};
             #LOCAL count @GetCommandCnt{};
-            Warn {$MAP[$u][$v][function], $Command[history][cnt], $count, $MAP[$u][$v][dist]};
+            Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
             #IF {$count > 0} {
                 #IF {"$MAP[$u][$v][function]" == "1" && $Command[history][cnt] > $Travel[THROTTLE]
                     || $Command[history][cnt] + $MAP[$u][$v][dist] > $Travel[THROTTLE]} {
