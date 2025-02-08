@@ -147,10 +147,10 @@
     #LOCAL {duration_in_min} {0};
     #MATH {duration_in_min} {$fight_stats[duration] / $MIN_IN_MICRO_SECOND};
 
-    #FORMAT {exp_msg} {经验增速: %d (最大 %d // 平均 %d)} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
-    #FORMAT {qn_msg} {潜能增速: %d  (最大 %d // 平均 %d)} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
+    #FORMAT {exp_msg} {经验增速: %d, 最大 %d, 平均 %d} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
+    #FORMAT {qn_msg} {潜能增速: %d, 最大 %d, 平均 %d} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
 
-    Log {经验: $vitals[经验] $exp_msg $qn_msg} {Info} {$fight_stats[log_file]};
+    Log {经验: $vitals[经验], 潜能, $vitals[潜能], $exp_msg, $qn_msg} {Info} {$fight_stats[log_file]};
 
     #DELAY {0.1} {
         #SHOWME {$exp_msg};
