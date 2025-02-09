@@ -67,3 +67,39 @@
         assert;
     };
 } {5};
+
+
+#FUNCTION AssertList {
+    
+    #LOCAL expected %1;
+    #LOCAL actual %2;
+    #ECHO {expected: $expected, actual: $actual};
+    #FOREACH {*expected[%*]} {i} {
+        #ECHO {i: $i, expected[$i]: $expected[$i]};
+    };
+    #FOREACH {*actual[%*]} {i} {
+        #ECHO {i: $i, actual[$i]: $actual[$i]};
+    };
+
+    #LOCAL m {};
+    #LOCAL n {};
+
+    #LIST expected SIZE m;
+    #LIST actual SIZE n;
+
+    #IF {$m != $n} {
+        #ECHO {<fac>[Error] Expecting size $m, but the actual is $n.};
+        #RETURN 0;
+    };
+
+    #LOCAL res {1};
+    #FOREACH {*expected[%*]} {i} {
+        #ECHO {i: $i};
+        #ECHO {expected: $expected[$i], actual: $actual[$i]};
+        #IF {"$expected[$i]" != "$actual[$i]"} {
+            #ECHO {<fac>[Error] Expecting item $i: $expected[$i], but the actual is $actual[$i].};
+            #LOCAL res {0};
+        };
+    };
+    #RETURN $res;
+}

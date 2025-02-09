@@ -1,0 +1,293 @@
+#CLASS {auto_mapped_map} OPEN
+
+#VARIABLE {DrawnMap}
+{
+    {洛阳东街1 south、north、east 和 west} 
+    {
+        {洛阳东街2  south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳东街2 south、north、east 和 west} 
+    {
+        {洛阳东街3  south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳东街3 south、north、east 和 west} 
+    {
+        {洛阳东街4  north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳东街4 north、east 和 west} 
+    {
+        {洛阳东门  east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳东门 east 和 west} 
+    {
+        {黄土大道  east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳中心 south、north、east、west 和 up} 
+    {
+        {洛阳东街1  south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳南街1 south、north、east 和 west} 
+    {
+        {洛阳中心  south、north、east、west 和 up} 
+        {
+            {dist} {1}
+            {path} {north}
+        }
+        {洛阳南街1 south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {洛阳南街2 south、north、east 和 west} 
+    {
+        {洛阳南街1  south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {north}
+        }
+        {粮店  west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {粮店 west} 
+    {
+        {洛阳南街2  south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {west}
+        }
+    }
+    {驿站 east} 
+    {
+        {洛阳南街2  south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+    }
+    {黄土大道 east 和 west} 
+    {
+        {黄土大道  south、east 和 west} 
+        {
+            {dist} {1}
+            {path} {west}
+        }
+    }
+    {黄土大道 north 和 south} 
+    {
+        {黄土大道  south、east 和 west} 
+        {
+            {dist} {1}
+            {path} {north}
+        }
+    }
+    {黄土大道 south、east 和 west} 
+    {
+        {黄土大道  east 和 west} 
+        {
+            {dist} {1}
+            {path} {east}
+        }
+        {黄土大道  north 和 south} 
+        {
+            {dist} {1}
+            {path} {south}
+        }
+    }
+}
+#VARIABLE {Mapper}
+{
+    {last_move_dir} {west}
+    {last_room_key} {黄土大道 south、east 和 west}
+}
+#VARIABLE {StackTable}
+{
+    {洛阳东街1  south、north、east 和 west} {1}
+    {洛阳东街2  south、north、east 和 west} {1}
+    {洛阳东街3  south、north、east 和 west} {1}
+    {洛阳东街4  north、east 和 west} {1}
+    {洛阳东门  east 和 west} {1}
+    {洛阳中心  south、north、east、west 和 up} {1}
+    {洛阳南街1  south、north、east 和 west} {1}
+    {洛阳南街1 south、north、east 和 west} {1}
+    {洛阳南街2  south、north、east 和 west} {1}
+    {粮店  west} {1}
+    {驿站  east} {1}
+    {黄土大道  east 和 west} {1}
+    {黄土大道  north 和 south} {1}
+    {黄土大道  south、east 和 west} {1}
+}
+#VARIABLE {VisitStack}
+{
+    {1} 
+    {
+        {exits} {east}
+        {move_dir} {east}
+        {room} {驿站}
+    }
+    {2} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {east}
+        {room} {洛阳南街2}
+    }
+    {3} 
+    {
+        {exits} {west}
+        {move_dir} {west}
+        {room} {粮店}
+    }
+    {4} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {north}
+        {room} {洛阳南街1}
+    }
+    {5} 
+    {
+        {exits} {south、north、east、west 和 up}
+        {move_dir} {east}
+        {room} {洛阳中心}
+    }
+    {6} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {east}
+        {room} {洛阳东街1}
+    }
+    {7} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {east}
+        {room} {洛阳东街2}
+    }
+    {8} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {east}
+        {room} {洛阳东街3}
+    }
+    {9} 
+    {
+        {exits} {north、east 和 west}
+        {move_dir} {east}
+        {room} {洛阳东街4}
+    }
+    {10} 
+    {
+        {exits} {east 和 west}
+        {move_dir} {east}
+        {room} {洛阳东门}
+    }
+    {11} 
+    {
+        {exits} {east 和 west}
+        {move_dir} {east}
+        {room} {黄土大道}
+    }
+    {12} 
+    {
+        {exits} {south、east 和 west}
+        {move_dir} {east}
+        {room} {黄土大道}
+    }
+    {13} 
+    {
+        {exits} {north 和 south}
+        {move_dir} {north}
+        {room} {黄土大道}
+    }
+}
+#VARIABLE {Visited}
+{
+    {洛阳东街1  south、north、east 和 west} 
+    {
+        {east} {1}
+    }
+    {洛阳东街2  south、north、east 和 west} 
+    {
+        {east} {1}
+    }
+    {洛阳东街3  south、north、east 和 west} 
+    {
+        {east} {1}
+    }
+    {洛阳东街4  north、east 和 west} 
+    {
+        {east} {1}
+    }
+    {洛阳东门  east 和 west} 
+    {
+        {east} {1}
+    }
+    {洛阳中心  south、north、east、west 和 up} 
+    {
+        {east} {1}
+    }
+    {洛阳南街1  south、north、east 和 west} 
+    {
+        {east} {1}
+    }
+    {洛阳南街1 south、north、east 和 west} 
+    {
+        {east} {1}
+        {north} {1}
+    }
+    {洛阳南街2  south、north、east 和 west} 
+    {
+        {east} {1}
+        {north} {1}
+    }
+    {粮店  west} 
+    {
+        {west} {1}
+    }
+    {驿站  east} 
+    {
+        {east} {1}
+    }
+    {黄土大道  east 和 west} 
+    {
+        {east} {1}
+        {west} {1}
+    }
+    {黄土大道  north 和 south} 
+    {
+        {north} {1}
+    }
+    {黄土大道  south、east 和 west} 
+    {
+        {east} {1}
+        {south} {1}
+        {west} {1}
+    }
+}
+
+#CLASS {auto_mapped_map} CLOSE

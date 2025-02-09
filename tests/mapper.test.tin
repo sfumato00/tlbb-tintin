@@ -1,0 +1,70 @@
+#NOP graph tests.;
+
+#CLASS testing READ {./pkg/pkg_testing.tin};
+#CLASS graph read {./pkg/pkg_map_graph.tin};
+#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS mapper read {./pkg/pkg_mapper.tin};
+
+#VARIABLE {username} {testgraph};
+#VARIABLE {password} {Abcd_124};
+
+#ALIAS ExplodeDirection_Test {
+    #VARIABLE {input} {%1};
+    #VARIABLE {expected} {%2};
+
+    #VARIABLE {input};
+    #VARIABLE {test[name]} {$input};
+
+    #VARIABLE res {@ExplodeDirection{{$input}}};
+
+    #ECHO {Result: {$res}};
+}
+
+
+#ALIAS PopVisitStack_Test {
+    #VARIABLE {VisitStack};
+
+    VisitStackPush {room 1} {a,b,c} {b};
+
+    #VARIABLE {VisitStack};
+
+    VisitStackPush {room 2} {c d e} {e};
+
+    #VARIABLE {VisitStack};
+
+    VisitStackPush {room 3} {g h} {g};
+
+    #VARIABLE prev {@VisitStackPop{}};
+    #VARIABLE prev;
+    #VARIABLE {VisitStack};
+
+    #VARIABLE prev {@VisitStackPop{}};
+    #VARIABLE prev;
+    #VARIABLE {VisitStack};
+
+    #VARIABLE prev {@VisitStackPop{}};
+    #VARIABLE prev;
+    #VARIABLE {VisitStack};
+}
+
+
+#ALIAS t1 {
+    ExplodeDirection {south 和 down} {{{1}{south}{2}{down}}};
+    #NOP ExplodeDirection { north、east 和 northeast} {{1}{north}{2}{east}{3}{northeast}};
+    #NOP ExplodeDirection { north、east 和 northeast} {{1}{north}{2}{east}};
+    #NOP ExplodeDirection { north 和 northeast} {{1}{north}{2}{east}};
+    #NOP ExplodeDirection { north、east 和 northeast} {{1}{norh}{2}{east}{3}{northeas}};
+    #END {Bye!};
+}
+
+#NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {汴梁城中心 north、south、east、west 和 up};
+#NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {洛阳中心 south、north、east、west 和 up};
+
+#EVENT {VARIABLE UPDATED env[last_login]} {
+};
+
+#VARIABLE {THROTTLE} {45};
+
+
+conn;
+

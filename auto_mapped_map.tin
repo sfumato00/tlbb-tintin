@@ -1,0 +1,116 @@
+#CLASS {auto_mapped_map} OPEN
+
+#VARIABLE {DrawnMap} {}
+#VARIABLE {VisitStack}
+{
+    {1} 
+    {
+        {exits} {east}
+        {move_dir} {east}
+        {room} {驿站}
+    }
+    {2} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {south}
+        {room} {洛阳南街2}
+    }
+    {3} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {south}
+        {room} {洛阳南街3}
+    }
+    {4} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {south}
+        {room} {洛阳南街4}
+    }
+    {5} 
+    {
+        {exits} {north 和 south}
+        {move_dir} {north}
+        {room} {洛阳南门}
+    }
+    {6} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {north}
+        {room} {洛阳南街4}
+    }
+    {7} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {north}
+        {room} {洛阳南街3}
+    }
+    {8} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {north}
+        {room} {洛阳南街2}
+    }
+    {9} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {south}
+        {room} {洛阳南街1}
+    }
+    {10} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {east}
+        {room} {洛阳南街2}
+    }
+    {11} 
+    {
+        {exits} {west}
+        {move_dir} {west}
+        {room} {粮店}
+    }
+    {12} 
+    {
+        {exits} {south、north、east 和 west}
+        {move_dir} {west}
+        {room} {洛阳南街2}
+    }
+}
+#VARIABLE {Visited}
+{
+    {洛阳南街1 south、north、east 和 west} 
+    {
+        {south} {1}
+    }
+    {洛阳南街2 south、north、east 和 west} 
+    {
+        {east} {1}
+        {north} {1}
+        {south} {1}
+        {west} {1}
+    }
+    {洛阳南街3 south、north、east 和 west} 
+    {
+        {north} {1}
+        {south} {1}
+    }
+    {洛阳南街4 south、north、east 和 west} 
+    {
+        {north} {1}
+        {south} {1}
+    }
+    {洛阳南门 north 和 south} 
+    {
+        {north} {1}
+    }
+    {粮店 west} 
+    {
+        {west} {1}
+    }
+    {驿站 east} 
+    {
+        {east} {1}
+    }
+}
+
+#CLASS {auto_mapped_map} CLOSE

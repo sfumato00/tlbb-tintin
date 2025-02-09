@@ -1,5 +1,155 @@
 #NOP Mapper
 
-#EVENT {VARIABLE UPDATED env[exits]} {
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS map_common READ {./pkg/pkg_map_common.tin};
+
+#CLASS auto_mapped_map OPEN;
+
+#LIST VisitStack CREATE {};
+#VARIABLE {StackTable} {};
+#VARIABLE {DrawnMap} {};
+#VARIABLE {Visited} {};
+
+#VARIABLE {Mapper} {
+    {last_room_key} {}
+    {last_move_dir} {}
+};
+
+#CLASS auto_mapped_map CLOSE;
+
+
+
+#EVENT {VARIABLE UPDATED env[room_updated]} {
+    #UNDELAY delay_move_timeout;
+    #CLASS auto_mapped_map WRITE {auto_mapped_map.map};
     
+    #LOCAL room_key {$env[room] $env[exits]};
+    #LOCAL last_room_key {$Mapper[last_room_key]};
+    #LOCAL last_move_dir {$Mapper[last_move_dir]};
+
+    #VARIABLE {Mapper};
+
+    #IF {"$Visited[$room_key]" == ""} {
+        #VARIABLE {Visited[$room_key]} {};
+    };
+    
+    #IF {"$last_room_key" != ""} {
+        #VARIABLE {DrawnMap[$last_room_key][$room_key]} {
+            {path} {$last_move_dir}
+            {dist} {1}
+        };
+    };
+
+    #LOCAL dirs @TableDirection{$env[exits]};
+    #LOCAL d {};
+    #LOCAL dir_to_go {};
+    #FOREACH {*DIRECTIONS[%*]} {d} {
+        Info {d: $d, dirs[$d]: $dirs[$d], Visited[$room_key][$d]: $Visited[$room_key][$d]};
+        #IF {$dirs[$d] && "$Visited[$room_key][$d]" == ""}  {
+            #VARIABLE Visited[$room_key][$d] {1};
+            #LOCAL dir_to_go {$d};
+            MoveDir {$env[room]} {$env[exits]} {$dir_to_go};
+            #BREAK;
+        };
+    };
+    
+    #IF {"$dir_to_go" == ""} {
+        #LOCAL prev_room @VisitStackPop{};
+        #LOCAL dir_to_go {$prev_room[move_dir]};
+    };
+    Cmd {$dir_to_go} {1};
+};
+
+#ALIAS {MoveDir} {
+    #LOCAL room %1;
+    #LOCAL exits %2;
+    #LOCAL move_dir %3;
+
+    #LOCAL key {$room $exits};
+
+    #VARIABLE {Mapper[last_room_key]} {$key};
+    #VARIABLE {Mapper[last_move_dir]} {$move_dir};
+
+    VisitStackPush {$room} {$exits} {$move_dir};
+
+    #DELAY {delay_move_timeout} {
+        #LOCAL prev @VisitStackPop{};
+        #VARIABLE {env[room]} {$prev[room]};
+        #VARIABLE {env[exits]} {$prev[exits]};
+        #VARIABLE {env[room_updated]} {@GetEpoch{}};
+    } {3};
+} {5};
+
+#FUNCTION ExplodeDirection {
+    #LOCAL dirs {%1};
+    #REPLACE {dirs} {和} {,};
+    #REPLACE {dirs} {、} {,};
+    #REPLACE {dirs} { } {};
+    #LIST dirs EXPLODE {,};
+    #RETURN {$dirs};
+}
+
+#FUNCTION TableDirection {
+    #LOCAL dirs {%1};
+    #REPLACE {dirs} {和} {;};
+    #REPLACE {dirs} {、} {;};
+    #REPLACE {dirs} { } {};
+    #LOCAL ret {};
+    #FOREACH {$dirs} {d} {
+        #LOCAL ret[$d] {1};
+    };
+    #RETURN {$ret};
+}
+
+#VARIABLE {DIRECTIONS} {
+    {east} {west}
+    {west} {east}
+    {north} {south}
+    {south} {north}
+    {northeast} {southwest}
+    {southwest} {northeast}
+    {northwest} {southeast}
+    {southeast} {northwest}
+    {up} {down}
+    {down} {up}
+    {enter} {out}
+    {out} {enter}
+    {northdown} {southup}
+    {southup} {northdown}
+    {southdown} {northup}
+    {northup} {southdown}
+};
+
+#Alias VisitStackPush {
+    #LOCAL room %1;
+    #LOCAL exits %2;
+    #LOCAL move_dir %3;
+
+    #IF {"$StackTable[$room_key]" == ""} {
+        #VARIABLE {StackTable[$room_key]} {1};
+        #LIST VisitStack Add {
+            {
+                {room} {$room}
+                {exits} {$exits}
+                {move_dir} {$move_dir}
+            }
+        };
+    };
+}
+
+#FUNCTION VisitStackPop {
+    #LOCAL n {};
+    #LIST VisitStack SIZE n;
+    #IF {$n > 0} {
+        #LOCAL prev $VisitStack[-1];
+        #LIST VisitStack DELETE $n 1;
+        #LOCAL room {$prev[room]};
+        #LOCAL exits {$prev[exits]};
+        #UNVARIABLE {StackTable[$room $exits]};
+
+        #LOCAL prev_d $prev[dir];
+        #LOCAL d $DIRECTIONS[$prev_d];
+        #RETURN {$prev};
+    };
+    #RETURN {};
 }
