@@ -345,6 +345,46 @@
             {path} {#3 e;eu;#4 n;#7 e}
             {dist} {15}
         }
+        {林中空地 north、south、northeast、southeast、northwest 和 southwest} {
+            {path} {#3 w;nw;sw}
+            {dist} {5}
+        }
+    }
+    {林中空地 north、south、northeast、southeast、northwest 和 southwest} {
+        {山脚 north、east、west 和 southup} {
+            {path} {ne;se;#3 e}
+            {dist} {5}
+        }
+        {青草坪 south、north、east 和 west} {
+            {path} {nw;sw;#3 e;s;#2 w}
+            {dist} {8}
+        }
+    }
+    {青草坪 south、north、east 和 west} {
+        {林中空地 north、south、northeast、southeast、northwest 和 southwest} {
+            {path} {#3 e;n;w;ne;se}
+            {dist} {5}
+        }
+        {小木屋 south} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+        {小客栈 east 和 up} {
+            {path} {#3 w}
+            {dist} {3}
+        }
+    }
+    {小木屋 south} {
+        {青草坪 south、north、east 和 west} {
+            {path} {#2 s}
+            {dist} {2}
+        }
+    }
+    {小客栈 east 和 up} {
+        {青草坪 south、north、east 和 west} {
+            {path} {#3 e}
+            {dist} {3}
+        }
     }
     {谷场 north、south、east 和 west} {
         {山脚 north、east、west 和 southup} {

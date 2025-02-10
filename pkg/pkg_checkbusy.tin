@@ -48,5 +48,5 @@
             Cmd {$Busy[cmds]} {$Busy[n_cmds]};
         };
     };
-    #TICKER {tkr_checkbusy} {dazuo 1} {1};
+    #TICKER {tkr_checkbusy} {Cmd {dazuo 1} {1}} {1};
 };

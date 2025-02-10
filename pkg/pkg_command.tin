@@ -46,6 +46,7 @@
 };
 
 #FUNCTION GetCommandCnt {
+    PurgeHistory;
     #LOCAL total_cnt {0};
     #FOREACH *Command[history][q][%*] {x} {
         #MATH {total_cnt} {$total_cnt + $Command[history][q][$x][cnt]};

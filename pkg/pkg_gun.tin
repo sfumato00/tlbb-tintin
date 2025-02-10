@@ -2,40 +2,35 @@
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS check_busy READ {./pkg/pkg_checkbusy.tin};
 
-#VARIABLE {Gun[book]} {changquan-book2};
+#VARIABLE {Gun[book]} {book};
 #VARIABLE {Gun[count]} {0};
 
 #ALIAS {feedback_loop_tuna} {
-
-    #10 {
-        Cmd {shoot doge} {1};
-        #2 Cmd {
-            drink longyin;
-            tuna $vitals[精神_max];
-        } {2};
-    };    
+    
+    Cmd {
+        tuna 100;
+        drink longyin;
+        tuna 100;
+        drink longyin;
+    } {4};
 };
 
 #ALIAS {feedback_loop_du} {
-    #IF {!($Gun[count] % 2)} {
-        Cmd shoot doge {1};
-        #VARIABLE {Gun[count]} {0};
-    };
+    #LOCAL js {0};
+    #MATH js {$vitals[精神_max]/5 * 5};
     Cmd {
         drink longyin;
-        du $Gun[book] $vitals[精神_max];
+        drink longyin;
+        du @_get_book_to_read{} $vitals[精神_max];
         skills;
-        enable;
-    } {4};
+    } {8};
     
     #MATH Gun[count] {$Gun[count] + 1};
 } {5};
 
-#Ticker {ticker_du} {
-    CheckBusy {
-        feedback_loop_du;
-    } {0};
-} {2};
+#UNTicker {ticker_du} {
+    feedback_loop_du;
+} {0.5};
 
 
 #ACTION {^  才智 (literate)     ： %S              有效等级：%s%*$} {
@@ -59,6 +54,28 @@
 } {1};
 
 
-#ALIAS {name} {
-    commands
-} {5};
+#ACTION {^你感觉好象有点饿了。$} {
+    #LOCAL count @GetCommandCnt{};
+    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+    feedback_loop_du;
+};
+
+#FUNCTION _get_book_to_read {
+    #IF {$skills[literate][lv] >= 36 && $skills[buddhism][lv] < 30} {
+        #RETURN {buddhism-book};
+    };
+    #ELSEIF {$skills[literate][lv] < 50} {
+        #RETURN {book};
+    };
+    #ELSEIF {$skills[parry][lv] < 50} {
+        #RETURN {parrybook};
+    };
+    
+    #UNACTION {^你感觉好象有点饿了。$};
+    #ACTION {^你感觉好象有点饿了。$} {
+        #LOCAL count @GetCommandCnt{};
+        Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+        feedback_loop_tuna;
+    }
+    #RETURN {};
+}

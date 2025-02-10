@@ -191,6 +191,14 @@
             {path} {#9 s}
         }
     }
+    {小客栈 east 和 up} 
+    {
+        {青草坪 south、north、east 和 west} 
+        {
+            {dist} {3}
+            {path} {#3 e}
+        }
+    }
     {小山坡 westdown、southdown 和 eastdown} 
     {
         {天水关 north、east 和 west} 
@@ -203,6 +211,14 @@
         {
             {dist} {3}
             {path} {wd;w}
+        }
+    }
+    {小木屋 south} 
+    {
+        {青草坪 south、north、east 和 west} 
+        {
+            {dist} {2}
+            {path} {#2 s}
         }
     }
     {小木间 south} 
@@ -251,6 +267,11 @@
     }
     {山脚 north、east、west 和 southup} 
     {
+        {林中空地 north、south、northeast、southeast、northwest 和 southwest} 
+        {
+            {dist} {5}
+            {path} {#3 w;nw;sw}
+        }
         {汴梁城中心 north、south、east、west 和 up} 
         {
             {dist} {15}
@@ -359,6 +380,19 @@
             {path} {nw;nd}
         }
     }
+    {林中空地 north、south、northeast、southeast、northwest 和 southwest} 
+    {
+        {山脚 north、east、west 和 southup} 
+        {
+            {dist} {5}
+            {path} {ne;se;#3 e}
+        }
+        {青草坪 south、north、east 和 west} 
+        {
+            {dist} {8}
+            {path} {nw;sw;#3 e;s;#2 w}
+        }
+    }
     {欢迎来到天龙八部 south 和 down} 
     {
         {龙门客栈 west 和 up} 
@@ -392,11 +426,6 @@
     }
     {洛阳中心 south、north、east、west 和 up} 
     {
-        {大殿 south、east 和 west} 
-        {
-            {dist} {28}
-            {path} {#7 e;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw;sw;wu;su;sw;su;w;open door;n;n}
-        }
         {大路 south、north 和 southeast} 
         {
             {dist} {6}
@@ -465,6 +494,11 @@
     }
     {神憩小舍 east、southdown、northwest 和 up} 
     {
+        {二祖庵庵门 south 和 east} 
+        {
+            {dist} {72}
+            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;#9 s;黄土大道-southeast-west-东安门;#6 w;#9 w;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw;sw;wu;su;sw;su;w}
+        }
         {天贶殿 north、south、east 和 west} 
         {
             {dist} {15}
@@ -583,6 +617,24 @@
         {
             {dist} {4}
             {path} {w;s;n;w}
+        }
+    }
+    {青草坪 south、north、east 和 west} 
+    {
+        {小客栈 east 和 up} 
+        {
+            {dist} {3}
+            {path} {#3 w}
+        }
+        {小木屋 south} 
+        {
+            {dist} {2}
+            {path} {#2 n}
+        }
+        {林中空地 north、south、northeast、southeast、northwest 和 southwest} 
+        {
+            {dist} {5}
+            {path} {#3 e;n;w;ne;se}
         }
     }
     {驿站 west} 

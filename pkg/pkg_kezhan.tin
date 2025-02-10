@@ -1,0 +1,85 @@
+#NOP kezhan module
+
+#CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
+#CLASS map_graph READ {./pkg/pkg_map_graph.tin};
+
+
+#VARIABLE {Kezhan} {
+    {hotel_room_key} {小客栈 east 和 up}
+    {learn} {
+        {master_room_key} {小木屋 south}
+        {master_id} {xue}
+        {skill_id} {jingluo}
+        {js_p_qn} {11}
+    }
+};
+
+#VARIABLE {KEZHAN} {
+    {小客栈 east 和 up} {
+        {waiter_id} {waiter}
+        {waiter_cn} {店小二}
+        {rooms} {
+            {1} {s}
+            {2} {n}
+            {3} {e}
+            {4} {w}
+        }
+    }
+    {abc} {}
+};
+
+#ACTION {笑着对你说道：这位姑娘，您还没付钱呢！$} {
+    Cmd {give waiter 1 gold} {1};
+    #DELAY 0.2 {go_rest};
+} {5};
+
+#ACTION {^你躺在檀香木小床上，眼望着天花板，发了半天呆，就是睡不着，大概是睡得太多了！$} {
+    Cmd {shui} {1};
+};
+
+#ACTION {^你一觉醒来，觉得身体完全恢复了} {
+    go_learn;
+};
+
+#ACTION {^你听了薛慕华的指导，似乎有些心得。$} {
+    #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+        go_rest;
+    };
+    goto {$Kezhan[hotel_room_key]};
+}
+
+#ALIAS {go_learn} {
+    #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+        learn_from_master;
+    };
+    await_goto {$Kezhan[learn][master_room_key]};
+} {5};
+
+#ALIAS learn_from_master {
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Kezhan[learn][js_p_qn]};
+    #LOCAL sk {$Kezhan[learn][skill_id]};
+    #LOCAL master_id {$Kezhan[learn][master_id]};
+    #MATH qn {($vitals[精神_max] - 1) / $js_p_qn};
+    #ECHO {qn to use: $qn};
+    Cmd {learn $sk from $master_id with $qn} {1};
+
+    Cmd {skills} {1};
+}
+
+#ALIAS {go_rest} {
+    Cmd {u;@_get_random_room{}} {2};
+} {5};
+
+#FUNCTION _get_random_room {
+    #LOCAL rooms $KEZHAN[$Kezhan[hotel_room_key]][rooms];
+    #LOCAL n {};
+    #LOCAL x {};
+    #LIST rooms SIZE n;
+    #MATH x {1d$n};
+    #RETURN $rooms[$x];
+};
+

@@ -23,6 +23,13 @@
     };
 }
 
+#ALIAS await_goto {
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #UNEVENT {VARIABLE UPDATED env[room_updated]};
+        goto {%1};
+    };
+}
+
 #ALIAS travel {
     #LOCAL src {%1};
     #LOCAL dest {%2};

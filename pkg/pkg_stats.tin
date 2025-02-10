@@ -1,0 +1,29 @@
+#NOP Stats Module
+
+#CLASS commands READ {./pkg/pkg_command.tin};
+
+#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%*} {
+
+    #VARIABLE {skills[%4]} {
+        {lv} {%9}
+        {prof} {@ParseFlakyNumber{%11}}
+    };
+} {1};
+
+#ACTION {^ 根骨%s%d%s胆识%s%d%s悟性%s%d%s膂力%s%d%s容貌%s%*} {
+    #VARIABLE {score[根骨]} {%2};
+    #VARIABLE {score[胆识]} {%5};
+    #VARIABLE {score[悟性]} {%8};
+    #VARIABLE {score[膂力]} {%11};
+    #VARIABLE {score[容貌]} {@ParseFlakyNumber{%14}};
+
+    #SHOW {角色: $env[name]($username), $env[sex], 现年: $env[age], 根骨: $score[根骨], 胆识: $score[胆识], 悟性: $score[悟性], 膂力: $score[膂力], 容貌: $score[容貌]} 1 5;
+} {5};
+
+
+#ACTION {^  %u (%w)%s：%*有效等级：%s%*$} {
+    #VARIABLE {enables[%2]} {@ParseFlakyNumber{%6}};
+};
+
+
+#ACTION {^你的「%u」进步了！$} {Cmd {skills} {1};}
