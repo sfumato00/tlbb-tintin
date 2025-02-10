@@ -132,6 +132,26 @@
             {path} {e;nd;ne;nd;ed;ne}
             {dist} {6}
         }
+        {卓锡泉 south 和 north} {
+            {path} {open door;n}
+            {dist} {2}
+        }
+    }
+    {卓锡泉 south 和 north} {
+        {二祖庵庵门 south 和 east} {
+            {path} {open door;s}
+            {dist} {2}
+        }
+        {大殿 south、east 和 west} {
+            {path} {n}
+            {dist} {1}
+        }
+    }
+    {大殿 south、east 和 west} {
+        {卓锡泉 south 和 north} {
+            {path} {s}
+            {dist} {1}
+        }
     }
     {登封县中央广场 north、south、east、west 和 up} {
         {登封县北街 north、south、east 和 northwest} {

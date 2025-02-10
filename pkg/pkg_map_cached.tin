@@ -49,6 +49,11 @@
     }
     {二祖庵庵门 south 和 east} 
     {
+        {卓锡泉 south 和 north} 
+        {
+            {dist} {2}
+            {path} {open door;n}
+        }
         {山道 southeast、southwest 和 northup} 
         {
             {dist} {6}
@@ -86,6 +91,19 @@
             {path} {#9 n;ne}
         }
     }
+    {卓锡泉 south 和 north} 
+    {
+        {二祖庵庵门 south 和 east} 
+        {
+            {dist} {2}
+            {path} {open door;s}
+        }
+        {大殿 south、east 和 west} 
+        {
+            {dist} {1}
+            {path} {n}
+        }
+    }
     {城隍庙 north} 
     {
         {东安门 east 和 west} 
@@ -97,6 +115,14 @@
         {
             {dist} {6}
             {path} {n;#5 w}
+        }
+    }
+    {大殿 south、east 和 west} 
+    {
+        {卓锡泉 south 和 north} 
+        {
+            {dist} {1}
+            {path} {s}
         }
     }
     {大路 south、north 和 southeast} 
@@ -366,6 +392,11 @@
     }
     {洛阳中心 south、north、east、west 和 up} 
     {
+        {大殿 south、east 和 west} 
+        {
+            {dist} {28}
+            {path} {#7 e;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw;sw;wu;su;sw;su;w;open door;n;n}
+        }
         {大路 south、north 和 southeast} 
         {
             {dist} {6}
@@ -455,11 +486,6 @@
     }
     {茶馆 east 和 up} 
     {
-        {山脚 north、east、west 和 southup} 
-        {
-            {dist} {3}
-            {path} {e;#2 s}
-        }
         {谷场 north、south、east 和 west} 
         {
             {dist} {1}
