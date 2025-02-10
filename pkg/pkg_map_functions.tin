@@ -260,3 +260,28 @@
     };
 };
 
+#ALIAS {二祖庵庵门-卓溪泉} {
+    #IF {"$env[room]" == "二祖庵庵门"} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {"$env[room]" == "卓锡泉"} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {open door;n};
+    };
+} {5};
+
+#ALIAS {卓溪泉-二祖庵庵门} {
+    #IF {"$env[room]" == "卓溪泉"} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {"$env[room]" == "二祖庵庵门"} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {open door;s};
+    };
+} {5};

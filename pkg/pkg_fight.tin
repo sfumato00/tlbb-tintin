@@ -238,6 +238,14 @@
     };
 };
 
+#ACTION {^你必须连线十秒后才能离开游戏。$} {
+    #delay 2 {quit};
+} {1};
+
+#ACTION {^你正忙着呢，暂时无法离开游戏。$} {
+    #delay 2 {quit};
+} {5};
+
 
 
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {

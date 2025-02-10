@@ -52,7 +52,8 @@
         {卓锡泉 south 和 north} 
         {
             {dist} {2}
-            {path} {open door;n}
+            {function} {1}
+            {path} {二祖庵庵门-卓溪泉}
         }
         {山道 southeast、southwest 和 northup} 
         {
@@ -96,7 +97,8 @@
         {二祖庵庵门 south 和 east} 
         {
             {dist} {2}
-            {path} {open door;s}
+            {function} {1}
+            {path} {卓溪泉-二祖庵庵门}
         }
         {大殿 south、east 和 west} 
         {
@@ -115,6 +117,11 @@
         {
             {dist} {6}
             {path} {n;#5 w}
+        }
+        {神憩小舍 east、southdown、northwest 和 up} 
+        {
+            {dist} {38}
+            {path} {n;e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
     }
     {大殿 south、east 和 west} 

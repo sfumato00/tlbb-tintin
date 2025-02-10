@@ -1,17 +1,20 @@
 #NOP 少林 模块
 
-#class 名气 open;
-
+#CLASS logging READ {./pkg/pkg_logging.tin};
 
 #action {^你的名气增加了：%1点。$} {
-    cmd {ask master about 名气};
+    Cmd {ask master about 名气} {1};
 };
 
 #ACTION {^%u重新连线回到这个世界。} {
-    cmd {ask master about 任务};
+    Cmd {ask master about 任务} {1};
 } {5};
 
-#TICKER {ticker_shaolin} {cmd {ask master about 任务}} {10};
+#TICKER {ticker_shaolin} {Cmd {ask master about 任务} {1}} {10};
 
-#class 名气 close;
-
+#ACTION {^你向玄生打听有关『名气』的消息。} {
+    #ACTION {^玄生说道：你现在的名气是%u点。} {
+        LogLine {Info} {./log/fame_$username.log};
+        #UNACTION {^玄生说道：你现在的名气是%u点。};
+    };
+}

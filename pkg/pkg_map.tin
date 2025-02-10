@@ -133,14 +133,16 @@
             {dist} {6}
         }
         {卓锡泉 south 和 north} {
-            {path} {open door;n}
+            {path} {二祖庵庵门-卓溪泉}
             {dist} {2}
+            {function} {1}
         }
     }
     {卓锡泉 south 和 north} {
         {二祖庵庵门 south 和 east} {
-            {path} {open door;s}
+            {path} {卓溪泉-二祖庵庵门}
             {dist} {2}
+            {function} {1}
         }
         {大殿 south、east 和 west} {
             {path} {n}

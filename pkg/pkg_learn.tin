@@ -1,4 +1,10 @@
-#CLASS learn OPEN;
+#NOP Learn Module
+
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
+
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS busy READ {./pkg/pkg_busy.tin};
 
 #VARIABLE THROTTLE {8};
 
@@ -17,8 +23,7 @@
 } {5};
 
 #EVENT {VARIABLE UPDATED busy[updated]} {
-    cmd {skills};
-    cmd {hp};
+    Cmd {skills;hp} {2}; 
 };
 
 #EVENT {VARIABLE UPDATED vitals[经验]} {
@@ -37,22 +42,22 @@
     #IF {$vitals[内力] < $vitals[内力_max]} {
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
         #IF {$xiqi > 0} {
-            cmd {xiqi $xiqi};
+            Cmd {xiqi $xiqi};
         };
         #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
         #IF {$yunqi > 0} {
-            cmd {yunqi $yunqi};
+            Cmd {yunqi $yunqi};
         };
         busy_dazuo $vitals[气血_max];
         #RETURN {};
     };
 
-    #LOCAL n_cmd {0};
+    #LOCAL n_Cmd {0};
     #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
     
     #IF {$xiqi > 0} {
-        cmd {xiqi $xiqi};
-        #MATH {n_cmd} {$n_cmd + 1};
+        Cmd {xiqi $xiqi};
+        #MATH {n_Cmd} {$n_Cmd + 1};
     };
 
     #VARIABLE skill_to_learn {@GetSkillToLearn{}};
@@ -95,15 +100,15 @@
             || ($curr_lv + 2 < $target_lv && "$sk" == "jiuyang-shengong"))
         } {
         #$full_xiqi_params[full_learn_multiple] {
-            cmd {learn $sk from $learn[master] with 50};
-            #MATH n_cmd {$n_cmd + 1};
-            #IF {$n_cmd > $THROTTLE} {
+            Cmd {learn $sk from $learn[master] with 50} {1};
+            #MATH n_Cmd {$n_Cmd + 1};
+            #IF {$n_Cmd > $THROTTLE} {
                 #RETURN {};
             };
         };
-        cmd {xiqi $full_xiqi_params[xiqi_full]};
-        #MATH n_cmd {$n_cmd + 1};
-        #IF {$n_cmd >= $THROTTLE} {
+        Cmd {xiqi $full_xiqi_params[xiqi_full]} {1};
+        #MATH n_Cmd {$n_Cmd + 1};
+        #IF {$n_Cmd >= $THROTTLE} {
             #RETURN {};
         };
 
@@ -117,9 +122,9 @@
     #LOCAL js_per_full_learn {};
     #MATH js_per_full_learn {$js_per_qn * 50};
     #WHILE {$js_remain > $js_per_full_learn && $qn_before_level >= 50} {
-        cmd {learn $sk from $learn[master] with 50};
-        #MATH n_cmd {$n_cmd + 1};
-        #IF {$n_cmd >= $THROTTLE} {
+        Cmd {learn $sk from $learn[master] with 50} {1};
+        #MATH n_Cmd {$n_Cmd + 1};
+        #IF {$n_Cmd >= $THROTTLE} {
             #RETURN {};
         };
 
@@ -138,11 +143,11 @@
     #LOCAL qn {@Min{$qn_before_level;$x}};
     #ECHO {qn_before_level: $qn_before_level, x: $x, qn: $qn};
     #IF {$qn > 0} {
-        cmd {learn $sk from $learn[master] with $qn};
+        Cmd {learn $sk from $learn[master] with $qn} {1};
     };
     #ELSEIF {"$sk" != "jiuyang-shengong" && $xunhuan[qn_per_res] > 5} {
-        cmd {research literate 1};
-        cmd {research $sk $xunhuan[qn_per_res]};
+        Cmd {research literate 1} {1};
+        Cmd {research $sk $xunhuan[qn_per_res]} {1};
     };
 };
 
@@ -207,5 +212,3 @@
 };
 
 #PROMPT {^你目前至少要用 %d 点潜能。$} {RES潜能: >> %1 <<} 0 2;
-
-#CLASS learn CLOSE;
