@@ -150,7 +150,7 @@
     #FORMAT {exp_msg} {经验增速: %d, 最大 %d, 平均 %d} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
     #FORMAT {qn_msg} {潜能增速: %d, 最大 %d, 平均 %d} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
 
-    Log {经验: $vitals[经验], 潜能, $vitals[潜能], $exp_msg, $qn_msg} {Info} {$fight_stats[log_file]};
+    Log {经验: $vitals[经验], 潜能, $vitals[潜能], $exp_msg, $qn_msg} {Info} {./log/fight_@GetDate{}_$username.log};
 
     #DELAY {0.1} {
         #SHOWME {$exp_msg};
@@ -172,7 +172,7 @@
 
 #ALIAS {init_fight} {
     #ECHO {开始练功};
-    Log {开始练功} {Info} {$fight_stats[log_file]}; 
+    Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log}; 
     #CLASS safety READ {./pkg/pkg_safety.tin};
 
     #EVENT {VARIABLE UPDATED vitals[经验]} {
@@ -218,7 +218,7 @@
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #LOCAL npc_list {$Fight[npc_list]};#LOCAL npc_list {$Fight[npc_list]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
-        Log {%0} {LOG} {./log/npc_$username.log};
+        Log {%0} {LOG} {./log/npc_@GetDate{}_$username.log};
     };
 };
 
