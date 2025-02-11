@@ -2,18 +2,10 @@
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 
-#VARIABLE LOG_DIRECTORY {./log};
+#CLASS command READ {./pkg/pkg_command.tin};
 
 #ALIAS {cmd} {
-    #VARIABLE {_cmds} {%1};
-    #FOREACH {$_cmds} {_last_cmd} {
-        #IF {"$_last_cmd" == ""} {
-            #CONTINUE;
-        };
-        #ECHO {@Timestamp{} 输入指令: $_last_cmd};
-        #SEND {$_last_cmd};
-        #VARIABLE {env[last_cmd]} {%U};
-    };
+    Cmd {%1};
 } {5};
 
 #FUNCTION ParseFlakyNumber {

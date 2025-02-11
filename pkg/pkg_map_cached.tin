@@ -16,6 +16,14 @@
             {path} {东安门-黄土大道}
         }
     }
+    {东客房 south、north、eastup、east、westup、southeast、west、southwest 和 southup} 
+    {
+        {小院 south、north、east 和 west} 
+        {
+            {dist} {2}
+            {path} {n;w}
+        }
+    }
     {东门 northeast、west、southup 和 northup} 
     {
         {中心广场 north、south、east 和 west} 
@@ -118,10 +126,18 @@
             {dist} {6}
             {path} {n;#5 w}
         }
-        {神憩小舍 east、southdown、northwest 和 up} 
+    }
+    {大厅 north、south 和 west} 
+    {
+        {小院 south、north、east 和 west} 
         {
-            {dist} {38}
-            {path} {n;e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
+            {dist} {1}
+            {path} {s}
+        }
+        {灵鹫宫药铺 east} 
+        {
+            {dist} {1}
+            {path} {w}
         }
     }
     {大殿 south、east 和 west} 
@@ -238,6 +254,16 @@
     }
     {小院 south、north、east 和 west} 
     {
+        {东客房 south、north、eastup、east、westup、southeast、west、southwest 和 southup} 
+        {
+            {dist} {2}
+            {path} {e;s}
+        }
+        {大厅 north、south 和 west} 
+        {
+            {dist} {1}
+            {path} {n}
+        }
         {缥缈峰半山腰 southdown 和 northup} 
         {
             {dist} {7}
@@ -454,6 +480,14 @@
             {path} {#7 e}
         }
     }
+    {灵鹫宫药铺 east} 
+    {
+        {大厅 north、south 和 west} 
+        {
+            {dist} {1}
+            {path} {e}
+        }
+    }
     {登封县中央广场 north、south、east、west 和 up} 
     {
         {大路 south、north 和 southeast} 
@@ -501,6 +535,11 @@
     }
     {神憩小舍 east、southdown、northwest 和 up} 
     {
+        {二祖庵庵门 south 和 east} 
+        {
+            {dist} {72}
+            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;#9 s;黄土大道-southeast-west-东安门;#6 w;#9 w;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw;sw;wu;su;sw;su;w}
+        }
         {天贶殿 north、south、east 和 west} 
         {
             {dist} {15}

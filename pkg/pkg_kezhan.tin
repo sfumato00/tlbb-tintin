@@ -5,16 +5,6 @@
 #CLASS map_graph READ {./pkg/pkg_map_graph.tin};
 
 
-#VARIABLE {Kezhan} {
-    {hotel_room_key} {小客栈 east 和 up}
-    {learn} {
-        {master_room_key} {小木屋 south}
-        {master_id} {xue}
-        {skill_id} {jingluo}
-        {js_p_qn} {11}
-    }
-};
-
 #VARIABLE {KEZHAN} {
     {小客栈 east 和 up} {
         {waiter_id} {waiter}
@@ -26,13 +16,33 @@
             {4} {w}
         }
     }
-    {abc} {}
+    {东客房 south、north、eastup、east、westup、southeast、west、southwest 和 southup} {
+        {waiter_id} {xiao cui}
+        {waiter_cn} {小翠}
+        {rooms} {
+            {1} {w}
+            {2} {s}
+            {3} {e}
+            {4} {wu}
+            {5} {su}
+            {6} {eu}
+            {7} {sw}
+            {8} {se}
+        }
+    }
 };
 
 #ACTION {笑着对你说道：这位姑娘，您还没付钱呢！$} {
-    Cmd {give waiter 1 gold} {1};
+    #local waiter {$KEZHAN[$Kezhan[hotel_room_key]][waiter_id]};
+    Cmd {give 1 gold to $waiter};
     #DELAY 0.2 {go_rest};
 } {5};
+
+#ACTION {^请先去交过钱再来住店吧！$} {
+    #local waiter {$KEZHAN[$Kezhan[hotel_room_key]][waiter_id]};
+    Cmd {give 1 gold to $waiter};
+    #DELAY 0.2 {go_rest};
+}
 
 #ACTION {^你躺在檀香木小床上，眼望着天花板，发了半天呆，就是睡不着，大概是睡得太多了！$} {
     Cmd {shui} {1};
@@ -42,12 +52,8 @@
     go_learn;
 };
 
-#ACTION {^你听了薛慕华的指导，似乎有些心得。$} {
-    #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
-        go_rest;
-    };
-    goto {$Kezhan[hotel_room_key]};
+#ACTION {^你听了%*的指导，似乎有些心得。$} {
+    go_rest;
 }
 
 #ACTION {^这里已经住满了，请到别间去住吧！} {
@@ -77,12 +83,13 @@
 }
 
 #ALIAS {go_rest} {
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {@_assertRoomExitsKey{走廊 south、north、east、down 和 west}} {
+    
+    #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+        #IF {"$Travel[trip_complete]" == "1"} {
             @_get_random_room{};
         };
     };
-    Cmd {u} {2};
+    goto {$Kezhan[hotel_room_key]};
 } {5};
 
 #FUNCTION _get_random_room {
@@ -95,17 +102,13 @@
 };
 
 #FUNCTION get_skill {
-    #IF {$skills[literate][lv] < 100} {
-        #RETURN {literate};
-    };
-    #IF {$skills[jingluo][lv] < 100} {
-        #RETURN {jingluo};
-    };
-    #IF {$skills[force][lv] < 100} {
-        #RETURN {force};
-    };
-    #IF {$skills[beiming-force][lv] < 100} {
-        #RETURN {beiming-force};
-    };
+    #FOREACH {*Learn[skills][%*]} {i} {
+        #LOCAL sk $Learn[skills][$i][sk];
+        #LOCAL lv $Learn[skills][$i][lv];
 
+        #IF {$skills[$sk][lv] < $lv} {
+            #RETURN {$sk};
+        };
+    };
+    #RETURN {};
 }

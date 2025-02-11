@@ -467,6 +467,36 @@
             {path} {s;sw;#5 s}
             {dist} {7}
         }
+        {大厅 north、south 和 west} {
+            {path} {n}
+            {dist} {1}
+        }
+        {东客房 south、north、eastup、east、westup、southeast、west、southwest 和 southup} {
+            {path} {e;s}
+            {dist} {2}
+        }
+    }
+    {东客房 south、north、eastup、east、westup、southeast、west、southwest 和 southup} {
+        {小院 south、north、east 和 west} {
+            {path} {n;w}
+            {dist} {2}
+        }
+    }
+    {大厅 north、south 和 west} {
+        {灵鹫宫药铺 east} {
+            {path} {w}
+            {dist} {1}
+        }
+        {小院 south、north、east 和 west} {
+            {path} {s}
+            {dist} {1}
+        }
+    }
+    {灵鹫宫药铺 east} {
+        {大厅 north、south 和 west} {
+            {path} {e}
+            {dist} {1}
+        }
     }
     {青海草原 north、south 和 west} {
         {青海草原 north、south、east、west 和 northwest} {

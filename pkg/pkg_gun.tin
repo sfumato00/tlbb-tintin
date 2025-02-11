@@ -1,81 +1,49 @@
 #NOP gun
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
 #CLASS check_busy READ {./pkg/pkg_checkbusy.tin};
-
-#VARIABLE {Gun[book]} {book};
-#VARIABLE {Gun[count]} {0};
 
 #ALIAS {feedback_loop_tuna} {
     
     Cmd {
-        tuna 100;
-        drink longyin;
-        tuna 100;
-        drink longyin;
+        tuna 200;
+        shoot $username;
+        hp;
+        #2 drink longyin;
     } {4};
 };
 
 #ALIAS {feedback_loop_du} {
-    #LOCAL js {0};
-    #MATH js {$vitals[精神_max]/5 * 5};
     Cmd {
-        drink longyin;
-        drink longyin;
-        du @_get_book_to_read{} $vitals[精神_max];
+        shoot $username;
+        #2 drink longyin;
+        du @_get_book_to_read{} 200;
         skills;
-    } {8};
-    
-    #MATH Gun[count] {$Gun[count] + 1};
+    } {1};
 } {5};
 
-#UNTicker {ticker_du} {
-    feedback_loop_du;
-} {0.5};
-
-
-#ACTION {^  才智 (literate)     ： %S              有效等级：%s%*$} {
-    
-    #VARIABLE {enables[literate]} {@ParseFlakyNumber{%3}};
-};
-
-#ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%*} {
-    
-    #LOCAL v $skills[%4][prof];
-    #LOCAL new_v @ParseFlakyNumber{%11};
-    #MATH v {$new_v - $v};
-    
-    #VARIABLE {skills[%4]} {
-        {lv} {%9}
-        {prof} {@ParseFlakyNumber{%11}}
-    };
-    #IF {$v > 0} {
-        #Show {%0} {%1%2%3(%4)%5-%6%7%8%9/%10$skills[%4][prof]  <fca>+{$v}} 0 0;
-    };
+#Ticker {ticker_gun} {
+    feedback_loop_tuna;
 } {1};
 
-
-#ACTION {^你感觉好象有点饿了。$} {
-    #LOCAL count @GetCommandCnt{};
-    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
-    feedback_loop_du;
-};
-
 #FUNCTION _get_book_to_read {
-    #IF {$skills[literate][lv] >= 36 && $skills[buddhism][lv] < 30} {
-        #RETURN {buddhism-book};
-    };
-    #ELSEIF {$skills[literate][lv] < 50} {
+    #IF {$skills[literate][lv] < 80} {
         #RETURN {book};
     };
-    #ELSEIF {$skills[parry][lv] < 50} {
-        #RETURN {parrybook};
+    #IF {$skills[changquan][lv] <60} {
+        #RETURN {changquan-book2};
     };
-    
-    #UNACTION {^你感觉好象有点饿了。$};
-    #ACTION {^你感觉好象有点饿了。$} {
-        #LOCAL count @GetCommandCnt{};
-        Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
-        feedback_loop_tuna;
-    }
-    #RETURN {};
+    #IF {$skills[jingluo][lv] < 30} {
+        #RETURN {jingluo};
+    };
+    #IF {$skills[beiming-force][lv] < 30} {
+        #RETURN {beiming};
+    };
+    #IF {$skills[unarmed][lv] < 50} {
+        #RETURN {unarmedbook};
+    };
+}
+
+#ALIAS stop {
+    #UNTICKER {ticker_gun};
 }
