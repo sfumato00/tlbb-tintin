@@ -1,6 +1,7 @@
 #NOP Stats Module
 
 #CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
 
 #ACTION {^%s%S%s(%S)%s-%s%S%s%d/%s%*} {
 

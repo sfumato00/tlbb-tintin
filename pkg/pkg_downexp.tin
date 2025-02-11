@@ -27,6 +27,12 @@
     };    
 } {1};
 
+#EVENT {VARIABLE UPDATED env[last_reconnect]} {
+    #IF {"$state[downexp_on]" == "1"} {
+        quit;
+    };
+} {1};
+
 
 #ALIAS {move_back_to_fight_room_handler} {
     
@@ -83,6 +89,11 @@
 #ACTION {^你正忙着呢，暂时无法离开游戏。$} {
     #delay 2 {quit};
 } {5};
+
+#ACTION {^钱掌柜告诉你：你阳世间的存款不够。} {
+    #ECHO {<faa> %0};
+    Log {%0} {Warn} {./log/need_money_$username.log};
+}
 
 
 #ALIAS {大理-跳崖} {
