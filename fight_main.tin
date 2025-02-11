@@ -6,7 +6,7 @@
 
 #ALIAS {conn} {
     #VARIABLE {env} {
-        {profile} {./profiles/fight/%1.tin}
+        {profile} {./profiles/%1.tin}
     };
     #CLASS profile read {$env[profile]};
     #CLASS state READ {./state/state_$username.state};

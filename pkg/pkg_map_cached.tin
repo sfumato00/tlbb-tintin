@@ -501,11 +501,6 @@
     }
     {神憩小舍 east、southdown、northwest 和 up} 
     {
-        {二祖庵庵门 south 和 east} 
-        {
-            {dist} {72}
-            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;#9 s;黄土大道-southeast-west-东安门;#6 w;#9 w;#2 s;登封县北街-少室山山脚;nw;nu;n;eu;n;nw;sw;wu;su;sw;su;w}
-        }
         {天贶殿 north、south、east 和 west} 
         {
             {dist} {15}

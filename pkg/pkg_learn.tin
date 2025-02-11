@@ -5,6 +5,7 @@
 
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS busy READ {./pkg/pkg_busy.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 
 #VARIABLE THROTTLE {8};
 

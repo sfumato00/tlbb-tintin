@@ -12,7 +12,7 @@
         #RETURN {};
     };
     
-    #IF {$vitals[内力] < $vitals[内力_max]} {
+    #IF {$vitals[内力] < $vitals[内力_max] / 2} {
                 
         #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
