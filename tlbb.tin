@@ -196,6 +196,24 @@
     };
 }
 
+#ALIAS {fight} {
+    
+
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            #ECHO {关闭练功模块};
+            #CLASS fight kill;
+        };
+
+        #DEFAULT {
+            #ECHO {开启练功模块};
+            Cmd {hp;skills;score;enable} {4};
+            #CLASS gun READ {./pkg/pkg_fight.tin};
+        };
+    };
+}
+
 #ALIAS {dazuo_max} {
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
     #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};

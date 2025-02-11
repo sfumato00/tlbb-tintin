@@ -8,7 +8,6 @@
     Cmd {
         tuna 200;
         shoot $username;
-        hp;
         #2 drink longyin;
     } {4};
 };
@@ -24,7 +23,7 @@
 
 #Ticker {ticker_gun} {
     feedback_loop_tuna;
-} {1};
+} {0.8};
 
 #FUNCTION _get_book_to_read {
     #IF {$skills[literate][lv] < 80} {

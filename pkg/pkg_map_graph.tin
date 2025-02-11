@@ -8,7 +8,7 @@
 #CLASS map_functions READ {./pkg/pkg_map_functions.tin};
 
 
-#VARIABLE {Travel[THROTTLE]} {23};
+#VARIABLE {Travel[THROTTLE]} {35};
 
 #ALIAS goto {
     #IF {"$env[room]" == ""} {
