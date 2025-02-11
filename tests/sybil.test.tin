@@ -1,0 +1,13 @@
+#NOP Sybil test
+
+#CLASS sybil_gift READ {./dev_pkg/pkg_sybil_gift.tin};
+
+#VARIABLE {prefix} {};
+#VARIABLE {Sybil} {
+    {1} {0}
+    {2} {1}
+    {3} {7}
+};
+
+
+#ECHO {@get_next_suffix{}};
