@@ -1,8 +1,14 @@
 #NOP learn
 
+
+#IF {"$xunhuan[min_restore]" == "$xunhuan[min_restore]"} {
+    #ECHO {<faa> 请初始化 "$xunhuan[min_restore]" };
+};
+
 #ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
     score;
 };
+
 
 #ALIAS {feedback_loop_research} {
     #LOCAL time {};
@@ -29,7 +35,7 @@
     #LOCAL m {};
     #MATH m {$vitals[精神_max] / 20};
     #LOCAL max_qn_to_spend {};
-    #MATH max_qn_to_spend {$vitals[精神_max] / 3 / 5 * 5};
+    #MATH max_qn_to_spend {($vitals[精神_max] / 3 / 5 - 1) * 5};
     #NOP #MATH max_qn_to_spend {$m * 5};
 
     
@@ -41,7 +47,7 @@
     #LOCAL {target_lv} {$skill_to_learn[+1]};
 
     #ECHO {DEBUG: ================> research skill: $sk, desired level: $target_lv};
-
+    
     #IF {$skills[$sk][lv] + 1 < $target_lv} {
         busy_research {$sk} {$max_qn_to_spend};
         #RETURN {};

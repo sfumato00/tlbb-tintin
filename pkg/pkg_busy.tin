@@ -53,17 +53,17 @@
     #LOCAL until {0};
     #MATH until {$time + %1};
 
-    #ECHO {[Debug] check_busy: previous busy until @GetTimeAsString{$busy[until]}, current timestamp: @GetTimeAsString{$time}, next until: @GetTimeAsString{$until}};
+    #ECHO {[Debug] check_busy: previous busy until @ConvertEpochToTimeStr{$busy[until]}, current timestamp: @ConvertEpochToTimeStr{$time}, next until: @ConvertEpochToTimeStr{$until}};
     #IF {$until > $busy[until]} {
         #VARIABLE {busy[until]} {$until};
     };
-    #ECHO {[Debug] check_busy: busy until @GetTimeAsString{$busy[until]}};
+    #ECHO {[Debug] check_busy: busy until @ConvertEpochToTimeStr{$busy[until]}};
 };
 
 #ALIAS {update_check_time} {
     #LOCAL time {};
     #FORMAT time {%T};
-    #ECHO {[Debug] update_check_time: busy[updated]: @GetTimeAsString{$busy[updated]}, current time: @GetTimeAsString{$time}};
+    #ECHO {[Debug] update_check_time: busy[updated]: @ConvertEpochToTimeStr{$busy[updated]}, current time: @ConvertEpochToTimeStr{$time}};
     
     #IF {$time > $busy[updated]} {
         #VARIABLE {busy[updated]} {$time};
