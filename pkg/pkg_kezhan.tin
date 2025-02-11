@@ -50,6 +50,12 @@
     goto {$Kezhan[hotel_room_key]};
 }
 
+#ACTION {^这里已经住满了，请到别间去住吧！} {
+    #DELAY {0.2} {
+        go_rest;
+    };
+}
+
 #ALIAS {go_learn} {
     #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
         #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
@@ -65,13 +71,18 @@
     #LOCAL master_id {$Kezhan[learn][master_id]};
     #MATH qn {($vitals[精神_max] - 1) / $js_p_qn};
     #ECHO {qn to use: $qn};
-    Cmd {learn $sk from $master_id with $qn} {1};
+    Cmd {learn @get_skill{} from $master_id with $qn} {1};
 
     Cmd {skills} {1};
 }
 
 #ALIAS {go_rest} {
-    Cmd {u;@_get_random_room{}} {2};
+    #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #IF {@_assertRoomExitsKey{走廊 south、north、east、down 和 west}} {
+            @_get_random_room{};
+        };
+    };
+    Cmd {u} {2};
 } {5};
 
 #FUNCTION _get_random_room {
@@ -83,3 +94,18 @@
     #RETURN $rooms[$x];
 };
 
+#FUNCTION get_skill {
+    #IF {$skills[literate][lv] < 100} {
+        #RETURN {literate};
+    };
+    #IF {$skills[jingluo][lv] < 100} {
+        #RETURN {jingluo};
+    };
+    #IF {$skills[force][lv] < 100} {
+        #RETURN {force};
+    };
+    #IF {$skills[beiming-force][lv] < 100} {
+        #RETURN {beiming-force};
+    };
+
+}

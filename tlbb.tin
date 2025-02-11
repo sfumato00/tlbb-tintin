@@ -53,7 +53,7 @@
     #VARIABLE {env[age]} {%3};
 };
 
-#ACTION {^你的「%u」进步了！$} {cmd {skills};}
+#ACTION {^你的「%u」进步了！$} {Cmd {skills};}
 
 #NOP 九阳
 #ALIAS {九阳} {
@@ -64,7 +64,7 @@
             #ECHO {开启九阳模块};
             #CLASS jiuyang kill;
             #CLASS jiuyang read {./pkg/pkg_jiuyang.tin};
-            cmd {exert powerup};
+            Cmd {exert powerup};
         };
 
         #CASE {"off"} {
@@ -88,7 +88,7 @@
             #ECHO {关闭 循环 模块};
             #CLASS xunhuan kill;
             #UNALIAS {feedback_loop};
-            #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+            #TICKER {ticker_feedback_loop} {Cmd {hp}} {15};
         };
 
         #CASE {"师父"} {
@@ -104,7 +104,7 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {hp} {1.5};
-                cmd {hp};
+                Cmd {hp};
             } {3};
         };
 
@@ -126,7 +126,7 @@
 
             #DELAY {init} {
                 #TICKER {ticker_feedback_loop} {dazuo 1} {1};
-                cmd {hp};
+                Cmd {hp};
             } {3};
         };
     };
@@ -208,13 +208,13 @@
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
     #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
 
-    #IF {$yunqi > 0} {cmd {yunqi $yunqi};};
-    cmd {dazuo $vitals[气血_max]};
-    cmd {hp};
+    #IF {$yunqi > 0} {Cmd {yunqi $yunqi};};
+    Cmd {dazuo $vitals[气血_max]};
+    Cmd {hp};
 } {5};
 
 #ALIAS {feedback_loop_idle} {
-    #TICKER {ticker_feedback_loop} {cmd {hp}} {15};
+    #TICKER {ticker_feedback_loop} {Cmd {hp}} {15};
 };
 
 #NOP 核心触发
