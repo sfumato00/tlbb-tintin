@@ -92,6 +92,8 @@
     #IF {$IS_MONEY[$en_id] > 0} {
         #VARIABLE {money[$en_id]} {1};
     };
+
+    #MATH {Items[cnt]} {$Items[cnt] + 1};
 };
 
 #ACTION {^    %S(%+)} {
@@ -120,6 +122,7 @@
     #VARIABLE {money} {};
     #VARIABLE {sellable} {};
     #VARIABLE {valuable} {};
+    #VARIABLE Items[cnt] {0};
     Cmd {i} {1};
 } {5};
 

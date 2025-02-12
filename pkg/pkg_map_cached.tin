@@ -799,11 +799,6 @@
             {dist} {6}
             {path} {w;#5 n}
         }
-        {神憩小舍 east、southdown、northwest 和 up} 
-        {
-            {dist} {48}
-            {path} {w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
-        }
         {黄土大道 north、west 和 southwest} 
         {
             {dist} {5}
