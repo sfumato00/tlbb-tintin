@@ -26,6 +26,7 @@
 #VARIABLE {IS_SELLABLE} {
     {布鞋-shoes} {50}
     {绣花鞋-shoes} {100}
+    {「诗经」} {200}
     {希尔登-yan} {500}
     {万宝路-yan} {500}
     {大前门-yan} {500}
