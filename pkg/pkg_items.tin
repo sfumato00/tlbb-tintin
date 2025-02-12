@@ -125,7 +125,11 @@
 
 #ALIAS sell_all {
     #FOREACH {*sellable[%*]} {x} {
-        Cmd {sell $x} {1};
+        
+        #LOCAL n $sellable[$x];
+        #LOOP 1 $n _ {
+            Cmd {sell $x} {1};
+        };
     };
 };
 
