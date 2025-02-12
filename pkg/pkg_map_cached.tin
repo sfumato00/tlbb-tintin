@@ -428,6 +428,11 @@
     }
     {欢迎来到天龙八部 south 和 down} 
     {
+        {十字广场 north、south、east、west 和 up} 
+        {
+            {dist} {16}
+            {path} {d;w;#4 s;sw;#9 s}
+        }
         {龙门客栈 west 和 up} 
         {
             {dist} {1}

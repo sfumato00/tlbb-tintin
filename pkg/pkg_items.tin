@@ -1,5 +1,7 @@
 #NOP 
 
+#CLASS command READ {./pkg/pkg_command.tin};
+
 #VARIABLE {IS_MONEY} {
     {coin} {1}
     {silver} {100}
@@ -113,33 +115,40 @@
     };
 };
 
-#ACTION {^你捡起%*。$} {
-    #LINE LOG {./log/$username.log};
-};
 
 #ALIAS {update_items} {
     #VARIABLE {money} {};
     #VARIABLE {sellable} {};
     #VARIABLE {valuable} {};
-    cmd {i};   
+    Cmd {i} {1};
 } {5};
 
 #ALIAS sell_all {
     #FOREACH {*sellable[%*]} {x} {
-        cmd {sell $x};
+        Cmd {sell $x} {1};
     };
 };
 
 #ALIAS give_all {
     #LOCAL o {%1};
     #FOREACH {*sellable[%*]} {x} {
-        cmd {give $o $x};
+        #LOCAL n $sellable[$x];
+        #LOOP 1 $n _ {
+            Cmd {give $o $x} {1};
+        };
+        
     };
     #FOREACH {*valuable[%*]} {x} {
-        cmd {give $o $x};
+        #LOCAL n $sellable[$x];
+        #LOOP 1 $n _ {
+            Cmd {give $o $x} {1};
+        };
     };
     #FOREACH {*money[%*]} {x} {
-        cmd {give $o $x};
+        #LOCAL n $sellable[$x];
+        #LOOP 1 $n _ {
+            Cmd {give $o $x} {1};
+        };
     };
 }
 
