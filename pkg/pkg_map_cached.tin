@@ -68,11 +68,6 @@
             {dist} {6}
             {path} {e;nd;ne;nd;ed;ne}
         }
-        {神憩小舍 east、southdown、northwest 和 up} 
-        {
-            {dist} {69}
-            {path} {e;nd;ne;nd;ed;ne;se;s;wd;s;sd;se;少室山山脚-登封县北街;#2 n;#9 e;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
-        }
     }
     {兴庆城城门 north、south、eastup 和 westup} 
     {
@@ -117,11 +112,6 @@
         {
             {dist} {1}
             {path} {n}
-        }
-        {神憩小舍 east、southdown、northwest 和 up} 
-        {
-            {dist} {71}
-            {path} {卓溪泉-二祖庵庵门;e;nd;ne;nd;ed;ne;se;s;wd;s;sd;se;少室山山脚-登封县北街;#2 n;#9 e;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
     }
     {城隍庙 north} 
@@ -550,11 +540,6 @@
             {dist} {15}
             {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s}
         }
-        {洛阳中心 south、north、east、west 和 up} 
-        {
-            {dist} {61}
-            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;#9 s;黄土大道-southeast-west-东安门;#6 w;#9 w;#7 w}
-        }
     }
     {缥缈峰半山腰 southdown 和 northup} 
     {
@@ -808,6 +793,11 @@
         {
             {dist} {6}
             {path} {w;#5 n}
+        }
+        {神憩小舍 east、southdown、northwest 和 up} 
+        {
+            {dist} {48}
+            {path} {w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
         {黄土大道 north、west 和 southwest} 
         {
