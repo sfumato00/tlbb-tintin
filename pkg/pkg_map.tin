@@ -314,6 +314,27 @@
             {path} {n;e}
             {dist} {2}
         }
+        
+        {西城门 east 和 northwest} {
+            {path} {#5 w}
+            {dist} {5}
+        }
+    }
+    {西城门 east 和 northwest} {
+        {十字广场 north、south、east、west 和 up} {
+            {path} {#5 e}
+            {dist} {5}
+        }
+        {山路 north 和 southdown} {
+            {path} {nw;nu;nd;nw;wu;n;n;nu;w;w;nw;nu;nw;wu;nu;wu}
+            {dist} {16}
+        }
+    }
+    {山路 north 和 southdown} {
+        {西城门 east 和 northwest} {
+            {path} {sd;sd;ed;se;sd;se;e;e;sd;s;s;ed;se;su;sd;se}
+            {dist} {16}
+        }
     }
     {驿站 west} {
         {十字广场 north、south、east、west 和 up} {
@@ -637,6 +658,7 @@
             {dist} {4}
         }
     }
+    
     {林中空地 northwest、southwest 和 enter} {
         {东门 northeast、west、southup 和 northup} {
             {path} {sw;s;#3 sw}
