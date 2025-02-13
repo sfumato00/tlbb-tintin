@@ -1,0 +1,35 @@
+#CLASS config READ {./config.tin};
+#CLASS login READ {./pkg/pkg_login.tin};
+
+#CLASS graph READ {./pkg/pkg_map_graph.tin};
+#CLASS const READ {./const.tin};
+
+#CLASS sidekick READ {./pkg/pkg_sidekick.tin};
+
+#ALIAS {conn} {
+    #VARIABLE {env} {
+        {profile} {./profiles/%1.tin}
+    };
+    #CLASS profile read {$env[profile]};
+    #SESSION {$username} {103.10.85.133} {8888};
+};
+
+#EVENT {SESSION DISCONNECTED} {
+    #gts #DELAY 3 {
+        conn $username;
+    };
+}
+
+#EVENT {SESSION TIMED OUT} {
+    conn $username;
+};
+
+
+#alias cjg {
+    #2 n;w;#3 n;#2 w;#2 nw;n;jumpover
+}
+
+#alias cjgb {
+    jumpover;#2 s;#2 e;#3 s;
+}
+

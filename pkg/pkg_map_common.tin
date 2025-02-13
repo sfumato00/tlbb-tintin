@@ -11,6 +11,7 @@
 }
 
 #FUNCTION _assertRoomExitsKey {
+    Warn {%1};
     #LOCAL {key} {$env[room]$env[exits]};
     #IF {"$key" == "%1"} {
         #RETURN 1;

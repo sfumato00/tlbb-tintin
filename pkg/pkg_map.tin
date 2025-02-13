@@ -165,6 +165,28 @@
             {dist} {1}
         }
     }
+    {藏经阁前 west} {
+        {藏经阁 east 和 up} {
+            {path} {w}
+            {dist} {1}
+        }
+    }
+    {藏经阁 east 和 up} {
+        {藏经阁二楼 down} {
+            {path} {u}
+            {dist} {1}
+        }
+        {藏经阁前 west} {
+            {path} {e}
+            {dist} {1}
+        }
+    }
+    {藏经阁二楼 down} {
+        {藏经阁 east 和 up} {
+            {path} {d}
+            {dist} {1}
+        }
+    }
     {登封县中央广场 north、south、east、west 和 up} {
         {登封县北街 north、south、east 和 northwest} {
             {path} {n}
@@ -742,6 +764,10 @@
             {path} {#2 e}
             {dist} {2}
         }
+        {西门 east、west、southup 和 northup} {
+            {path} {#2 w}
+            {dist} {2}
+        }
     }
     {东门 northeast、west、southup 和 northup} {
         {中心广场 north、south、east 和 west} {
@@ -753,7 +779,12 @@
             {dist} {4}
         }
     }
-    
+    {西门 east、west、southup 和 northup} {
+        {中心广场 north、south、east 和 west} {
+            {path} {#2 e}
+            {dist} {2}
+        }
+    }
     {林中空地 northwest、southwest 和 enter} {
         {东门 northeast、west、southup 和 northup} {
             {path} {sw;s;#3 sw}

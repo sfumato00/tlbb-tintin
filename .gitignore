@@ -18,3 +18,6 @@ state/
 
 .idea/
 state_*
+
+
+pkg/pkg_map_common.tin

@@ -1,0 +1,39 @@
+#NOP preempt
+
+#VARIABLE {Preempt} {
+    {default} {
+        {delay} {0.5}
+        {freq} {0.1}
+        {duration} {2}
+    }
+};
+
+#ALIAS {PreemptNpc} {
+    #VARIABLE {Preempt[npc]} {%1};
+
+    #VARIABLE {Preempt[delay]} {$Preempt[default][delay]};
+    #VARIABLE {Preempt[freq]} {$Preempt[default][freq]};
+    #VARIABLE {Preempt[duration]} {$Preempt[default][duration]};
+
+    #IF {"%2" != ""} {
+        #VARIABLE {Preempt[delay]} {%2};
+    };
+
+    #IF {"%3" != ""} {
+        #VARIABLE {Preempt[freq]} {%3};
+    };
+
+    #IF {"%4" != ""} {
+        #VARIABLE {Preempt[duration]} {%4};
+    };
+    
+    #DELAY {$Preempt[delay]} {
+        Cmd {get $Preempt[npc]} {1};
+        #ticker {tk_preempt_get} {
+            Cmd {get $Preempt[npc]} {1};
+        } {$Preempt[freq]};
+        #DELAY {$Preempt[duration]} {
+            #UNTICKER {tk_preempt_get};
+        };
+    };   
+} {5};

@@ -1,0 +1,69 @@
+#NOP sidekick
+
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS preempt READ {./pkg/pkg_preempt.tin};
+
+#ACTION {( %u已经陷入半昏迷状态，随时都可能摔倒晕去。 )} {
+    #VARIABLE _name {%1};
+    #LOCAL NPC $SideKick[npc];
+    #IF {"$Sidekick[npc][$_name]" != ""} {
+        PreemptNpc {$Sidekick[npc][$_name][id]} {0.8} {0.08} {0.8};
+    };
+} {1};
+
+#ACTION {^%u两眼发黑，脑袋嗡的一下，跌在地上一动也不动了。$} {
+    #VARIABLE _name {%1};
+    #IF {"$Sidekick[npc][$_name]" != ""} {
+        Cmd {get $Sidekick[npc][$_name][id]} {1};
+    };
+} {1};
+
+#ACTION {^%u将%u扶了起来背在背上。} {
+    Log {%0} {Info} {./log/sidekick_$username.log}; 
+    #IF {"%1" == "你"} {
+        #gts #VARIABLE {Persist[return_room]} {{$env[room]$env[exits]}};
+        #VARIABLE {Sidekick[npc_id]} {$Sidekick[npc][%2][id]};
+
+        #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+            #IF {$Travel[trip_complete]} {
+                #IF {@_assertRoomExitsKey{{$Sidekick[handler][room_key]}}} {
+                    Cmd {give $Sidekick[handler][id] $Sidekick[npc_id]};
+                    quit;
+                };
+            };
+        };
+
+        Cmd {$Sidekick[npc][%2][cmds]};
+        goto {$Sidekick[handler][room_key]};
+    };
+} {1};
+
+#ACTION {^您要将另一个连线中的相同人物赶出去，取而代之吗？} {
+    y;
+} {1};
+
+#ACTION {你必须连线十秒后才能离开游戏。} {#DELAY {1} {quit}};
+
+
+#EVENT {VARIABLE UPDATED env[last_login]} {
+    #IF {"$Persist[return_room]" != ""} {
+        #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+            #IF {$Travel[trip_complete]} {
+                #IF {@_assertRoomExitsKey{{$Persist[return_room]}}} {
+                    follow mia;
+                };
+            };
+        };
+        goto {$Persist[return_room]};
+    };
+};
+
+
+#TICKER {ticker_remain_in_game} {i} {600};
+
+
+
+#ALIAS log {
+    Log {%0} {Info} {./log/delivery_$username.log}; 
+}
