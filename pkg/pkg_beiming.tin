@@ -1,39 +1,35 @@
 #NOP 北冥模块
 #NOP 这个是适合比较高级的账号在中门站撸。
 
+#CLASS command READ {./pkg/pkg_command.tin};
+
 #VARIABLE {xi_count} {0};
 #VARIABLE {to_yun} {false};
 
+#VARIABLE {Beiming} {
+    {xi_count} {0}
+    {to_yun} {0}
+};
+
 #ACTION {^门开了，从里面走出来一名金衣剑客。$} {
-    #8 {
-        exert xi jia ding;
+    #IF {$vitals[气血] < $vitals[气血_max] * 0.9} {
+        #RETURN {};
     };
+
+    Cmd {#8 exert xi jia ding} {8};
 } {5};
 
 #ACTION {^门开了，从里面走出来一名红衣武士。$} {
-    #5 {
-        exert xi wu shi;
+    #IF {$vitals[气血] < $vitals[气血_max] * 0.9} {
+        #RETURN {};
     };
+    Cmd {#10 exert xi wu shi} {8};
 } {5};
 
 
 #ACTION {^你要服用哪种药？$} {
     #class beiming kill;
 } {5};
-
-
-#ACTION {不转睛地盯著%u的动作，寻找进攻的最佳时机。} {
-    surrender;
-} {5};
-
-#ACTION {一边注视著%u的行动，一边伺机出手。} {
-    surrender;
-} {5};
-
-#ACTION {缓缓地移动脚步，想要找出%u的破绽。} {
-    surrender;
-} {5};
-
 
 #ACTION {^金衣剑客转身走了进去。$} {
     hp;
@@ -48,24 +44,21 @@
 
 
 #ACTION {^门又关上了。$} {
-    apply xiao-xingxue;
-    apply xiao-xingxue;
-    apply xiao-xingxue;
-    apply xiao-xingxue;
+    Cmd {apply xiao-xingxue} {1};
 } {5};
 
 
 #ACTION {^你运用北冥神功，将%u的内力吸了少许过来储藏于檀中气穴。$} {
-    #MATH {xi_count} {$xi_count + 1};
+    #MATH {Beiming[xi_count]} {$Beiming[xi_count] + 1};
 
-    #IF {$xi_count >= 50} {
-        #VARIABLE {to_yun} {true};
-        #VARIABLE {xi_count} {0};
+    #IF {$Beiming[xi_count] >= 50} {
+        #VARIABLE {Beiming[to_yun]} {1};
+        #VARIABLE {Beiming[xi_count]} {0};
     };
 } {5};
 
 #ACTION {^你全身放松，坐下来开始将储存在膻中的真气归入气海。$} {
-    #VARIABLE {to_yun} {false};
+    #VARIABLE {Beiming[to_yun]} {0};
 } {5};
 
 
@@ -73,12 +66,10 @@
     #ECHO {#EVENT {VARIABLE UPDATED vitals[内力_max]}};
 
     #IF {$vitals[气血%] < 100} {
-        apply xiao-xingxue;
-        apply xiao-xingxue;
-        apply xiao-xingxue;
+        Cmd {apply xiao-xingxue} {1};
     } {
-        #IF {"$to_yun" == "true" && $vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
-            exert yun;
+        #IF {$Beiming[to_yun] && $vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
+            Cmd {exert yun} {1};
         };
     };
 

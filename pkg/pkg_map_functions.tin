@@ -355,7 +355,7 @@
 }
 
 #ALIAS {渊涯绝壁-八大夫} {
-    access {渊涯绝壁 east} {八大夫 down} {jump down} {1};
+    access {渊涯绝壁 east} {八大夫 down} {{jump down}} {1};
 } {5};
 
 #ALIAS {八大夫-谷底} {
@@ -375,6 +375,24 @@
         Cmd {d} {1};
     };
 } {5};
+
+#ALIAS {洞口-江边小路} {
+    #IF {@_assertRoomExitsKey{洞口 out 和 west}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{江边小路 northup}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        #EVENT {VARIABLE UPDATED env[room]} {
+            #IF {"$env[room]" == "山坡"} {
+                Cmd {climb up} {1};
+            };
+        }
+        Cmd {out} {1};
+    };
+}
 
 
 #ALIAS access {

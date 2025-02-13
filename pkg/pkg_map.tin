@@ -302,9 +302,9 @@
         }
     }
     {十字广场 north、south、east、west 和 up} {
-        {黄土大道 north、west 和 southwest} {
-            {path} {#9 n;ne}
-            {dist} {10}
+        {大路 south、north、east 和 west} {
+            {path} {#8 n}
+            {dist} {8}
         }
         {戏院 south} {
             {path} {w;n}
@@ -381,6 +381,55 @@
     }
     {岩边 south} {
 
+    }
+    {入口 northdown} {
+        {石室 north 和 east} {
+            {path} {nd;nd;wd;nd;ed;nd;nd;open door;n;ne;open door;w;wd;wd;open door;w;s;w}
+            {dist} {18}
+        }
+    }
+    {石室 north 和 east} {
+        {洞口 out 和 west} {
+            {path} {e;n;nu;nu;wu;nu;eu;e}
+            {dist} {8}
+        }
+    }
+    {洞口 out 和 west} {
+        {江边小路 northup} {
+            {path} {洞口-江边小路}
+            {dist} {4}
+            {function} {1}
+        }
+    }
+    {江边小路 northup} {
+        {江边小路 east、southdown 和 northdown} {
+            {path} {nu}
+            {dist} {1}
+        }
+    }
+    {江边小路 east、southdown 和 northdown} {
+        {大路 south、north、east 和 west} {
+            {path} {e}
+            {dist} {1}
+        }
+        {江边小路 northup} {
+            {path} {sd}
+            {dist} {1}
+        }
+    }
+    {大路 south、north、east 和 west} {
+        {江边小路 east、southdown 和 northdown} {
+            {path} {w}
+            {dist} {1}
+        }
+        {黄土大道 north、west 和 southwest} {
+            {path} {n;ne}
+            {dist} {2}
+        }
+        {十字广场 north、south、east、west 和 up} {
+            {path} {#8 s}
+            {dist} {8}
+        }
     }
     {驿站 west} {
         {十字广场 north、south、east、west 和 up} {

@@ -69,6 +69,23 @@
             {path} {e;nd;ne;nd;ed;ne}
         }
     }
+    {入口 northdown} 
+    {
+        {石室 north 和 east} 
+        {
+            {dist} {18}
+            {path} {nd;nd;wd;nd;ed;nd;nd;open door;n;ne;open door;w;wd;wd;open door;w;s;w}
+        }
+    }
+    {八大夫 down} 
+    {
+        {谷底 south} 
+        {
+            {dist} {4}
+            {function} {1}
+            {path} {八大夫-谷底}
+        }
+    }
     {兴庆城城门 north、south、eastup 和 westup} 
     {
         {中心广场 north、south、east 和 west} 
@@ -84,6 +101,11 @@
     }
     {十字广场 north、south、east、west 和 up} 
     {
+        {大路 south、north、east 和 west} 
+        {
+            {dist} {8}
+            {path} {#8 n}
+        }
         {戏院 south} 
         {
             {dist} {2}
@@ -98,11 +120,6 @@
         {
             {dist} {2}
             {path} {n;e}
-        }
-        {黄土大道 north、west 和 southwest} 
-        {
-            {dist} {10}
-            {path} {#9 n;ne}
         }
     }
     {卓锡泉 south 和 north} 
@@ -182,6 +199,24 @@
         {
             {dist} {4}
             {path} {se;#3 e}
+        }
+    }
+    {大路 south、north、east 和 west} 
+    {
+        {十字广场 north、south、east、west 和 up} 
+        {
+            {dist} {8}
+            {path} {#8 s}
+        }
+        {江边小路 east、southdown 和 northdown} 
+        {
+            {dist} {1}
+            {path} {w}
+        }
+        {黄土大道 north、west 和 southwest} 
+        {
+            {dist} {2}
+            {path} {n;ne}
         }
     }
     {大道 north、east 和 northeast} 
@@ -400,11 +435,17 @@
     }
     {山路 southdown 和 northup} 
     {
-        {山路 southdown 和 northup} 
+        {山路 north 和 southdown} 
         {
             {dist} {1}
             {function} {1}
             {path} {山路-sd-nu-山路-n-sd}
+        }
+        {山顶 south、north 和 east} 
+        {
+            {dist} {2}
+            {function} {1}
+            {path} {山路-山顶}
         }
     }
     {山道 southeast、southwest 和 northup} 
@@ -420,6 +461,15 @@
             {path} {se;s;wd;s;sd;se}
         }
     }
+    {山顶 south、north 和 east} 
+    {
+        {渊涯绝壁 east} 
+        {
+            {dist} {6}
+            {path} {n;e;#2 n;#2 w}
+        }
+    }
+    {岩边 south} {}
     {戏院 south} 
     {
         {十字广场 north、south、east、west 和 up} 
@@ -502,6 +552,27 @@
             {path} {d}
         }
     }
+    {江边小路 east、southdown 和 northdown} 
+    {
+        {大路 south、north、east 和 west} 
+        {
+            {dist} {1}
+            {path} {e}
+        }
+        {江边小路 northup} 
+        {
+            {dist} {1}
+            {path} {sd}
+        }
+    }
+    {江边小路 northup} 
+    {
+        {江边小路 east、southdown 和 northdown} 
+        {
+            {dist} {1}
+            {path} {nu}
+        }
+    }
     {汴梁城中心 north、south、east、west 和 up} 
     {
         {东安门 east 和 west} 
@@ -551,6 +622,24 @@
         {
             {dist} {7}
             {path} {#7 e}
+        }
+    }
+    {洞口 out 和 west} 
+    {
+        {江边小路 northup} 
+        {
+            {dist} {4}
+            {function} {1}
+            {path} {洞口-江边小路}
+        }
+    }
+    {渊涯绝壁 east} 
+    {
+        {八大夫 down} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {渊涯绝壁-八大夫}
         }
     }
     {渔人码头 east} 
@@ -633,6 +722,14 @@
             {path} {#2 s}
         }
     }
+    {石室 north 和 east} 
+    {
+        {洞口 out 和 west} 
+        {
+            {dist} {8}
+            {path} {e;n;nu;nu;wu;nu;eu;e}
+        }
+    }
     {神憩小舍 east、southdown、northwest 和 up} 
     {
         {天贶殿 north、south、east 和 west} 
@@ -713,6 +810,14 @@
         {
             {dist} {1}
             {path} {w}
+        }
+    }
+    {谷底 south} 
+    {
+        {岩边 south} 
+        {
+            {dist} {11}
+            {path} {s;#3 ne;n;e;n;pull 青藤;l 玉璧;ne;pull 青藤}
         }
     }
     {销魂台 north 和 southdown} 
@@ -915,15 +1020,15 @@
     }
     {龙门客栈 west 和 up} 
     {
-        {山路 north 和 southdown} 
-        {
-            {dist} {36}
-            {path} {w;#4 s;sw;#9 s;#5 w;nw;nu;nd;nw;wu;n;n;nu;w;w;nw;nu;nw;wu;nu;wu}
-        }
         {汴梁城中心 north、south、east、west 和 up} 
         {
             {dist} {6}
             {path} {w;#5 n}
+        }
+        {神憩小舍 east、southdown、northwest 和 up} 
+        {
+            {dist} {48}
+            {path} {w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
         {黄土大道 north、west 和 southwest} 
         {
