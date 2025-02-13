@@ -114,6 +114,19 @@
             {path} {n}
         }
     }
+    {古城客栈 south 和 up} 
+    {
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {2}
+            {path} {s;w}
+        }
+        {黄土大道 south、east 和 west} 
+        {
+            {dist} {7}
+            {path} {s;#6 e}
+        }
+    }
     {城隍庙 north} 
     {
         {东安门 east 和 west} 
@@ -187,6 +200,11 @@
             {dist} {9}
             {path} {#2 s;#4 e;n;w;n}
         }
+        {鼋头渚 north、southeast 和 southwest} 
+        {
+            {dist} {8}
+            {path} {#2 n;nw;nu;wd;ne;n;ne}
+        }
     }
     {天水关 north、east 和 west} 
     {
@@ -214,6 +232,20 @@
             {path} {#9 s}
         }
     }
+    {太湖边 northwest} 
+    {
+        {渔人码头 east} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {太湖边-渔人码头}
+        }
+        {鼋头渚 north、southeast 和 southwest} 
+        {
+            {dist} {1}
+            {path} {nw}
+        }
+    }
     {小客栈 east 和 up} 
     {
         {青草坪 south、north、east 和 west} 
@@ -234,6 +266,19 @@
         {
             {dist} {3}
             {path} {wd;w}
+        }
+    }
+    {小岛边 north、east 和 west} 
+    {
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {39}
+            {path} {w;sw;se;w;#3 s;wu;wd;#5 w;渔人码头-太湖边;nw;sw;s;sw;se;sd;se;#2 s;#2 s;#4 e;n;w;n;#6 n}
+        }
+        {渔人码头 east} 
+        {
+            {dist} {14}
+            {path} {w;sw;se;w;#3 s;wu;wd;#5 w}
         }
     }
     {小木屋 south} 
@@ -428,11 +473,6 @@
     }
     {欢迎来到天龙八部 south 和 down} 
     {
-        {十字广场 north、south、east、west 和 up} 
-        {
-            {dist} {16}
-            {path} {d;w;#4 s;sw;#9 s}
-        }
         {龙门客栈 west 和 up} 
         {
             {dist} {1}
@@ -464,6 +504,11 @@
     }
     {洛阳中心 south、north、east、west 和 up} 
     {
+        {古城客栈 south 和 up} 
+        {
+            {dist} {2}
+            {path} {e;n}
+        }
         {大路 south、north 和 southeast} 
         {
             {dist} {6}
@@ -474,6 +519,16 @@
             {dist} {8}
             {path} {#8 w}
         }
+        {小岛边 north、east 和 west} 
+        {
+            {dist} {42}
+            {path} {#6 s;s;e;s;#4 w;#2 n;#2 n;nw;nu;wd;ne;n;ne;se;太湖边-渔人码头;#5 e;eu;ed;#2 n;e;w;s;n;e;ne;#2 e}
+        }
+        {小院 south、north、east 和 west} 
+        {
+            {dist} {40}
+            {path} {#8 w;#2 w;wu;wd;w;w;nw;#2 nu;虎跳溪-断魂崖;断魂崖-屏风壁;屏风壁-销魂台;销魂台-缥缈峰半山腰;缥缈峰半山腰-小院}
+        }
         {松鹤楼 east 和 up} 
         {
             {dist} {2}
@@ -483,6 +538,20 @@
         {
             {dist} {7}
             {path} {#7 e}
+        }
+    }
+    {渔人码头 east} 
+    {
+        {太湖边 northwest} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {渔人码头-太湖边}
+        }
+        {小岛边 north、east 和 west} 
+        {
+            {dist} {17}
+            {path} {#5 e;eu;ed;#2 n;e;w;s;n;e;ne;#2 e}
         }
     }
     {灵鹫宫药铺 east} 
@@ -524,10 +593,23 @@
             {dist} {1}
             {path} {#1 s}
         }
+        {登封客栈 west 和 up} 
+        {
+            {dist} {1}
+            {path} {e}
+        }
         {黄土大道 south、east 和 west} 
         {
             {dist} {2}
             {path} {#2 n}
+        }
+    }
+    {登封客栈 west 和 up} 
+    {
+        {登封县北街 north、south、east 和 northwest} 
+        {
+            {dist} {1}
+            {path} {w}
         }
     }
     {皇宫大门 south、eastup 和 westup} 
@@ -544,6 +626,11 @@
         {
             {dist} {15}
             {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s}
+        }
+        {洛阳中心 south、north、east、west 和 up} 
+        {
+            {dist} {61}
+            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;#9 s;黄土大道-southeast-west-东安门;#6 w;#9 w;#7 w}
         }
     }
     {缥缈峰半山腰 southdown 和 northup} 
@@ -790,6 +877,19 @@
         {
             {dist} {1}
             {path} {s}
+        }
+    }
+    {鼋头渚 north、southeast 和 southwest} 
+    {
+        {大道 north、south 和 northeast} 
+        {
+            {dist} {8}
+            {path} {sw;s;sw;se;sd;se;#2 s}
+        }
+        {太湖边 northwest} 
+        {
+            {dist} {1}
+            {path} {se}
         }
     }
     {龙门客栈 west 和 up} 

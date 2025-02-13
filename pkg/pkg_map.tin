@@ -105,6 +105,16 @@
             {dist} {4}
             {function} {1}
         }
+        {登封客栈 west 和 up} {
+            {path} {e}
+            {dist} {1}
+        }
+    }
+    {登封客栈 west 和 up} {
+        {登封县北街 north、south、east 和 northwest} {
+            {path} {w}
+            {dist} {1}
+        }
     }
     {少室山山脚 south 和 northwest} {
         {登封县北街 north、south、east 和 northwest} {
@@ -188,6 +198,48 @@
             {path} {#2 s;#4 e;n;w;n}
             {dist} {9}
         }
+        {鼋头渚 north、southeast 和 southwest} {
+            {path} {#2 n;nw;nu;wd;ne;n;ne}
+            {dist} {8}
+        }
+    }
+    {鼋头渚 north、southeast 和 southwest} {
+        {大道 north、south 和 northeast} {
+            {path} {sw;s;sw;se;sd;se;#2 s}
+            {dist} {8}
+        }
+        {太湖边 northwest} {
+            {path} {se}
+            {dist} {1}
+        }
+    }
+    {太湖边 northwest} {
+        {鼋头渚 north、southeast 和 southwest} {
+            {path} {nw}
+            {dist} {1}
+        }
+        {渔人码头 east} {
+            {path} {太湖边-渔人码头}
+            {dist} {1}
+            {function} {1}
+        }
+    }
+    {渔人码头 east} {
+        {小岛边 north、east 和 west} {
+            {path} {#5 e;eu;ed;#2 n;e;w;s;n;e;ne;#2 e}
+            {dist} {17}
+        }
+        {太湖边 northwest} {
+            {path} {渔人码头-太湖边}
+            {dist} {1}
+            {function} {1}
+        }
+    }
+    {小岛边 north、east 和 west} {
+        {渔人码头 east} {
+            {path} {w;sw;se;w;#3 s;wu;wd;#5 w}
+            {dist} {14}
+        }
     }
     {洛阳中心 south、north、east、west 和 up} {
         {黄土大道 south、east 和 west} {
@@ -205,6 +257,20 @@
         {松鹤楼 east 和 up} {
             {path} {n;w}
             {dist} {2}
+        }
+        {古城客栈 south 和 up} {
+            {path} {e;n}
+            {dist} {2}
+        }
+    }
+    {古城客栈 south 和 up} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {s;w}
+            {dist} {2}
+        }
+        {黄土大道 south、east 和 west} {
+            {path} {s;#6 e}
+            {dist} {7}
         }
     }
     {松鹤楼 east 和 up} {

@@ -23,7 +23,8 @@
 
 #Ticker {ticker_gun} {
     feedback_loop_tuna;
-} {0.8};
+    feedback_loop_tuna;
+} {1};
 
 #FUNCTION _get_book_to_read {
     #IF {$skills[literate][lv] < 80} {
@@ -38,9 +39,10 @@
     #IF {$skills[beiming-force][lv] < 30} {
         #RETURN {beiming};
     };
-    #IF {$skills[unarmed][lv] < 50} {
+    #IF {$skills[unarmed][lv] < 35} {
         #RETURN {unarmedbook};
     };
+    #RETURN {book};
 }
 
 #ALIAS stop {

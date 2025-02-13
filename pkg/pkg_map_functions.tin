@@ -285,3 +285,31 @@
         Cmd {open door;s};
     };
 } {5};
+
+
+#ALIAS {渔人码头-太湖边} {
+    #IF {@_assertRoomExitsKey{渔人码头 east}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{太湖边 northwest}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {sail} {1};
+    };
+};
+
+
+#ALIAS {太湖边-渔人码头} {
+    #IF {@_assertRoomExitsKey{太湖边 northwest}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{渔人码头 east}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {sail} {1};
+    };
+};

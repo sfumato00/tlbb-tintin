@@ -3,6 +3,7 @@
 #CLASS commands READ {./pkg/pkg_command.tin};
 #CLASS stats READ {./pkg/pkg_stats.tin};
 #CLASS map_graph READ {./pkg/pkg_map_graph.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 
 
 #VARIABLE {KEZHAN} {
@@ -30,13 +31,45 @@
             {8} {se}
         }
     }
+    {登封客栈 west 和 up} {
+        {waiter_id} {waiter}
+        {waiter_cn} {店小二}
+        {rooms} {
+            {1} {u;w}
+            {2} {u;n}
+            {3} {u;e}
+        }
+    }
+    {古城客栈 south 和 up} {
+        {waiter_id} {keeper}
+        {waiter_cn} {掌柜的}
+        {rooms} {
+            {1} {u;e}
+        }
+    }
+    {神憩小舍 east、southdown、northwest 和 up} {
+        {waiter_id} {fatman}
+        {waiter_cn} {董胖子}
+        {rooms} {
+            {1} {u;w}
+            {2} {u;n}
+        }
+    }
 };
 
-#ACTION {笑着对你说道：这位姑娘，您还没付钱呢！$} {
+#ACTION {笑着对你说道：这位%*，您还没付钱呢！$} {
+    #local waiter {$KEZHAN[$Kezhan[hotel_room_key]][waiter_id]};
+    Cmd {give 1 gold to $waiter};
+    #DELAY 0.5 {
+        Cmd {@_get_random_room{}} {2};
+    };
+} {5};
+
+#ACTION {^掌柜的在你后面咳嗽了一下：“先交一两银子！”。$} {
     #local waiter {$KEZHAN[$Kezhan[hotel_room_key]][waiter_id]};
     Cmd {give 1 gold to $waiter};
     #DELAY 0.2 {go_rest};
-} {5};
+}
 
 #ACTION {^请先去交过钱再来住店吧！$} {
     #local waiter {$KEZHAN[$Kezhan[hotel_room_key]][waiter_id]};
@@ -49,7 +82,12 @@
 };
 
 #ACTION {^你一觉醒来，觉得身体完全恢复了} {
-    go_learn;
+    dazuo $vitals[气血_max];
+    CheckBusy {
+        du duan-steps $vitals[精神_max];
+        CheckBusy {@_get_random_room{};hp};
+    };
+    
 };
 
 #ACTION {^你听了%*的指导，似乎有些心得。$} {
@@ -57,8 +95,8 @@
 }
 
 #ACTION {^这里已经住满了，请到别间去住吧！} {
-    #DELAY {0.2} {
-        go_rest;
+    #DELAY {0.5} {
+        Cmd {@_get_random_room{}} {2};
     };
 }
 
@@ -92,6 +130,8 @@
     goto {$Kezhan[hotel_room_key]};
 } {5};
 
+
+
 #FUNCTION _get_random_room {
     #LOCAL rooms $KEZHAN[$Kezhan[hotel_room_key]][rooms];
     #LOCAL n {};
@@ -112,3 +152,4 @@
     };
     #RETURN {};
 }
+
