@@ -7,6 +7,7 @@
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS quit READ {./pkg/pkg_quit.tin};
 #CLASS remote_control READ {./pkg/pkg_remote_control.tin};
 
 #IF {"$Fight[downexp]" == "1"} {
@@ -238,21 +239,11 @@
     };
 };
 
-#ACTION {^你必须连线十秒后才能离开游戏。$} {
-    #delay 2 {quit};
-} {1};
-
-#ACTION {^你正忙着呢，暂时无法离开游戏。$} {
-    #delay 2 {quit};
-} {5};
-
-
-
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {
-    Cmd {look;hp} {2};
+    Cmd {enable;score;hp;look} {4};
     #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
     init_fight;
-}
+} {5};
 
 #FUNCTION CalNpcMsg {
     #LOCAL {msg} {};
@@ -264,5 +255,9 @@
     #LIST msg COLLAPSE {, };
     #RETURN {$msg};
 };
+
+#FUNCTION LogMessage {
+
+}
 
 #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};

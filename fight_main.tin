@@ -9,12 +9,11 @@
         {profile} {./profiles/%1.tin}
     };
     #CLASS profile read {$env[profile]};
-    #CLASS state READ {./state/state_$username.state};
-    #IF {$state[downexp_on]} {
+
+    #IF {$Fight[downexp_on]} {
         #CLASS downexp READ {./pkg/pkg_downexp.tin};
-    } {
-        #CLASS fight read {./pkg/pkg_fight.tin};
-    };    
+    };
+    #CLASS fight read {./pkg/pkg_fight.tin};
     #SESSION {$username} {103.10.85.133} {8888};
 };
 

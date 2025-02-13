@@ -54,6 +54,11 @@
             {dist} {2}
             {path} {#2 n}
         }
+        {西门 east、west、southup 和 northup} 
+        {
+            {dist} {2}
+            {path} {#2 w}
+        }
     }
     {二祖庵庵门 south 和 east} 
     {
@@ -284,6 +289,24 @@
         {
             {dist} {1}
             {path} {nw}
+        }
+    }
+    {富贵钱庄 east} 
+    {
+        {汴梁城中心 north、south、east、west 和 up} 
+        {
+            {dist} {2}
+            {path} {e;n}
+        }
+        {神憩小舍 east、southdown、northwest 和 up} 
+        {
+            {dist} {44}
+            {path} {e;n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
+        }
+        {龙门客栈 west 和 up} 
+        {
+            {dist} {5}
+            {path} {e;#4 s}
         }
     }
     {小客栈 east 和 up} 
@@ -759,6 +782,35 @@
             {path} {e}
         }
     }
+    {藏经阁 east 和 up} 
+    {
+        {藏经阁二楼 down} 
+        {
+            {dist} {1}
+            {path} {u}
+        }
+        {藏经阁前 west} 
+        {
+            {dist} {1}
+            {path} {e}
+        }
+    }
+    {藏经阁二楼 down} 
+    {
+        {藏经阁 east 和 up} 
+        {
+            {dist} {1}
+            {path} {d}
+        }
+    }
+    {藏经阁前 west} 
+    {
+        {藏经阁 east 和 up} 
+        {
+            {dist} {1}
+            {path} {w}
+        }
+    }
     {虎跳溪 east 和 southdown} 
     {
         {山脚 southeast、northeast 和 northup} 
@@ -797,6 +849,14 @@
         {
             {dist} {2}
             {path} {su;se}
+        }
+    }
+    {西门 east、west、southup 和 northup} 
+    {
+        {中心广场 north、south、east 和 west} 
+        {
+            {dist} {2}
+            {path} {#2 e}
         }
     }
     {谷场 north、south、east 和 west} 
@@ -897,6 +957,11 @@
         {
             {dist} {2}
             {path} {w;s}
+        }
+        {富贵钱庄 east} 
+        {
+            {dist} {20}
+            {path} {w;#8 n;ne;#4 n;e;w;#4 n;w}
         }
         {黄土大道 north、west 和 southwest} 
         {
@@ -1020,15 +1085,15 @@
     }
     {龙门客栈 west 和 up} 
     {
+        {富贵钱庄 east} 
+        {
+            {dist} {5}
+            {path} {w;#4 n;w}
+        }
         {汴梁城中心 north、south、east、west 和 up} 
         {
             {dist} {6}
             {path} {w;#5 n}
-        }
-        {神憩小舍 east、southdown、northwest 和 up} 
-        {
-            {dist} {48}
-            {path} {w;#5 n;#6 e;东安门-黄土大道;se;e;#9 n;#3 n;#2 nw;#2 nu;n;nu;n;nu;n;nu;ne;nu}
         }
         {黄土大道 north、west 和 southwest} 
         {

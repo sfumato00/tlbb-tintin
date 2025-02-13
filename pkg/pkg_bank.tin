@@ -1,0 +1,7 @@
+#NOP banking
+
+#CLASS logging READ {./pkg/pkg_logging.tin};
+
+#ACTION {^你在银行中存了%*两银子。} {
+    Log {%0} {Info} {./log/bank_$username.log};
+};

@@ -19,6 +19,16 @@
             {dist} {6}
         }
     }
+    {富贵钱庄 east} {
+        {汴梁城中心 north、south、east、west 和 up} {
+            {path} {e;n}
+            {dist} {2}
+        }
+        {龙门客栈 west 和 up} {
+            {path} {e;#4 s}
+            {dist} {5}
+        }
+    }
     {城隍庙 north} {
         {汴梁城中心 north、south、east、west 和 up} {
             {path} {n;#5 w}
@@ -830,6 +840,10 @@
         }
         {黄土大道 north、west 和 southwest} {
             {path} {w;#4 s}
+            {dist} {5}
+        }
+        {富贵钱庄 east} {
+            {path} {w;#4 n;w}
             {dist} {5}
         }
     }    

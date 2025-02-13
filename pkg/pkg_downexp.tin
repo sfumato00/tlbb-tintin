@@ -7,32 +7,47 @@
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS quit READ {./pkg/pkg_quit.tin};
 
 
 #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
 
-#EVENT {VARIABLE UPDATED env[last_login]} {
-    hp;
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {@_assertRoomExitsKey{驿站 west}} {
-            #ECHO {[Debug]: 开始自杀。};
-            stop;
-            enable dodge duan-steps;
-            enable move duan-steps;
-            #CLASS safety KILL;
-            start_stuck_check;
-            Cmd {w;s} {2};
-            大理-跳崖;
-        };
-    };    
-} {1};
+#gts #VARIABLE {State[downexp]} {0};
 
-#EVENT {VARIABLE UPDATED env[last_reconnect]} {
-    #IF {"$state[downexp_on]" == "1"} {
-        quit;
+#EVENT {VARIABLE UPDATED env[last_login]} {
+    Cmd {hp;enable} {2};
+
+    #IF {$State[downexp]} {
+        #EVENT {VARIABLE UPDATED vitals[气血]} {
+            #IF {$vitals[气血] > $vitals[气血_max] * 0.3} {
+                enable dodge duan-steps;
+                enable move duan-steps;
+                #CLASS safety KILL;
+                start_stuck_check;
+                Cmd {w;s} {2};
+                大理-跳崖;
+            };
+        };
+    };
+    #ELSE {
+        #CLASS bank READ {./pkg/pkg_bank.tin};
+        #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+            #IF {$Travel[trip_complete]} {
+                #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+                Cmd {check} {1};
+                #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+                    #IF {$Travel[trip_complete]} {
+                        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+                        #CLASS bank KILL;
+                        init_fight;
+                    };
+                };
+                goto {$Fight[room]};
+            };
+        };
+        goto {富贵钱庄 east};
     };
 } {1};
-
 
 #ALIAS {move_back_to_fight_room_handler} {
     
@@ -75,26 +90,17 @@
 } {5};
 
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
-    #IF {"$state[downexp_on]" != "1" && $vitals[经验] >= $downexp[threshold_exp]} {
+    #IF {!$State[downexp] && $vitals[经验] >= $downexp[threshold_exp]} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
-        update_state 1;
+        UpdateDownexpState 1;
         quit;
     };
 }
-
-#ACTION {^你必须连线十秒后才能离开游戏。$} {
-    #delay 2 {quit};
-} {1};
-
-#ACTION {^你正忙着呢，暂时无法离开游戏。$} {
-    #delay 2 {quit};
-} {5};
 
 #ACTION {^钱掌柜告诉你：你阳世间的存款不够。} {
     #ECHO {<faa> %0};
     Log {%0} {Warn} {./log/need_money_$username.log};
 }
-
 
 #ALIAS {大理-跳崖} {
     #ECHO {大理-跳崖-async};
@@ -114,11 +120,10 @@
                 #EVENT {VARIABLE UPDATED env[room_updated]} {
                     #SWITCH {"$env[room]"} {
                         #CASE {"鬼门关"} {
-                            update_state 0;
+                            UpdateDownexpState 0;
                             death_handler;
                         };
                         #CASE {"城隍庙"} {
-                            update_state 0;
                             #UNEVENT {VARIABLE UPDATED env[room_updated]};
                             Cmd {drink tong} {1};
                             move_back_to_fight_room_handler;
@@ -160,9 +165,6 @@
     #UNTICKER {ticker_stuck_check};
 } {5};
 
-#ALIAS update_state {
-    #CLASS state OPEN;
-    #VARIABLE {state[downexp_on]} {%1};
-    #CLASS state CLOSE;
-    #CLASS state WRITE {./state/state_$username.state};
+#ALIAS UpdateDownexpState {
+    #gts #VARIABLE {state[downexp_on]} {%1};
 }

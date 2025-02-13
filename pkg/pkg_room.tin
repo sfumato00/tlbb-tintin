@@ -1,23 +1,27 @@
 #NOP Room module
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
-#CLASS logging READ {./pkg/pkg_logging.tin};
 
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};
-} {1};
+} {2};
 
 #ACTION {    这里%u的出口是%*。} {
     #VARIABLE {env[exits]} {%2};
     #VARIABLE {env[room_updated]} {@GetEpoch{}};
     #VARIABLE {env[room_update_hook]} {1};
     #VARIABLE {env[travel_callback_hook]} {1};
-} {1};
+} {2};
 
 #ACTION {    这里没有明显的出口。} {
     #VARIABLE {env[exits]} {};
     #VARIABLE {env[room_updated]} {@GetEpoch{}};
     #VARIABLE {env[room_update_hook]} {1};
     #VARIABLE {env[travel_callback_hook]} {1};
-} {1};
+} {2};
 
+
+#ACTION {呼叫来自：/cmds/std/look.c 的 main() 第 85 行，物件： /cmds/std/look} {
+    #VARIABLE {env[room_update_hook]} {1};
+    #VARIABLE {env[travel_callback_hook]} {1};
+} {2};
