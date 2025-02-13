@@ -83,7 +83,7 @@
 };
 
 #ACTION {^你一觉醒来，觉得身体完全恢复了} {
-    du duan-steps $vitals[精神_max];
+    du duan-sword-book $vitals[精神_max];
     CheckBusy {@_get_random_room{};hp};
 };
 

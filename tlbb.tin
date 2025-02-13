@@ -1,10 +1,8 @@
 #NOP TLBB main module
 
-#CLASS paths read {./paths.tin};
 #CLASS config read {./config.tin};
-
 #CLASS login read {./pkg/pkg_login.tin};
-#CLASS graph read {./pkg/pkg_map_graph.tin};
+#CLASS graph READ {./pkg/pkg_map_graph.tin};
 
 #CLASS room read {./pkg/pkg_room.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
@@ -209,7 +207,7 @@
         #DEFAULT {
             #ECHO {开启练功模块};
             Cmd {hp;skills;score;enable} {4};
-            #CLASS gun READ {./pkg/pkg_fight.tin};
+            #CLASS fight READ {./pkg/pkg_fight.tin};
         };
     };
 }
