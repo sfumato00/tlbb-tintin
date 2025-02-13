@@ -342,11 +342,45 @@
         }
     }
     {山路 southdown 和 northup} {
-        {山路 southdown 和 northup} {
+        {山路 north 和 southdown} {
             {path} {山路-sd-nu-山路-n-sd}
             {dist} {1}
             {function} {1}
         }
+        {山顶 south、north 和 east} {
+            {path} {山路-山顶}
+            {dist} {2}
+            {function} {1}
+        }
+    }
+    {山顶 south、north 和 east} {
+        {渊涯绝壁 east} {
+            {path} {n;e;#2 n;#2 w}
+            {dist} {6}
+        }
+    }
+    {渊涯绝壁 east} {
+        {八大夫 down} {
+            {path} {渊涯绝壁-八大夫}
+            {dist} {1}
+            {function} {1}
+        }
+    }
+    {八大夫 down} {
+        {谷底 south} {
+            {path} {八大夫-谷底}
+            {dist} {4}
+            {function} {1}
+        }
+    }
+    {谷底 south} {
+        {岩边 south} {
+            {path} {s;#3 ne;n;e;n;pull 青藤;l 玉璧;ne;pull 青藤}
+            {dist} {11}
+        }
+    }
+    {岩边 south} {
+
     }
     {驿站 west} {
         {十字广场 north、south、east、west 和 up} {

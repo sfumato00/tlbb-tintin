@@ -337,7 +337,59 @@
                 #VARIABLE {travel[started]} {0};
             };
         };
-        Cmd {climb mountain} {1};
+        Cmd {climb down} {1};
     };
 }
 
+#ALIAS {山路-山顶} {
+    #IF {@_assertRoomExitsKey{山路 southdown 和 northup}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{山顶 south、north 和 east}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {nu;climb mountain} {1};
+    };
+}
+
+#ALIAS {渊涯绝壁-八大夫} {
+    access {渊涯绝壁 east} {八大夫 down} {jump down} {1};
+} {5};
+
+#ALIAS {八大夫-谷底} {
+    #IF {@_assertRoomExitsKey{八大夫 down}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{谷底 south}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        #EVENT {VARIABLE UPDATED env[room]} {
+            #IF {"$env[room]" == "渊涯"} {
+                Cmd {climb down} {1};
+            };
+        }
+        Cmd {d} {1};
+    };
+} {5};
+
+
+#ALIAS access {
+    #local room_key_one {%1};
+    #local room_key_two {%2};
+    #local path {%3};
+    #local dist {%4};
+    #IF {@_assertRoomExitsKey{$room_key_one}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{$room_key_two}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd $path $dist;
+    };
+}

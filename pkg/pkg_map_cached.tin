@@ -386,10 +386,25 @@
     }
     {山路 north 和 southdown} 
     {
+        {山路 southdown 和 northup} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {山路-n-sd-山路-sd-nu}
+        }
         {西城门 east 和 northwest} 
         {
             {dist} {16}
             {path} {sd;sd;ed;se;sd;se;e;e;sd;s;s;ed;se;su;sd;se}
+        }
+    }
+    {山路 southdown 和 northup} 
+    {
+        {山路 southdown 和 northup} 
+        {
+            {dist} {1}
+            {function} {1}
+            {path} {山路-sd-nu-山路-n-sd}
         }
     }
     {山道 southeast、southwest 和 northup} 
