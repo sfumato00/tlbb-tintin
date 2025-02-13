@@ -1,0 +1,33 @@
+#NOP functions used by learn
+
+#FUNCTION GetMinQnBeforeLevel {
+    #LOCAL level %1;
+    #LOCAL prof %2;
+    #LOCAL wx %3;
+
+    #LOCAL next_level {$level};
+    #LOCAL diff {0};
+    
+    #MATH next_level {$next_level + 1};
+    #MATH max_pro {$next_level * $next_level + 1};
+    #MATH diff {$max_pro - $prof};
+
+    #MATH max_pro_per_qn {$wx * 3 / 4 + 2};
+    #MATH res {$diff / $max_pro_per_qn};
+
+    #RETURN $res;
+};
+
+
+#FUNCTION GetSkillToLearn {
+    #FOREACH {$Learn[skills][%*]} {skill} {
+        
+        #LOCAL sk {*skill[+1]};
+        #LOCAL target_lv {$skill[*skill[+1]]};
+        
+        #IF {"$skills[$sk]" === "" || $skills[$sk][lv] < $target_lv} {
+            #RETURN {{$sk}{$target_lv}};
+        };
+    };
+    #RETURN {};
+};

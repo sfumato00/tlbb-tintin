@@ -313,3 +313,31 @@
         Cmd {sail} {1};
     };
 };
+
+
+#ALIAS {山路-n-sd-山路-sd-nu} {
+    #IF {@_assertRoomExitsKey{山路 north 和 southdown}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{山路 southdown 和 northup}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {climb mountain} {1};
+    };
+}
+
+#ALIAS {山路-sd-nu-山路-n-sd} {
+    #IF {@_assertRoomExitsKey{山路 southdown 和 northup}} {
+        #VARIABLE {travel[started]} {1};
+        #Event {VARIABLE UPDATED env[room_updated]} {
+            #IF {@_assertRoomExitsKey{山路 north 和 southdown}} {
+                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #VARIABLE {travel[started]} {0};
+            };
+        };
+        Cmd {climb mountain} {1};
+    };
+}
+

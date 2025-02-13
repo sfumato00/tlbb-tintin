@@ -4,6 +4,7 @@
 #CLASS stats READ {./pkg/pkg_stats.tin};
 #CLASS map_graph READ {./pkg/pkg_map_graph.tin};
 #CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
+#CLASS learn_function READ {./pkg/pkg_learn_function.tin};
 
 
 #VARIABLE {KEZHAN} {
@@ -82,12 +83,8 @@
 };
 
 #ACTION {^你一觉醒来，觉得身体完全恢复了} {
-    dazuo $vitals[气血_max];
-    CheckBusy {
-        du duan-steps $vitals[精神_max];
-        CheckBusy {@_get_random_room{};hp};
-    };
-    
+    du duan-steps $vitals[精神_max];
+    CheckBusy {@_get_random_room{};hp};
 };
 
 #ACTION {^你听了%*的指导，似乎有些心得。$} {
@@ -111,12 +108,24 @@
 #ALIAS learn_from_master {
     #LOCAL qn {1};
     #LOCAL js_p_qn {$Kezhan[learn][js_p_qn]};
-    #LOCAL sk {$Kezhan[learn][skill_id]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {$sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+2]};
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+
     #LOCAL master_id {$Kezhan[learn][master_id]};
     #MATH qn {($vitals[精神_max] - 1) / $js_p_qn};
+    
+    #IF {$qn > $qn_before_level && ($sk_curr_lv >= 100 || $sk_curr_lv + 1 == $target_lv)} {
+        #LOCAL qn $qn_before_level;
+    };
+    
     #ECHO {qn to use: $qn};
-    Cmd {learn @get_skill{} from $master_id with $qn} {1};
-
+    Cmd {learn $sk from $master_id with $qn} {1};
     Cmd {skills} {1};
 }
 
@@ -130,8 +139,6 @@
     goto {$Kezhan[hotel_room_key]};
 } {5};
 
-
-
 #FUNCTION _get_random_room {
     #LOCAL rooms $KEZHAN[$Kezhan[hotel_room_key]][rooms];
     #LOCAL n {};
@@ -141,15 +148,4 @@
     #RETURN $rooms[$x];
 };
 
-#FUNCTION get_skill {
-    #FOREACH {*Learn[skills][%*]} {i} {
-        #LOCAL sk $Learn[skills][$i][sk];
-        #LOCAL lv $Learn[skills][$i][lv];
-
-        #IF {$skills[$sk][lv] < $lv} {
-            #RETURN {$sk};
-        };
-    };
-    #RETURN {};
-}
 

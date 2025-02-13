@@ -7,6 +7,8 @@
 #CLASS busy READ {./pkg/pkg_busy.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 
+#CLASS learn_function READ {./pkg/pkg_learn_function.tin};
+
 #VARIABLE THROTTLE {8};
 
 #ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
@@ -180,36 +182,5 @@
     };
     #RETURN {$ret};
 }
-
-#FUNCTION GetMinQnBeforeLevel {
-    #LOCAL level %1;
-    #LOCAL prof %2;
-    #LOCAL wx %3;
-
-    #LOCAL next_level {$level};
-    #LOCAL diff {0};
-    
-    #MATH next_level {$next_level + 1};
-    #MATH max_pro {$next_level * $next_level + 1};
-    #MATH diff {$max_pro - $prof};
-
-    #MATH max_pro_per_qn {$wx * 3 / 4 + 2};
-    #MATH res {$diff / $max_pro_per_qn};
-
-    #RETURN $res;
-};
-
-#FUNCTION GetSkillToLearn {
-    #FOREACH {$learn_skill[%*]} {skill} {
-        
-        #LOCAL sk {*skill[+1]};
-        #LOCAL target_lv {$skill[*skill[+1]]};
-        
-        #IF {"$skills[$sk]" === "" || $skills[$sk][lv] < $target_lv} {
-            #RETURN {{$sk}{$target_lv}};
-        };
-    };
-    #RETURN {};
-};
 
 #PROMPT {^你目前至少要用 %d 点潜能。$} {RES潜能: >> %1 <<} 0 2;

@@ -335,6 +335,18 @@
             {path} {sd;sd;ed;se;sd;se;e;e;sd;s;s;ed;se;su;sd;se}
             {dist} {16}
         }
+        {山路 southdown 和 northup} {
+            {path} {山路-n-sd-山路-sd-nu}
+            {dist} {1}
+            {function} {1}
+        }
+    }
+    {山路 southdown 和 northup} {
+        {山路 southdown 和 northup} {
+            {path} {山路-sd-nu-山路-n-sd}
+            {dist} {1}
+            {function} {1}
+        }
     }
     {驿站 west} {
         {十字广场 north、south、east、west 和 up} {

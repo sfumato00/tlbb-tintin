@@ -89,6 +89,11 @@
             {dist} {2}
             {path} {w;n}
         }
+        {西城门 east 和 northwest} 
+        {
+            {dist} {5}
+            {path} {#5 w}
+        }
         {驿站 west} 
         {
             {dist} {2}
@@ -270,11 +275,6 @@
     }
     {小岛边 north、east 和 west} 
     {
-        {洛阳中心 south、north、east、west 和 up} 
-        {
-            {dist} {39}
-            {path} {w;sw;se;w;#3 s;wu;wd;#5 w;渔人码头-太湖边;nw;sw;s;sw;se;sd;se;#2 s;#2 s;#4 e;n;w;n;#6 n}
-        }
         {渔人码头 east} 
         {
             {dist} {14}
@@ -382,6 +382,14 @@
         {
             {dist} {1}
             {path} {se}
+        }
+    }
+    {山路 north 和 southdown} 
+    {
+        {西城门 east 和 northwest} 
+        {
+            {dist} {16}
+            {path} {sd;sd;ed;se;sd;se;e;e;sd;s;s;ed;se;su;sd;se}
         }
     }
     {山道 southeast、southwest 和 northup} 
@@ -519,16 +527,6 @@
             {dist} {8}
             {path} {#8 w}
         }
-        {小岛边 north、east 和 west} 
-        {
-            {dist} {42}
-            {path} {#6 s;s;e;s;#4 w;#2 n;#2 n;nw;nu;wd;ne;n;ne;se;太湖边-渔人码头;#5 e;eu;ed;#2 n;e;w;s;n;e;ne;#2 e}
-        }
-        {小院 south、north、east 和 west} 
-        {
-            {dist} {40}
-            {path} {#8 w;#2 w;wu;wd;w;w;nw;#2 nu;虎跳溪-断魂崖;断魂崖-屏风壁;屏风壁-销魂台;销魂台-缥缈峰半山腰;缥缈峰半山腰-小院}
-        }
         {松鹤楼 east 和 up} 
         {
             {dist} {2}
@@ -627,11 +625,6 @@
             {dist} {15}
             {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s}
         }
-        {洛阳中心 south、north、east、west 和 up} 
-        {
-            {dist} {61}
-            {path} {sd;se;sd;s;sd;s;sd;s;#2 sd;#2 se;#3 s;#9 s;黄土大道-southeast-west-东安门;#6 w;#9 w;#7 w}
-        }
     }
     {缥缈峰半山腰 southdown 和 northup} 
     {
@@ -671,6 +664,19 @@
         {
             {dist} {3}
             {path} {sd;sd;se}
+        }
+    }
+    {西城门 east 和 northwest} 
+    {
+        {十字广场 north、south、east、west 和 up} 
+        {
+            {dist} {5}
+            {path} {#5 e}
+        }
+        {山路 north 和 southdown} 
+        {
+            {dist} {16}
+            {path} {nw;nu;nd;nw;wu;n;n;nu;w;w;nw;nu;nw;wu;nu;wu}
         }
     }
     {西夏王陵 north 和 southup} 
@@ -894,6 +900,11 @@
     }
     {龙门客栈 west 和 up} 
     {
+        {山路 north 和 southdown} 
+        {
+            {dist} {36}
+            {path} {w;#4 s;sw;#9 s;#5 w;nw;nu;nd;nw;wu;n;n;nu;w;w;nw;nu;nw;wu;nu;wu}
+        }
         {汴梁城中心 north、south、east、west 和 up} 
         {
             {dist} {6}
