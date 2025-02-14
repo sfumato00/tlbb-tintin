@@ -498,6 +498,23 @@
             {path} {#2 w;wu}
             {dist} {3}
         }
+        {山路 northeast、northwest 和 eastdown} {
+            {path} {n;w;wu}
+            {dist} {3}
+        }
+    }
+    {山路 northeast、northwest 和 eastdown} {
+        {天水关 north、east 和 west} {
+            {path} {ed;e;s}
+            {dist} {3}
+        }
+        {松林入口 west} {
+            {path} {nw;pushaside bush;n;#2 w;#2 e;enter forest}
+            {dist} {8}
+        }
+    }
+    {松林入口 west} {
+
     }
     {小山坡 westdown、southdown 和 eastdown} {
         {天水关 north、east 和 west} {
