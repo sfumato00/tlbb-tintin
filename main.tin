@@ -6,7 +6,8 @@
         {profile} {./profiles/%1.tin}
     };
     #CLASS profile read {$env[profile]};
-    #SESSION {$username} {103.10.85.133} {8888};
+    #gts #SESSION {$username} {103.10.85.133} {8888};
+    #$username;
 };
 
 #EVENT {SESSION DISCONNECTED} {

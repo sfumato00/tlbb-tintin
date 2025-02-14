@@ -14,15 +14,16 @@
         #CLASS downexp READ {./pkg/pkg_downexp.tin};
     };
     #CLASS fight read {./pkg/pkg_fight.tin};
-    #SESSION {$username} {103.10.85.133} {8888};
+    #gts #SESSION {$username} {103.10.85.133} {8888};
+    #$username;
 };
 
 #EVENT {SESSION DISCONNECTED} {
     #gts #DELAY 3 {
         conn $username;
-    };    
+    };
 }
 
 #EVENT {SESSION TIMED OUT} {
-    conn $username;
+    #gts conn $username;
 };

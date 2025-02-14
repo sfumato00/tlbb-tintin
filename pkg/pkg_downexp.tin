@@ -12,14 +12,14 @@
 
 #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
 
-#gts #VARIABLE {State[downexp]} {0};
-
 #EVENT {VARIABLE UPDATED env[last_login]} {
-    Cmd {hp;enable} {2};
+    FetchDownexpState;
 
-    #IF {$State[downexp]} {
-        #EVENT {VARIABLE UPDATED vitals[气血]} {
+    Cmd {hp;enable} {2};
+    #IF {"$State[downexp_on]" == "1"} {
+        #EVENT {VARIABLE UPDATED vitals[last_updated]} {
             #IF {$vitals[气血] > $vitals[气血_max] * 0.3} {
+                #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
                 enable dodge duan-steps;
                 enable move duan-steps;
                 #CLASS safety KILL;
@@ -28,6 +28,7 @@
                 大理-跳崖;
             };
         };
+        Cmd {hp};
     };
     #ELSE {
         #CLASS bank READ {./pkg/pkg_bank.tin};
@@ -39,6 +40,7 @@
                     #IF {$Travel[trip_complete]} {
                         #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
                         #CLASS bank KILL;
+                        UpdateDownexpState 0;
                         init_fight;
                     };
                 };
@@ -50,26 +52,25 @@
 } {1};
 
 #ALIAS {move_back_to_fight_room_handler} {
-    
     #ECHO {返回战斗地点};
     stop_stuck_check;
-    #ECHO {距离返回战斗地点还有 18 秒};
-    #DELAY {6} {
-        #ECHO {距离返回战斗地点还有 12 秒};
-        #DELAY {6} {
-            #ECHO {距离返回战斗地点还有 6 秒};
-            #DELAY {6} {
-                start_stuck_check;
-                #CLASS graph read {./pkg/pkg_map_graph.tin};
-                #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-                    stop_stuck_check;
-                    #CLASS graph KILL;
-                    init_fight;
-                };
-                goto {$Fight[room]};
+
+    #EVENT {VARIABLE UPDATED vitals[last_updated]} {
+        #IF {$vitals[气血] > $vitals[气血_max] * 0.8} {
+            #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
+
+            #CLASS graph read {./pkg/pkg_map_graph.tin};
+            #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+                #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+                stop_stuck_check;
+                #CLASS graph KILL;
+                init_fight;
             };
+            start_stuck_check;
+            goto {$Fight[room]};
         };
     };
+    Cmd {hp} {1};
 } {5};
 
 #ALIAS {death_handler} {
@@ -90,7 +91,9 @@
 } {5};
 
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
-    #IF {!$State[downexp] && $vitals[经验] >= $downexp[threshold_exp]} {
+    FetchDownexpState;
+    
+    #IF {"$State[downexp_on]" != "1" && $vitals[经验] >= $downexp[threshold_exp]} {
         #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
         UpdateDownexpState 1;
         quit;
@@ -166,5 +169,12 @@
 } {5};
 
 #ALIAS UpdateDownexpState {
-    #gts #VARIABLE {state[downexp_on]} {%1};
+    #CLASS state OPEN;
+    #gts #VARIABLE {State[downexp_on]} {%1};
+    #CLASS state CLOSE;
+    #CLASS state WRITE {./state/$username.tin};
+}
+
+#ALIAS FetchDownexpState {
+    #CLASS state READ {./state/$username.tin};
 }
