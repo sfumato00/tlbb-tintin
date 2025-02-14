@@ -176,6 +176,8 @@
     Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log}; 
     #CLASS safety READ {./pkg/pkg_safety.tin};
 
+    #VARIABLE {fight_stats[epoch][start]} {0};
+
     #EVENT {VARIABLE UPDATED vitals[经验]} {
         feedback_loop;
     };

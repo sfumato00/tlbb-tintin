@@ -169,12 +169,8 @@
 } {5};
 
 #ALIAS UpdateDownexpState {
-    #CLASS state OPEN;
     #gts #VARIABLE {State[downexp_on]} {%1};
-    #CLASS state CLOSE;
-    #CLASS state WRITE {./state/$username.tin};
 }
 
 #ALIAS FetchDownexpState {
-    #CLASS state READ {./state/$username.tin};
 }

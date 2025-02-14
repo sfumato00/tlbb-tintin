@@ -12,10 +12,10 @@
         {waiter_id} {waiter}
         {waiter_cn} {店小二}
         {rooms} {
-            {1} {s}
-            {2} {n}
-            {3} {e}
-            {4} {w}
+            {1} {u;s}
+            {2} {u;n}
+            {3} {u;e}
+            {4} {u;w}
         }
     }
     {东客房 south、north、eastup、east、westup、southeast、west、southwest 和 southup} {
