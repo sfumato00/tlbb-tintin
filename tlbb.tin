@@ -1,6 +1,6 @@
 #NOP TLBB main module
 
-#CLASS config read {./config.tin};
+
 #CLASS login read {./pkg/pkg_login.tin};
 #CLASS graph READ {./pkg/pkg_map_graph.tin};
 
@@ -9,21 +9,8 @@
 
 #CLASS utils read {./pkg/pkg_utils.tin};
 #CLASS vitals read {./pkg/pkg_vitals.tin};
-#CLASS display read {./pkg/pkg_display.tin};
 #CLASS stats read {./pkg/pkg_stats.tin};
 
-
-#EVENT {VARIABLE UPDATED vitals[精神_max]} {
-    #VARIABLE {xunhuan[max_xiqi_full]} {@RestoreFull{0;$vitals[精神_max];$xunhuan[min_restore]}};
-}
-
-#EVENT {VARIABLE UPDATED vitals[气血_max]} {
-    #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
-}
-
-#EVENT {VARIABLE UPDATED env[event]} {
-    #VARIABLE {xunhuan[max_yunqi_full]} {@RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]}};
-}
 
 #ACTION {^ 姓名：%s%u ($username)。%s别号：%*。$} {
     #VARIABLE {env[name]} {%2};
@@ -177,7 +164,6 @@
 }
 
 #ALIAS {gun} {
-    
 
     #SWITCH {"%1"} {
 
@@ -206,8 +192,8 @@
 
         #DEFAULT {
             #ECHO {开启练功模块};
-            Cmd {hp;skills;score;enable} {4};
             #CLASS fight READ {./pkg/pkg_fight.tin};
+            init_fight;
         };
     };
 }
@@ -220,6 +206,7 @@
     Cmd {dazuo $vitals[气血_max]};
     Cmd {hp};
 } {5};
+
 
 #ALIAS {feedback_loop_idle} {
     #TICKER {ticker_feedback_loop} {Cmd {hp}} {15};
