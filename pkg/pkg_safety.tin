@@ -1,6 +1,8 @@
 #NOP death log module
 
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
 
 #ACTION {^你死了。$} {
     buffer_dump {death};
@@ -18,3 +20,16 @@
         quit;
     } {1};
 };
+
+
+#EVENT {VARIABLE UPDATED vitals[气血_max]} {
+    #IF {$vitals[气血%] < 95 || $hp_percentage < 50} {
+        #ECHO {<faa>=====> 非正常状态, 紧急处理 <=======};
+        #SHOW {<faa>=====> 非正常状态, 紧急处理 <=======} 2 10;
+        Cmd {surrender} {1};
+        #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
+            buffer_dump {fight};
+            #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
+        };
+    };
+}

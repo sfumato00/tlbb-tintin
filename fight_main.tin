@@ -10,9 +10,6 @@
     };
     #CLASS profile read {$env[profile]};
 
-    #IF {$Fight[downexp_on]} {
-        #CLASS downexp READ {./pkg/pkg_downexp.tin};
-    };
     #CLASS fight read {./pkg/pkg_fight.tin};
     #gts #SESSION {$username} {103.10.85.133} {8888};
     #$username;

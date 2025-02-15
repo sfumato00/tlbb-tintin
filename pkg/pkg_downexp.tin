@@ -2,7 +2,6 @@
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS room READ {./pkg/pkg_room.tin};
-#CLASS graph read {./pkg/pkg_map_graph.tin};
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
@@ -36,15 +35,10 @@
             #IF {$Travel[trip_complete]} {
                 #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
                 Cmd {check} {1};
-                #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-                    #IF {$Travel[trip_complete]} {
-                        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
-                        #CLASS bank KILL;
-                        UpdateDownexpState 0;
-                        init_fight;
-                    };
+                #DELAY 10 {
+                    #CLASS bank KILL;
                 };
-                goto {$Fight[room]};
+                move_back_to_fight_room_handler
             };
         };
         goto {富贵钱庄 east};

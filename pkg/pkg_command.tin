@@ -6,6 +6,7 @@
 #VARIABLE {Command[history][cnt]} {0};
 
 #ALIAS Cmd {
+    PurgeHistory;
     #LOCAL commands {%1};
     #LOCAL cnt {%2};
     #LOCAL epoch @GetEpoch{};
