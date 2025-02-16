@@ -1,0 +1,73 @@
+#NOP gun
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS learn_function READ {./pkg/pkg_learn_function.tin};
+
+
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+    #LOCAL count @GetCommandCnt{};
+    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+    #IF {$count < 39} {
+        Cmd {
+            shoot $username;
+            #2 drink longyin;
+            shoot $username;
+            #2 drink longyin;
+            learn_from_master_with_research 388;
+        } {7};
+    };
+}
+
+#ALIAS learn_from_master_with_research {
+    #LOCAL js {%1};
+    #IF {"$js" == ""} {
+        #LOCAL js $vitals[精神_max];
+    };
+
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
+
+    Info {sk: $sk, target lv: $target_lv};
+
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    Info {qn_before_level: $qn_before_level, curr level: $sk_curr_lv, target lv: $target_lv};
+    #IF {"$qn_before_level" == "0" && $sk_curr_lv >= 100} {
+        Cmd {research $sk $xunhuan[qn_per_res]} {1};
+        #RETURN {};
+    };
+
+    #MATH qn {($js - 1) / $js_p_qn};
+    
+    #IF {$qn > $qn_before_level && ($sk_curr_lv >= 100 || $sk_curr_lv + 1 == $target_lv)} {
+        #LOCAL qn {$qn_before_level};
+    };
+    Info {qn_before_level: $qn_before_level, qn to use: $qn, curr level: $sk_curr_lv, target lv: $target_lv};
+    Cmd {learn $sk from $Learn[master] with $qn} {1};
+}
+
+
+#ALIAS stop {
+    #CLASS gun KILL;
+}
+
+#TICKER {ticker_checkbusy} {
+    #IF {@GetEpoch{} >= $Busy[next_check]} {
+        Cmd {skills;hp} {2};
+    };
+} {2};
+
+
+Info {开启学习模块};
+Cmd {skills;score;research literate 1} {3};
+#VARIABLE {Busy[next_check]} {0};

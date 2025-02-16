@@ -1,0 +1,44 @@
+#NOP learn with xunhuan
+
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS learn_function READ {./pkg/pkg_learn_function.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
+
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+    #IF {"$Busy[busy]" == "0"} {
+        restore;
+        learn_from_master $vitals[精神_max];
+    };
+}
+
+#TICKER {ticker_checkbusy} {
+    #IF {@GetEpoch{} > $Busy[next_check]} {
+        Cmd {dazuo 1;hp} {1};
+    };
+} {1};
+
+
+#ALIAS restore {
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #IF {$xiqi > 0} {
+        Cmd {xiqi $xiqi} {1};
+    };
+
+    #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
+    #IF {$yunqi > 0} {
+        Cmd {yunqi $yunqi} {1};
+    };
+}
+
+
+#IF {$xunhuan[min_restore] > 0} {} {
+    Error {必须设置最小回复量！！};
+};
+
+
+
+
