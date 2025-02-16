@@ -16,35 +16,40 @@
     Cmd {
         shoot $username;
         #2 drink longyin;
-        du @_get_book_to_read{} 200;
+        shoot $username;
+        #2 drink longyin;
+        du @_get_book_to_read{} 388;
         skills;
     } {1};
-} {5};
+}
 
-#Ticker {ticker_gun} {
-    feedback_loop_tuna;
-    feedback_loop_tuna;
-} {1};
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "0"} {
+        feedback_loop_du;
+    };
+}
 
 #FUNCTION _get_book_to_read {
-    #IF {$skills[literate][lv] < 80} {
-        #RETURN {book};
-    };
-    #IF {$skills[changquan][lv] <60} {
-        #RETURN {changquan-book2};
-    };
-    #IF {$skills[jingluo][lv] < 30} {
+    #IF {$skills[jingluo][lv] < 70} {
         #RETURN {jingluo};
     };
-    #IF {$skills[beiming-force][lv] < 30} {
+    #IF {$skills[beiming-force][lv] <70} {
         #RETURN {beiming};
     };
-    #IF {$skills[unarmed][lv] < 35} {
-        #RETURN {unarmedbook};
+    #IF {$skills[yijing][lv] < 30} {
+        #RETURN {yijing};
     };
     #RETURN {book};
 }
 
 #ALIAS stop {
-    #UNTICKER {ticker_gun};
+    #CLASS gun KILL;
 }
+
+#TICKER {ticker_checkbusy} {
+    #IF {@GetEpoch{} >= $Busy[next_check]} {
+        Cmd {dazuo 1} {1};
+    };
+} {1.5};
+
+#VARIABLE {Busy[next_check]} {0};
