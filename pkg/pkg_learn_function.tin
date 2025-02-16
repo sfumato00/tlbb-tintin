@@ -20,13 +20,14 @@
 
 
 #FUNCTION GetSkillToLearn {
-    #FOREACH {$Learn[skills][%*]} {skill} {
-        
-        #LOCAL sk {*skill[+1]};
-        #LOCAL target_lv {$skill[*skill[+1]]};
-        
-        #IF {"$skills[$sk]" === "" || $skills[$sk][lv] < $target_lv} {
-            #RETURN {{$sk}{$target_lv}};
+    #LOCAL i {};
+    #FOREACH {$Learn[skills][%*]} {_skill} {
+        #LOCAL sk {*_skill[+1]};
+        #LOCAL target_lv {$_skill[+1]};
+        Info {sk: $sk, target_lv: $target_lv};
+        #IF {"$skills[$sk]" == "" || $skills[$sk][lv] < $target_lv} {
+            Warn {RETURN: sk: $sk, target_lv: $target_lv};
+            #RETURN {$_skill};
         };
     };
     #RETURN {};
