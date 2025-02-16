@@ -1,0 +1,15 @@
+#NOP print module.
+
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#ALIAS Info {
+    #ECHO {@Timestamp{} <cfa>[Info] %1};
+}
+
+#ALIAS Warn {
+    #ECHO {@Timestamp{} <fca>[Warn] %1};
+}
+
+#ALIAS Error {
+    #ECHO {@Timestamp{} <faa>[Error] %1};
+}

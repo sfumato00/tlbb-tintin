@@ -2,14 +2,15 @@
 
 
 #CLASS login read {./pkg/pkg_login.tin};
-#CLASS graph READ {./pkg/pkg_map_graph.tin};
 
 #CLASS room read {./pkg/pkg_room.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #CLASS utils read {./pkg/pkg_utils.tin};
 #CLASS vitals read {./pkg/pkg_vitals.tin};
 #CLASS stats read {./pkg/pkg_stats.tin};
+
 
 
 #ACTION {^ 姓名：%s%u ($username)。%s别号：%*。$} {
@@ -61,17 +62,13 @@
             #CLASS xunhuan kill;
             #CLASS xunhuan read {./pkg/pkg_xunhuan.tin};
 
-            #ALIAS {feedback_loop} {
-                feedback_loop_xfer;
-            } {5};
-
-            #DELAY {init} {
-                #TICKER {ticker_feedback_loop} {dazuo 1} {1};
-                Cmd {hp};
-            } {3};
+            #TICKER {ticker_feedback_loop} {feedback_loop_xfer} {1};
+            Cmd {hp};
         };
     };
 } {5};
+
+
 
 
 #ALIAS {吐纳} {
@@ -95,23 +92,6 @@
         #CLASS read read {./pkg/pkg_read.tin};
     } {3};
 }
-
-#ALIAS {学习} {
-    #ECHO {开启 学习 模块};
-        #VARIABLE {learn[master]} {%1};
-        #IF {"%2" == ""} {
-            #VARIABLE {xunhuan[js_per_qn]} {11};
-        } {
-            #VARIABLE {xunhuan[js_per_qn]} {%2};
-        };
-        #DELAY {init} {
-            #TICKER {ticker_feedback_loop} {check_busy} {2};
-            #CLASS learn kill;
-            #CLASS learn read {./pkg/pkg_learn.tin};
-        } {4};
-        score;
-        research literate 1;
-} {5};
 
 #ALIAS {研究} {
     #ECHO {开启 研究 模块};
@@ -145,9 +125,42 @@
     };
 } {5};
 
+
+#ALIAS do_learn {
+    #IF {"%1" == "off"} {
+        #CLASS learn KILL;
+        #RETURN {};
+    };
+    
+    #CLASS learn READ {./pkg/pkg_new_learn.tin};
+};
+
+
+#ALIAS {xfer} {
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            #ECHO {关闭传功模块};
+            #CLASS transfer kill;
+        };
+
+        #CASE {""} {
+            Error {必须指定传功对象!};
+        };
+
+        #DEFAULT {
+            #CLASS transfer READ {./pkg/pkg_transfer.tin};
+            #VARIABLE {Transfer[target]} {%1};
+            Cmd {
+                hp;
+                score;
+            } {2};
+        };
+    }
+} {5};
+
 #ALIAS {kezhan} {
     
-
     #SWITCH {"%1"} {
 
         #CASE {"off"} {
@@ -157,7 +170,7 @@
 
         #DEFAULT {
             #ECHO {开启客栈模块};
-            Cmd {hp;skills;score;enable} {4};
+            Cmd {hp;skills;score;enable;research literate 1} {4};
             #CLASS kezhan READ {./pkg/pkg_kezhan.tin};
         };
     };
@@ -180,9 +193,44 @@
     };
 }
 
+#ALIAS {gun_learn} {
+
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            #ECHO {关闭打手枪学习模块};
+            #CLASS gun_learn kill;
+        };
+
+        #DEFAULT {
+            #ECHO {开启打手枪学习模块};
+            Cmd {hp;skills;score;enable} {4};
+            #CLASS gun_learn READ {./pkg/pkg_gun_learn.tin};
+        };
+    };
+}
+
+#ALIAS {go} {
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            #ECHO {关闭旅行模块};
+            #CLASS graph KILL;
+        };
+
+        #DEFAULT {
+            Info {开启旅行模块};
+            #IF {"$env[room]" == ""} {
+                Cmd {l} {1};
+            };
+            #CLASS graph READ {./pkg/pkg_map_graph.tin};
+        };
+    };
+}
+
+
 #ALIAS {fight} {
     
-
     #SWITCH {"%1"} {
 
         #CASE {"off"} {
@@ -206,6 +254,7 @@
     Cmd {dazuo $vitals[气血_max]};
     Cmd {hp};
 } {5};
+
 
 
 #ALIAS {feedback_loop_idle} {

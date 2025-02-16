@@ -146,6 +146,29 @@
             {path} {sw;wu;su;sw;su;w}
             {dist} {6}
         }
+        {大雄宝殿 north、east、southdown 和 west} {
+            {path} {#2 nu;#3 n;#2 nu;#2 n;#2 nu}
+            {dist} {11}
+        }
+    }
+    {大雄宝殿 north、east、southdown 和 west} {
+        {山道 southeast、southwest 和 northup} {
+            {path} {#2 sd;#2 s;#2 sd;#3 s;#2 sd}
+            {dist} {11}
+        }
+        {法堂 south、east 和 west} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+    }
+    {法堂 south、east 和 west} {
+        {大雄宝殿 north、east、southdown 和 west} {
+            {path} {#2 s}
+            {dist} {2}
+        }
+    }
+    {菩提院 north 和 south} {
+
     }
     {二祖庵庵门 south 和 east} {
         {山道 southeast、southwest 和 northup} {
