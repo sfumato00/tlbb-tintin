@@ -15,10 +15,11 @@
     FetchDownexpState;
 
     Cmd {hp;enable} {2};
-    #IF {"$State[downexp_on]" == "1"} {
-        #EVENT {VARIABLE UPDATED vitals[last_updated]} {
-            #IF {$vitals[气血] > $vitals[气血_max] * 0.3} {
-                #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
+
+    #EVENT {VARIABLE UPDATED vitals[last_updated]} {
+        #IF {$vitals[气血] > $vitals[气血_max] * 0.3} {
+            #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
+            #IF {$vitals[经验] > $downexp[threshold_exp]} {
                 enable dodge duan-steps;
                 enable move duan-steps;
                 #CLASS safety KILL;
@@ -26,22 +27,22 @@
                 Cmd {w;s} {2};
                 大理-跳崖;
             };
-        };
-        Cmd {hp};
-    };
-    #ELSE {
-        #CLASS bank READ {./pkg/pkg_bank.tin};
-        #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-            #IF {$Travel[trip_complete]} {
-                #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
-                Cmd {check} {1};
-                #DELAY 10 {
-                    #CLASS bank KILL;
+            #ELSE {
+                #CLASS bank READ {./pkg/pkg_bank.tin};
+                #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
+                    
+                    #IF {$Travel[trip_complete]} {
+                        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+                        Cmd {check} {1};
+                        #DELAY 10 {
+                            #CLASS bank KILL;
+                        };
+                        move_back_to_fight_room_handler
+                    };
                 };
-                move_back_to_fight_room_handler
+                goto {富贵钱庄 east};
             };
         };
-        goto {富贵钱庄 east};
     };
 } {1};
 
