@@ -93,16 +93,7 @@
     } {3};
 }
 
-#ALIAS {研究} {
-    #ECHO {开启 研究 模块};
-        
-        #DELAY {init} {
-            #TICKER {ticker_feedback_loop} {check_busy} {2};
-            #CLASS research kill;
-            #CLASS research read {./pkg/pkg_research.tin};
-        } {4};
-        score;
-} {5};
+
 
 #ALIAS {北冥} {
 
@@ -136,6 +127,23 @@
 };
 
 
+#ALIAS {do_res} {
+
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            Info {关闭研究模块};
+            #CLASS research KILL;
+        };
+
+        #DEFAULT {
+            Info {开启 研究 模块};
+            #CLASS research read {./pkg/pkg_research.tin};
+        };
+    };
+} {5};
+
+
 #ALIAS {xfer} {
     #SWITCH {"%1"} {
 
@@ -156,7 +164,7 @@
                 score;
             } {2};
         };
-    }
+    };
 } {5};
 
 #ALIAS {kezhan} {
