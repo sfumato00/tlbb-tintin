@@ -236,23 +236,54 @@
     };
 }
 
-
-#ALIAS {fight} {
-    
+#alias xfer_tuna {
     #SWITCH {"%1"} {
 
         #CASE {"off"} {
-            #ECHO {关闭练功模块};
-            #CLASS fight kill;
+            #ECHO {关闭传功吐纳模块};
+            #CLASS transfer_tuna KILL;
         };
 
         #DEFAULT {
-            #ECHO {开启练功模块};
-            #CLASS fight READ {./pkg/pkg_fight.tin};
-            init_fight;
+            Info {开启传功吐纳模块};
+            #CLASS transfer_tuna READ {./pkg/pkg_transfer_tuna.tin};
         };
     };
 }
+
+#alias xfer_learn {
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            #ECHO {关闭传功吐纳模块};
+            #CLASS transfer_learn KILL;
+        };
+
+        #DEFAULT {
+            Info {开启传功吐纳模块};
+            #CLASS transfer_learn READ {./pkg/pkg_transfer_learn.tin};
+        };
+    };
+}
+
+#alias xfer_du {
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            #ECHO {关闭传功读书模块};
+            #CLASS transfer_du KILL;
+        };
+
+        #DEFAULT {
+            Info {开启传功读书模块};
+            #CLASS transfer_du READ {./pkg/pkg_transfer_du.tin};
+        };
+    };
+}
+
+#alias do_zhua {
+    #class zhua READ {./pkg/pkg_zhua.tin};
+};
 
 #ALIAS {dazuo_max} {
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
@@ -274,3 +305,24 @@
 #ACTION {^你目前至少要用 %1 点潜能。$} {
     #VARIABLE {xunhuan[qn_per_res]} {@ParseFlakyNumber{%1}};
 } {5};
+
+
+#ALIAS sx {
+    go;
+    goto {神憩小舍 east、southdown、northwest 和 up};
+}
+
+#ALIAS ez {
+    go;
+    goto {二祖庵庵门 south 和 east};
+}
+
+#ALIAS xx {
+    go;
+    goto {中心广场 north、south、east 和 west};
+}
+
+#ALIAS ly {
+    go;
+    goto {洛阳中心 south、north、east、west 和 up};
+}

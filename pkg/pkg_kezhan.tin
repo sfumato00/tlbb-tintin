@@ -85,8 +85,13 @@
 #ACTION {^你一觉醒来，觉得身体完全恢复了！$} {
     #NOP go_learn;
     // #NOP du duan-sword-book $vitals[精神_max];
-    du jingluo $vitals[精神_max];
-    CheckBusy {@_get_random_room{};hp} {3};
+    dazuo $vitals[气血_max];
+    CheckBusy {
+        Cmd {du @_get_book_to_read{} $vitals[精神_max]} {1};
+        #DELAY {0.1} {
+            CheckBusy {@_get_random_room{};hp} {3};
+        };
+    };
 };
 
 #ACTION {^你听了%*的指导，似乎有些心得。$} {
@@ -168,3 +173,9 @@
 };
 
 
+#FUNCTION _get_book_to_read {
+    #IF {$skills[luohan-fist][lv] < 100} {
+        #RETURN {book};
+    };
+    #RETURN {};
+}

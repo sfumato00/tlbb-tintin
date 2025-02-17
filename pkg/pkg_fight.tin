@@ -6,6 +6,8 @@
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS quit READ {./pkg/pkg_quit.tin};
 #CLASS remote_control READ {./pkg/pkg_remote_control.tin};
+#CLASS const READ {./const.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
 
 #IF {"$Fight[downexp]" == "1"} {
     #CLASS downexp READ {./pkg/pkg_downexp.tin};

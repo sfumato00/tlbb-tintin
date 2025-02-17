@@ -17,12 +17,12 @@
             #2 drink longyin;
             shoot $username;
             #2 drink longyin;
-            learn_from_master_with_research 388;
+            learn_with_research 388;
         } {7};
     };
 }
 
-#ALIAS learn_from_master_with_research {
+#ALIAS learn_with_research {
     #LOCAL js {%1};
     #IF {"$js" == ""} {
         #LOCAL js $vitals[精神_max];

@@ -1,6 +1,7 @@
 #NOP 
 
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS cn_num READ {./pkg/pkg_cn_num.tin};
 
 #VARIABLE {IS_MONEY} {
     {coin} {1}
@@ -23,6 +24,18 @@
     {十全大补药-yao} {100K}
     {青光战甲-bluelight armor} {100K}
     {虎头战靴-tiger boot} {100K}
+    {涅磐经-book} {1M}
+    {法华经-book} {1M}
+    {维摩经-book} {1M}
+    {杂阿含经-book} {1M}
+    {拈花指法-book} {1M}
+    {摩诃指法-book} {1M}
+    {金刚经-book} {1M}
+    {罗汉拳法-book} {1M}
+    {韦陀掌法-book} {1M}
+    {龙爪手秘籍-book} {1M}
+    {少林心法-book} {1M}
+    {易筋经-yijinjing} {1M}
 }
 
 #VARIABLE {IS_SELLABLE} {

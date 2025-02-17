@@ -1,173 +1,91 @@
-#NOP new learn
+#NOP Learn Module
 
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
-#CLASS stats READ {./pkg/pkg_stats.tin};
-
-#CLASS command READ {./pkg/pkg_command.tin};
-#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS learn_function READ {./pkg/pkg_learn_function.tin};
 
-#ALIAS {stop} {
-    #ECHO {关闭 学习 模块};
-    feedback_loop_idle;
-    #CLASS learn kill;
-} {5};
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+    restore;
+    learn_from_master_with_research $vitals[精神_max];
+}
+
+#TICKER {ticker_checkbusy} {
+    Cmd {hp} {1};
+} {1};
 
 
-#ALIAS {feedback_loop} {
-    #IF {$vitals[内力] < $vitals[内力_max]} {
-        #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
-        #LIST cmds CREATE {};
-        #IF {$xiqi > 0} {
-            #LIST cmds ADD {xiqi $xiqi};
-        };
-        #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
-        #IF {$yunqi > 0} {
-            #LIST cmds ADD {yunqi $yunqi};
-        };
-        #LIST cmds ADD {dazuo $vitals[气血_max]};
-        #LOCAL n {};
-        #LIST cmds SIZE n;
-        #LIST cmds SIMPLIFY $cmds;
-        Cmd {$cmds} {$n};
-        #RETURN {};
-    };
-
+#ALIAS restore {
     #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
     #IF {$xiqi > 0} {
-        Cmd {xiqi $xiqi};
+        Cmd {xiqi $xiqi} {1};
+    };
+}
+
+#ALIAS learn_from_master_no_research {
+    #LOCAL js {%1};
+    #IF {"$js" == ""} {
+        #LOCAL js $vitals[精神_max];
     };
 
-    #VARIABLE skill_to_learn {@GetSkillToLearn{}};
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
 
-    #LOCAL {sk} {*skill_to_learn[+1]};
-    #LOCAL {target_lv} {$skill_to_learn[+1]};
-    #LOCAL {curr_lv} {$skills[$sk][lv]};
-    #LOCAL {curr_prof} {$skills[$sk][prof]};
+    Info {sk: $sk, target lv: $target_lv};
 
-    #IF {"$sk" == "" ||  "$target_lv" == "" || "$skills[$sk]" == ""} {
-        #ECHO {sk: $sk, target_lv: $target_lv, skill: $skills[$sk]};
-        error {=================== please make skill variables are set correctly!!!!!!!!!!!!! ===================};
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    #MATH qn {($js - 1) / $js_p_qn};
+    #IF {$qn > $qn_before_level && $sk_curr_lv + 1 == $target_lv} {
+        #MATH qn {$qn_before_level + 1};
+    };
+    Info {qn_before_level: $qn_before_level, qn to use: $qn, curr level: $sk_curr_lv, target lv: $target_lv};
+    Cmd {learn $sk from $Learn[master] with $qn;skills} {2};
+}
+
+#ALIAS learn_from_master_with_research {
+    #LOCAL js {%1};
+    #IF {"$js" == ""} {
+        #LOCAL js $vitals[精神_max];
+    };
+
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
+
+    Info {sk: $sk, target lv: $target_lv};
+
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    Info {qn_before_level: $qn_before_level, curr level: $sk_curr_lv, target lv: $target_lv};
+    #IF {"$qn_before_level" == "0"} {
+        Cmd {research $sk $xunhuan[qn_per_res]} {1};
         #RETURN {};
     };
 
-    #IF {"$curr_lv" == ""} {
-        #LOCAL {$curr_lv} {0};
-    };
-
-    #IF {"$curr_prof" == ""} {
-        #LOCAL {$curr_prof} {0};
-    };
-
-    #LOCAL full_xiqi_params {@GetFullXiqiParams{$vitals[精神_max];$xunhuan[js_per_qn];$xunhuan[min_restore]}};
-    #LOCAL qn_before_level @GetMinQnBeforeLevel{$curr_lv;$curr_prof;$score[悟性]};
-    #LOCAL available_neili {};
-    #MATH available_neili {$vitals[内力] - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - @RestoreFull{0;$vitals[气血_max];$xunhuan[min_restore]} - $xiqi};
-
-    #ECHO {qn_before_level: $qn_before_level};
-    #IF {$full_xiqi_params[full_learn_multiple] > $THROTTLE} {
-        #VARIABLE {full_xiqi_params[full_learn_multiple]} {$THROTTLE};
-    };
-    #ECHO {$full_xiqi_params};
-    #ECHO {可供使用内力: $available_neili};
-
-    #LOCAL count @GetCommandCnt{};
-    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
-
-    #WHILE {$available_neili >= $full_xiqi_params[xiqi_full] 
-        && ($qn_before_level >= $full_xiqi_params[qn_per_full_xiqi] 
-            || $curr_lv + 5 < 100
-            || ($xunhuan[qn_per_res] == 5 && $curr_lv + 2 < $target_lv)
-            || ($curr_lv + 2 < $target_lv && "$sk" == "jiuyang-shengong"))
-        } {
-        #$full_xiqi_params[full_learn_multiple] {
-            Cmd {learn $sk from $learn[master] with 50} {1};
-            #MATH n_Cmd {$n_Cmd + 1};
-            #IF {$n_Cmd > $THROTTLE} {
-                #RETURN {};
-            };
-        };
-        Cmd {xiqi $full_xiqi_params[xiqi_full]} {1};
-        #MATH n_Cmd {$n_Cmd + 1};
-        #IF {$n_Cmd >= $THROTTLE} {
-            #RETURN {};
-        };
-
-        #MATH {available_neili} {$available_neili - $full_xiqi_params[xiqi_full]};
-        #MATH {qn_before_level} {$qn_before_level - $full_xiqi_params[qn_per_full_xiqi]};
-
-        #ECHO {available_neili: $available_neili, qn_before_level: $qn_before_level};
-    };
-
-
-} {5};
-
-
-#Ticker {tker_checkbusy} {
-    Cmd {hp;dazuo 1} {2};
-}
-
-#EVENT {VARIABLE UPDATED Busy[busy]} {
-    #IF {!$Busy[busy]} {
-        feedback_loop;
-    };
-}
-
-#FUNCTION GetFullXiqiParams {
-
-    #LOCAL js_max {%1};
-    #LOCAL js_per_qn {%2};
-    #LOCAL min_restore {%3};
-
-    #LOCAL js_per_full_learn {};
-    #MATH js_per_full_learn {$js_per_qn * 50};
-
-    #LOCAL full_learn_multiple {};
-    #MATH full_learn_multiple {$js_max / $js_per_full_learn};
-
-    #LOCAL qn_per_full_xiqi {};
-    #MATH qn_per_full_xiqi {$full_learn_multiple * 50};
-
-    #LOCAL js_per_full_xiqi {};
-    #MATH js_per_full_xiqi {$js_per_qn * $qn_per_full_xiqi};
-
-    #MATH xiqi_full {($js_per_full_xiqi / $min_restore + 1) * 20};
-
-    #LOCAL ret {
-        {xiqi_full} {$xiqi_full}
-        {qn_per_full_xiqi} {$qn_per_full_xiqi}
-        {full_learn_multiple} {$full_learn_multiple}
-    };
-    #RETURN {$ret};
-}
-
-#FUNCTION GetMinQnBeforeLevel {
-    #LOCAL level %1;
-    #LOCAL prof %2;
-    #LOCAL wx %3;
-
-    #LOCAL next_level {$level};
-    #LOCAL diff {0};
+    #MATH qn {($js - 1) / $js_p_qn};
     
-    #MATH next_level {$next_level + 1};
-    #MATH max_pro {$next_level * $next_level + 1};
-    #MATH diff {$max_pro - $prof};
-
-    #MATH max_pro_per_qn {$wx * 3 / 4 + 2};
-    #MATH res {$diff / $max_pro_per_qn};
-
-    #RETURN $res;
-};
-
-#FUNCTION GetSkillToLearn {
-    #FOREACH {*Learn[skills][%*]} {i} {
-        #LOCAL sk $Learn[skills][$i][sk];
-        #LOCAL target_lv $Learn[skills][$i][lv];
-        
-        #IF {"$skills[$sk]" == "" || $skills[$sk][lv] < $target_lv} {
-            #RETURN {{$sk}{$target_lv}};
-        };
+    #IF {$qn > $qn_before_level && ($sk_curr_lv >= 100 || $sk_curr_lv + 1 == $target_lv)} {
+        #LOCAL qn {$qn_before_level};
     };
-
-    #RETURN {};
+    Info {qn_before_level: $qn_before_level, qn to use: $qn, curr level: $sk_curr_lv, target lv: $target_lv};
+    Cmd {learn $sk from $Learn[master] with $qn} {1};
+    Cmd {skills} {1};
 }
+
+Info {开启学习模块};
+Cmd {skills;score;research literate 1} {3};
+#VARIABLE {Busy[next_check]} {0};

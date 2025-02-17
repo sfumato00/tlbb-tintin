@@ -1,48 +1,68 @@
-#CLASS zhua OPEN;
-#CLASS room READ {./pkg/pkg_room.tin};
+#NOP Zhua
 
-#ALIAS {doclaw} {
-    enable unarmed dragon-claw;
-    jiali 50;
-    fight %1;
-    perform claw;
-    jiali 0;
-    surrender;
-}
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
+
+#VARIABLE {Busy[next_check]} {0};
+
+
+#ALIAS {cl} {
+    Cmd {
+        #VARIABLE {Zhua[target]} {%1};
+        enable unarmed dragon-claw;
+        jiali 50;
+        fight %1;
+        perform claw;
+        jiali 0;
+        enable unarmed jiuyang-shengong;
+        surrender;
+        surrender;
+        surrender;
+    } {6};
+};
 
 #ALIAS {mh} {
-    enable unarmed mohe-finger;
-    jiali %2;
-    fight %1;
-    perform strike;
-    jiali 0;
-    surrender;
+    #IF {"%1" != ""} {
+        #VARIABLE {Zhua[target]} {%1};
+    };
+    Cmd {
+        enable unarmed mohe-finger;
+        jiali $Zhua[jiali_max];
+        fight $Zhua[target];
+        perform strike;
+        jiali 0;
+        enable unarmed jiuyang-shengong;
+        surrender;
+        surrender;
+    } {6};
 }
 
-#ACTION {^令和(highlander)告诉你：北门校尉} {
-    go;
+#alias zm {
+    #IF {"%1" != ""} {
+        #VARIABLE {Zhua[target]} {%1};
+    };
+    Cmd {
+        fight $Zhua[target];
+        enable unarmed zhemei-strike;
+        perform getweapon;
+        surrender;
+        surrender;
+        enable unarmed jiuyang-shengong;
+    } {6};
 }
 
-#ALIAS go {
-    stop;
-    #DELAY 6 {
-        cmd {s;e;s;s;s;s;s;s;s;s};
 
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #ACTION {^{请不要一次输入太多的指令。|你必须先用 enable 选择你要用的内功心法。}$} {
-                #DELAY 3 {w};
-            } {1};
-            
-            #IF {"$env[room]" == "黄土大道"} {
-                cmd {w};
+#ACTION {^结果%*的手腕受了严重的伤害，已完全使不出力！} {
+    #DELAY 2 {
+        #TICKER {ticker_checkbusy} {
+            #IF {"$Busy[busy]" == "0"} {
+                #UNTICKER {ticker_checkbusy};
+                mh;
             };
-            #ELSE {
-                #UNACTION {^请不要一次输入太多的指令。$};
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+            #ELSEIF {@GetEpoch{} >= $Busy[next_check]} {
+                Cmd {dazuo 1;hp} {1};
             };
-        };
-        cmd {s};    
+        } {1};
     };
 }
 
-#CLASS zhua CLOSE;

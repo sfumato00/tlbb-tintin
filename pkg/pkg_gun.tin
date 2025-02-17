@@ -46,10 +46,24 @@
     #CLASS gun KILL;
 }
 
-#TICKER {ticker_checkbusy} {
+#UNTICKER {ticker_checkbusy} {
     #IF {@GetEpoch{} >= $Busy[next_check]} {
         Cmd {dazuo 1} {1};
     };
 } {1.5};
+
+#TICKER {ticker_checkbusy} {
+    #LOCAL count @GetCommandCnt{};
+    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+    #IF {$count < 39} {
+        Cmd {
+            shoot $username;
+            #2 drink longyin;
+            shoot $username;
+            #2 drink longyin;
+            tuna 388;
+        } {7};
+    };
+} {1};
 
 #VARIABLE {Busy[next_check]} {0};

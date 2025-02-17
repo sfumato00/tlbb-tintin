@@ -1,0 +1,35 @@
+#NOP gun
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
+#CLASS check_busy READ {./pkg/pkg_checkbusy.tin};
+
+#ALIAS {feedback_loop} {
+
+    #LOCAL count @GetCommandCnt{};
+    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+    #IF {$count < 36 && "$Busy[busy]" == "0"} {
+        Cmd {
+            shoot $username;
+            #2 drink huxiao;
+            shoot $username;
+            #1 drink huxiao;
+            dazuo 269;
+            #MATH Busy[next_check] {@GetEpoch{} + 2};
+        } {4};
+    };
+};
+
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "0"} {
+        feedback_loop;
+    };
+}
+
+#TICKER {ticker_checkbusy} {
+    #IF {@GetEpoch{} >= $Busy[next_check]} {
+        Cmd {dazuo 1;hp} {1};
+    };
+} {1};
+
+#VARIABLE {Busy[busy]} {0};
+#VARIABLE {Busy[next_check]} {0};

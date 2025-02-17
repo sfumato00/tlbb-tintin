@@ -1,4 +1,5 @@
 #NOP 九阳 模块
+#CLASS command READ {./pkg/pkg_command.tin};
 
 #ACTION {^你的九阳神功运行完毕，将内力收回丹田。$} {
     Cmd {exert powerup} {1};

@@ -15,7 +15,7 @@
 }
 
 
-#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+#EVENT {VARIABLE UPDATED Busy[busy]} {
     #IF {"$Busy[busy]" == "0"} {
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
         #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};
@@ -28,19 +28,18 @@
             Cmd {yunqi $yunqi};
         };
         #IF {$vitals[内力] > $vitals[内力_max]} {
-            Cmd {#3 exert transfer $Transfer[target]} {3};
-            Cmd {#3 exert transfer doge} {2};
-        };    
-        Cmd {dazuo $vitals[气血_max]} {1};
+            Cmd {#5 exert transfer $Transfer[target]} {5};
+        };
 
-        #LOCAL time {@GetEpoch{}};
-        #MATH Busy[next_check] {$time + 7};
+        Cmd {dazuo $vitals[气血_max]} {1};
+        #VARIABLE {Busy[busy]} {1};
+        #MATH Busy[next_check] {@GetEpoch{} + 7};
     };
 }
 
 #TICKER {ticker_checkbusy} {
     #IF {@GetEpoch{} >= $Busy[next_check]} {
-        Cmd {dazuo 1;hp} {1};
+        Cmd {hp;dazuo 1} {1};
     };
 } {1};
 
