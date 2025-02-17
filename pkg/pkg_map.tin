@@ -18,6 +18,10 @@
             {path} {#5 s;e}
             {dist} {6}
         }
+        {富贵钱庄 east} {
+            {path} {s;w}
+            {dist} {2}
+        }
     }
     {富贵钱庄 east} {
         {汴梁城中心 north、south、east、west 和 up} {
