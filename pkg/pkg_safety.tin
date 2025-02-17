@@ -10,7 +10,7 @@
 
 
 #ACTION {^看起来%u想杀死你！$} {
-    Log {%0} {Warn} {$fight_stats[log_file]};
+    Log {%0} {Warn} {./log/kill_$username_@Timestamp{}.log};
     #EVENT {SESSION DISCONNECTED} {
         buffer_dump {kill};
         #UNTICKER {ticker_quit};
