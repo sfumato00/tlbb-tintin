@@ -165,6 +165,7 @@
 
 #ALIAS UpdateDownexpState {
     #gts #VARIABLE {State[downexp_on]} {%1};
+    #VARIABLE {State[downexp_on]} {%1};
 }
 
 #ALIAS FetchDownexpState {

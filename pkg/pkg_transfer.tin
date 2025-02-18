@@ -8,13 +8,6 @@
 
 #VARIABLE {Busy[next_check]} {0};
 
-
-#ALIAS stop {
-    Info {关闭传功模式};
-    #CLASS transfer KILL;
-}
-
-
 #EVENT {VARIABLE UPDATED Busy[busy]} {
     #IF {"$Busy[busy]" == "0"} {
         #LOCAL xiqi {@Restore{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
@@ -28,7 +21,7 @@
             Cmd {yunqi $yunqi};
         };
         #IF {$vitals[内力] > $vitals[内力_max]} {
-            Cmd {#5 exert transfer $Transfer[target]} {5};
+            Cmd {#6 exert transfer $Transfer[target]} {6};
         };
 
         Cmd {dazuo $vitals[气血_max]} {1};
@@ -42,5 +35,3 @@
         Cmd {hp;dazuo 1} {1};
     };
 } {1};
-
-

@@ -382,6 +382,7 @@
         #Event {VARIABLE UPDATED env[room_updated]} {
             #IF {@_assertRoomExitsKey{江边小路 northup}} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #UNEVENT {VARIABLE UPDATED env[room]};
                 #VARIABLE {travel[started]} {0};
             };
         };

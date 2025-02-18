@@ -6,6 +6,7 @@
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS learn_function READ {./pkg/pkg_learn_function.tin};
+#CLASS stats read {./pkg/pkg_stats.tin};
 
 #EVENT {VARIABLE UPDATED vitals[last_updated]} {
     restore;
@@ -47,6 +48,10 @@
     #IF {$qn > $qn_before_level && $sk_curr_lv + 1 == $target_lv} {
         #MATH qn {$qn_before_level + 1};
     };
+    #IF {$qn > 50} {
+        $LOCAL qn {50};
+    };
+    Warn {test};
     Info {qn_before_level: $qn_before_level, qn to use: $qn, curr level: $sk_curr_lv, target lv: $target_lv};
     Cmd {learn $sk from $Learn[master] with $qn;skills} {2};
 }
@@ -79,12 +84,77 @@
     #MATH qn {($js - 1) / $js_p_qn};
     
     #IF {$qn > $qn_before_level && ($sk_curr_lv >= 100 || $sk_curr_lv + 1 == $target_lv)} {
-        #LOCAL qn {$qn_before_level};
+        #LOCAL qn @Min{$qn;$qn_before_level};
     };
+    
+    #LOCAL qn @Min{$qn;50};
     Info {qn_before_level: $qn_before_level, qn to use: $qn, curr level: $sk_curr_lv, target lv: $target_lv};
     Cmd {learn $sk from $Learn[master] with $qn} {1};
     Cmd {skills} {1};
 }
+
+
+#ALIAS learn_from_master {
+    #LOCAL js {%1};
+    #IF {"$js" == ""} {
+        #LOCAL js $vitals[精神_max];
+    };
+
+    #LOCAL do_res {%2};
+    #IF {"%2" == ""} {
+        #LOCAL do_res {1};
+    };
+
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
+
+    Info {sk: $sk, target lv: $target_lv};
+
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    Info {qn_before_level: $qn_before_level, curr level: $sk_curr_lv, target lv: $target_lv};
+
+    #IF {"$qn_before_level" == "0"} {
+        #IF {$sk_curr_lv >= 100 && "$do_res" == "1"} {
+            Cmd {research $sk $xunhuan[qn_per_res]} {1};
+            #RETURN {};
+        };
+        #ELSEIF {$sk_curr_lv + 1 == $target_lv} {
+            Cmd {learn $sk from $Learn[master] with 1} {1};
+            #RETURN {};
+        };
+    };
+
+    #LOCAL multiple_before_level {};
+    #MATH multiple_before_level {$qn_before_level / 50};
+
+    #LOCAL multiple_allowed_by_js {};
+    #LOCAL js_per_fifty_learn {};
+    #MATH js_per_fifty_learn {$js_p_qn * 50};
+    #MATH multiple_allowed_by_js {($js - 1) / $js_per_fifty_learn};
+
+    #LOCAL m {@Min{$multiple_allowed_by_js;$multiple_before_level}};
+
+    Info {qn_before_level: $qn_before_level, m: $m, qn to use: $qn, curr level: $sk_curr_lv, target lv: $target_lv};
+    
+    #IF {$m > 0} {
+        #$m {
+            Cmd {learn $sk from $Learn[master] with 50} {1};
+        };
+    };
+    #ELSE {
+        Cmd {learn $sk from $Learn[master] with $qn_before_level} {1};
+    };
+    Cmd {skills} {1};
+}
+
+
 
 Info {开启学习模块};
 Cmd {skills;score;research literate 1} {3};

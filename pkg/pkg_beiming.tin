@@ -2,6 +2,9 @@
 #NOP 这个是适合比较高级的账号在中门站撸。
 
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
 
 #VARIABLE {xi_count} {0};
 #VARIABLE {to_yun} {false};
@@ -12,23 +15,26 @@
 };
 
 #ACTION {^门开了，从里面走出来一名金衣剑客。$} {
-    #IF {$vitals[气血] < $vitals[气血_max] * 0.9} {
-        #RETURN {};
+    #IF {$vitals[气血] > $vitals[气血_max] * 0.9} {
+        Cmd {#3 exert xi wu shi} {3};
     };
+}
 
-    Cmd {#8 exert xi jia ding} {8};
-} {5};
-
-#ACTION {^门开了，从里面走出来一名红衣武士。$} {
-    #IF {$vitals[气血] < $vitals[气血_max] * 0.9} {
-        #RETURN {};
+#ACTION {在门上敲了几下。$} {
+    #IF {$vitals[气血] > $vitals[气血_max] * 0.9} {
+        #TICKER temp_tker_xi {
+            Cmd {#3 exert xi wu shi} {3};
+        } {0.1};
+        #DELAY 0.4 {
+            #UNTICKER temp_tker_xi;
+        };
     };
-    Cmd {#10 exert xi wu shi} {8};
 } {5};
 
 
 #ACTION {^你要服用哪种药？$} {
-    #class beiming kill;
+    Warn {药用完了。停手。};
+    #class beiming KILL;
 } {5};
 
 #ACTION {^金衣剑客转身走了进去。$} {
@@ -44,7 +50,12 @@
 
 
 #ACTION {^门又关上了。$} {
-    Cmd {apply xiao-xingxue} {1};
+    #IF {$vitals[气血%] < 100} {
+        Cmd {
+            apply xiao-xingxue;
+            apply xiao-xingxue;
+        } {1};
+    };
 } {5};
 
 
@@ -62,15 +73,12 @@
 } {5};
 
 
-#EVENT {VARIABLE UPDATED vitals[内力_max]} {
-    #ECHO {#EVENT {VARIABLE UPDATED vitals[内力_max]}};
-
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
     #IF {$vitals[气血%] < 100} {
         Cmd {apply xiao-xingxue} {1};
-    } {
-        #IF {$Beiming[to_yun] && $vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
-            Cmd {exert yun} {1};
-        };
+    };
+    #ELSEIF {$Beiming[to_yun] && $vitals[气血] == $vitals[气血_max] && $vitals[内力] >= $vitals[内力_max]} {
+        Cmd {exert yun} {1};
     };
 
     #LOCAL {target} {0};
@@ -78,11 +86,14 @@
     #MATH {target} {$score[根骨] * 150};
     #math diff {$target - $vitals[内力_max]};
 
-    #IF {$diff == 0} {
-        #CLASS beiming kill;
+    #IF {"$diff" == "0"} {
+        #CLASS beiming KILL;
         #TICKER {ticker_feedback_loop} {hp;} {15};
         #RETURN {};
     };
-    #SHOWME {目标最大内力：$target};
-    say 还差$diff;
+    Info {目标最大内力：$target, xi_count: $Beiming[xi_count]};
+    Cmd {say 还差$diff} {1};
 };
+
+
+Cmd {score;hp} {2};

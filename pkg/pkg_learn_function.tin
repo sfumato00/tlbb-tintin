@@ -1,4 +1,81 @@
 #NOP functions used by learn
+#CLASS stats read {./pkg/pkg_stats.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+
+#ALIAS learn_from_master {
+    Warn {debug};
+    #LOCAL js {%1};
+    #IF {"$js" == ""} {
+        #LOCAL js $vitals[精神_max];
+    };
+
+    #LOCAL do_res {%2};
+    #IF {"%2" == ""} {
+        #LOCAL do_res {1};
+    };
+
+    #IF {$vitals[饮水] < $vitals[饮水_max]} {
+        Cmd {drink tong} {1};
+    };
+
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
+
+    Info {sk: $sk, target lv: $target_lv};
+
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    Info {qn_before_level: $qn_before_level, curr level: $sk_curr_lv, target lv: $target_lv};
+
+    #IF {"$qn_before_level" == "0"} {
+        #IF {$sk_curr_lv >= 100 && "$do_res" == "1"} {
+            Cmd {research $sk $xunhuan[qn_per_res]} {1};
+            #RETURN {};
+        };
+        #ELSEIF {$sk_curr_lv < 100 || $sk_curr_lv + 1 == $target_lv} {
+            Cmd {learn $sk from $Learn[master] with 1} {1};
+            #RETURN {};
+        };
+    };
+
+    #LOCAL multiple_before_level {};
+    #MATH multiple_before_level {$qn_before_level / 50};
+
+    #LOCAL multiple_allowed_by_js {};
+    #LOCAL js_per_fifty_learn {};
+    #MATH js_per_fifty_learn {$js_p_qn * 50};
+    #MATH multiple_allowed_by_js {($js - 1) / $js_per_fifty_learn};
+
+    #LOCAL m {@Min{$multiple_allowed_by_js;$multiple_before_level}};
+    
+    Info {qn_before_level: $qn_before_level, m: $m, curr level: $sk_curr_lv, target lv: $target_lv};
+    
+    #IF {$m > 0} {
+        #$m {
+            Cmd {learn $sk from $Learn[master] with 50} {1};
+        };
+    };
+    #ELSE {
+        
+        #LOCAL qn {1};
+        #MATH qn {($js - 1) / $js_p_qn};
+        #LOCAL next_level {1};
+        #MATH next_level {$qn_before_level + 1};
+        Warn {qn_before_level: $qn_before_level, qn: $qn, js: $js, js_p_qn: $js_p_qn};
+        #LOCAL qn {@Min{$next_level;$qn}};
+        
+        Cmd {learn $sk from $Learn[master] with $qn} {1};
+        #LOCAL remaining_js {0};
+        #MATH remaining_js {$js}
+    };
+}
+
 
 #FUNCTION GetMinQnBeforeLevel {
     #LOCAL level %1;
@@ -24,7 +101,7 @@
     #FOREACH {$Learn[skills][%*]} {_skill} {
         #LOCAL sk {*_skill[+1]};
         #LOCAL target_lv {$_skill[+1]};
-        Info {sk: $sk, target_lv: $target_lv};
+        #NOP Info {sk: $sk, target_lv: $target_lv};
         #IF {"$skills[$sk]" == "" || $skills[$sk][lv] < $target_lv} {
             Warn {RETURN: sk: $sk, target_lv: $target_lv};
             #RETURN {$_skill};

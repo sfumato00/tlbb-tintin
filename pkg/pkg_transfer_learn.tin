@@ -6,32 +6,43 @@
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS learn_function READ {./pkg/pkg_learn_function.tin};
-#CLASS learn READ {./pkg/pkg_new_learn.tin};
+#CLASS stats read {./pkg/pkg_stats.tin};
+
 
 #EVENT {VARIABLE UPDATED vitals[last_updated]} {
-    #IF {"$Busy[busy]" == "0"} {
-        restore;
-
-        #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
-        #IF {$xiqi > 0 && $xiqi <= $vitals[内力]} {
-            Cmd {xiqi $xiqi} {1};
-        };
-        #ELSEIF {$xiqi > 0 && $xiqi > $vitals[内力]} {
-            $LOCAL xq {};
-            #MATH xq {$vitals[内力] / 20 * 20};
-            Cmd {xiqi $xq};
-        }
-        learn_from_master_no_research $vitals[精神_max];
-    };
+    feedback_loop;
 }
 
-#TICKER {ticker_feedback_loop} {hp} {2};
 
-#IF {$xunhuan[min_restore] > 0} {} {
-    Error {必须设置最小回复量！！};
-};
+#ALIAS feedback_loop {
+    #LOCAL xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #IF {$xiqi > $vitals[内力]} {
+        #LOCAL xq {};
+        #MATH xq {$vitals[内力] / 20 * 20};
+        #IF {$xq > 0} {
+            Cmd {xiqi $xq} {1};
+        };
+        #RETURN {};
+    };
+    #IF {$xiqi > 0 && $xiqi <= $vitals[内力]} {
+        Cmd {xiqi $xiqi} {1};
+    };
+    
+    learn_from_master {$vitals[精神_max]} {1};
+}
 
-Cmd {hp} {1};
+#TICKER {ticker_feedback_loop} {
+    #LOCAL count @GetCommandCnt{};
+    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+    #IF {$count < 39} {
+        Cmd {skills;hp} {1};
+    };
+} {2};
+
+#VARIABLE {Busy[busy]} {0};
+#VARIABLE {Busy[next_check]} {0};
+
+Cmd {skills;score;research literate 1} {3};
 
 
 

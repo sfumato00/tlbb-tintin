@@ -23,5 +23,3 @@
 }
 
 Info {开启师父模块};
-Cmd {enable;score} {3};
-#VARIABLE {Busy[next_check]} {0};

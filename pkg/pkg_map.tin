@@ -170,9 +170,16 @@
             {path} {#2 s}
             {dist} {2}
         }
+        {菩提院 north 和 south} {
+            {path} {e;#2 n;e;n}
+            {dist} {5}
+        }
     }
     {菩提院 north 和 south} {
-
+        {法堂 south、east 和 west} {
+            {path} {s;w;#2 s;w}
+            {dist} {5}
+        }
     }
     {二祖庵庵门 south 和 east} {
         {山道 southeast、southwest 和 northup} {
@@ -180,16 +187,14 @@
             {dist} {6}
         }
         {卓锡泉 south 和 north} {
-            {path} {二祖庵庵门-卓溪泉}
+            {path} {open door;l;n}
             {dist} {2}
-            {function} {1}
         }
     }
     {卓锡泉 south 和 north} {
         {二祖庵庵门 south 和 east} {
-            {path} {卓溪泉-二祖庵庵门}
-            {dist} {2}
-            {function} {1}
+            {path} {open door;l;s}
+            {dist} {3}
         }
         {大殿 south、east 和 west} {
             {path} {n}
@@ -285,7 +290,7 @@
     }
     {渔人码头 east} {
         {小岛边 north、east 和 west} {
-            {path} {#5 e;eu;ed;#2 n;e;w;s;n;e;ne;#2 e}
+            {path} {#5 e;eu;ed;#2 n;e;w;s;n;e;ne;e}
             {dist} {17}
         }
         {太湖边 northwest} {
@@ -298,6 +303,16 @@
         {渔人码头 east} {
             {path} {w;sw;se;w;#3 s;wu;wd;#5 w}
             {dist} {14}
+        }
+        {望燕亭 north 和 west} {
+            {path} {e}
+            {dist} {1}
+        }
+    }
+    {望燕亭 north 和 west} {
+        {小岛边 north、east 和 west} {
+            {path} {w}
+            {dist} {1}
         }
     }
     {洛阳中心 south、north、east、west 和 up} {

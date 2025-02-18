@@ -219,20 +219,16 @@
 }
 
 #ALIAS {go} {
-    #SWITCH {"%1"} {
-
-        #CASE {"off"} {
-            #ECHO {关闭旅行模块};
+    #IF {"%1" == ""} {
+        Info {开启旅行模块};
+        #IF {"$env[room]" == ""} {
+            Cmd {l} {1};
+        };
+        #CLASS graph READ {./pkg/pkg_map_graph.tin};
+    };
+    #ELSEIF {"%1" == "off"} {
+        #ECHO {关闭旅行模块};
             #CLASS graph KILL;
-        };
-
-        #DEFAULT {
-            Info {开启旅行模块};
-            #IF {"$env[room]" == ""} {
-                Cmd {l} {1};
-            };
-            #CLASS graph READ {./pkg/pkg_map_graph.tin};
-        };
     };
 }
 
@@ -270,7 +266,7 @@
     #SWITCH {"%1"} {
 
         #CASE {"off"} {
-            #ECHO {关闭传功读书模块};
+            Info {关闭传功读书模块};
             #CLASS transfer_du KILL;
         };
 
@@ -281,9 +277,43 @@
     };
 }
 
-#alias do_zhua {
-    #class zhua READ {./pkg/pkg_zhua.tin};
+
+#alias xfer_master {
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            Info {关闭传功读书模块};
+            #CLASS transfer_master KILL;
+        };
+
+        #DEFAULT {
+            Info {开启传功读书模块};
+            #CLASS transfer_master READ {./pkg/pkg_transfer_master.tin};
+        };
+    };
+}
+
+#alias zhua {
+    #IF {"%1" == ""} {
+        Info {开启抓NPC模块};
+        #class zhua READ {./pkg/pkg_zhua.tin};
+    };
+    #ELSEIF {"%1" == "off"} {
+        Info {关闭抓NPC模块};
+        #CLASS zhua KILL;
+    };
 };
+
+#ALIAS path {
+    #IF {"%1" == ""} {
+        Info {开启简易路径模块};
+        #CLASS paths READ {./pkg/pkg_path.tin};
+    };
+    #ELSEIF {"%1" == "off"} {
+        Info {关闭简易路径模块};
+        #CLASS paths KILL;
+    };
+}
 
 #ALIAS {dazuo_max} {
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
@@ -306,23 +336,3 @@
     #VARIABLE {xunhuan[qn_per_res]} {@ParseFlakyNumber{%1}};
 } {5};
 
-
-#ALIAS sx {
-    go;
-    goto {神憩小舍 east、southdown、northwest 和 up};
-}
-
-#ALIAS ez {
-    go;
-    goto {二祖庵庵门 south 和 east};
-}
-
-#ALIAS xx {
-    go;
-    goto {中心广场 north、south、east 和 west};
-}
-
-#ALIAS ly {
-    go;
-    goto {洛阳中心 south、north、east、west 和 up};
-}

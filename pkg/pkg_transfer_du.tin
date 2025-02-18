@@ -27,17 +27,19 @@
     #LOCAL neili {$vitals[内力]};
     #MATH neili {$neili - $xiqi};
 
+    #LOCAL js {$vitals[精神_max]};
+    #MATH js {$js / $Du[min_js] * $Du[min_js]};
+
     #LOCAL count @GetCommandCnt{};
     Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
     
-    #WHILE {$count < 48 && $neili > $xiqi_full + 1000} {
+    #WHILE {$count < 48 && $neili > $xiqi_full + $js * 5} {
         Cmd {tuna $vitals[精神_max];xiqi $xiqi_full} {2};
         #MATH neili {$neili - $xiqi_full};
         #MATH count {$count + 2};
     };
-    #LOCAL js {$vitals[精神_max]};
-    #MATH js {$js / 54 * 54};
-    Cmd {du book $js} {2};
+    
+    Cmd {du $Du[book] $js} {2};
     #VARIABLE {Busy[busy]} {1};
     #MATH Busy[next_check] {@GetEpoch{} + 2};
 }
