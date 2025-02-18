@@ -1,0 +1,26 @@
+#NOP path aliases
+
+#ALIAS sx {
+    go;
+    goto {神憩小舍 east、southdown、northwest 和 up};
+}
+
+#ALIAS ez {
+    go;
+    goto {二祖庵庵门 south 和 east};
+}
+
+#ALIAS xx {
+    go;
+    goto {中心广场 north、south、east 和 west};
+}
+
+#ALIAS ly {
+    go;
+    goto {洛阳中心 south、north、east、west 和 up};
+}
+
+#ALIAS dl {
+    go;
+    goto {十字广场 north、south、east、west 和 up};
+}
