@@ -146,9 +146,9 @@
             {path} {se;s;wd;s;sd;se}
             {dist} {6}
         }
-        {二祖庵庵门 south 和 east} {
-            {path} {sw;wu;su;sw;su;w}
-            {dist} {6}
+        {二祖庵庵门 north、south 和 east} {
+            {path} {sw;wu;su;sw;su;w;open door;l}
+            {dist} {8}
         }
         {大雄宝殿 north、east、southdown 和 west} {
             {path} {#2 nu;#3 n;#2 nu;#2 n;#2 nu}
@@ -186,25 +186,25 @@
             {path} {e;nd;ne;nd;ed;ne}
             {dist} {6}
         }
-        {卓锡泉 south 和 north} {
-            {path} {open door;l;n}
+        {大殿 south、east 和 west} {
+            {path} {open door;#2 n}
+            {dist} {3}
+        }
+    }
+    {二祖庵庵门 north、south 和 east} {
+        {山道 southeast、southwest 和 northup} {
+            {path} {e;nd;ne;nd;ed;ne}
+            {dist} {6}
+        }
+        {大殿 south、east 和 west} {
+            {path} {#2 n}
             {dist} {2}
         }
     }
-    {卓锡泉 south 和 north} {
-        {二祖庵庵门 south 和 east} {
-            {path} {open door;l;s}
-            {dist} {3}
-        }
-        {大殿 south、east 和 west} {
-            {path} {n}
-            {dist} {1}
-        }
-    }
     {大殿 south、east 和 west} {
-        {卓锡泉 south 和 north} {
-            {path} {s}
-            {dist} {1}
+        {二祖庵庵门 north、south 和 east} {
+            {path} {s;open door;s}
+            {dist} {3}
         }
     }
     {藏经阁前 west} {
