@@ -6,13 +6,16 @@
     #LOCAL msg %1;
     #LOCAL level %2;
     #LOCAL file_path %3;
-    #ECHO {@Timestamp{} [%2] $msg [$file_path] [@_logMsg{$file_path;$level;$msg}] };
+    #ECHO {@Timestamp{} [%2] $msg [$file_path]: @_logMsg{$file_path;$level;$msg} };
 };
 
 #ALIAS {LogLine} {
     #LOCAL level {%1};
     #LOCAL file_path {%2};
-    #ECHO {@Timestamp{} [%2] $msg [$file_path] [@_logLine{$file_path;$level}] };
+
+    #IF {@_logLine{$file_path;$level}} {
+        #ECHO {@Timestamp{} [$file_path] Logged line.};
+    };
 }
 
 #ALIAS buffer_dump {

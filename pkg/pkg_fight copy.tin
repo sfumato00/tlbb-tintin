@@ -8,10 +8,8 @@
 #CLASS remote_control READ {./pkg/pkg_remote_control.tin};
 #CLASS const READ {./const.tin};
 #CLASS utils READ {./pkg/pkg_utils.tin};
-#CLASS print READ {./pkg/pkg_print.tin};
-#CLASS gag READ {./pkg/pkg_gag.tin};
 
-#IF {"$Fight[downexp]" == "1"} {
+#IF {"$Fight[Downexp]" == "1"} {
     #CLASS Downexp READ {./pkg/pkg_downexp.tin};
 };
 
@@ -19,33 +17,30 @@
     #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
 };
 
-#VARIABLE {Fight[epoch][start]} {0};
+#GAG {似乎有些疲惫，但是仍然十分有活力。 )};
+#GAG {动作似乎开始有点不太灵光，但是仍然有条不紊。 )};
+#GAG {气喘嘘嘘，看起来状况并不太好。 )};
+#GAG {看起来可能有些累了。 )};
+#GAG {看起来充满活力，一点也不累。 )};
+#GAG {拿起水桶咕噜噜地喝了几口凉水。};
+
+#VARIABLE {fight_stats} {
+    {epoch} {
+        {start} {0}
+    }
+};
 
 #VARIABLE {MIN_IN_SECOND} {60};
 #VARIABLE {MIN_IN_MICRO_SECOND} {60M};
 
-#ALIAS do_eat_drink {
-    Cmd {stop} {1};
-    #CLASS surrender READ {./pkg/pkg_surrender.tin};
-    AwaitSurrender {do_eat_drink_callback};
-};
-
-#ALIAS do_eat_drink_callback {
-    #LOCAL m {};
-    #LOCAL n {};
-    #MATH m {($vitals[食物_max] - vitals[食物])/100};
-    #MATH n {($vitals[饮水_max] - vitals[饮水])/10};
-    #LOOP 1 $m _ {Cmd {eat pig} {$m}};
-    #LOOP 1 $n _ {Cmd {drink tong} {$n}};
-    #CLASS surrender KILL;
-    init_fight;
-};
-
 #ALIAS {feedback_loop} {
+    Cmd {say @CalNpcMsg{}} {1};
+    #IF {$vitals[饮水] < $vitals[饮水_max]} {
+        Cmd {drink tong} {1};
+    };
 
-    #IF {$vitals[饮水] < 10} {
-        do_eat_drink;
-        #RETURN {};
+    #IF {$vitals[食物] < $vitals[食物_max]} {
+        Cmd {eat pig} {1};
     };
 
     #LOCAL {hp_percentage} {0};
@@ -57,14 +52,24 @@
             buffer_dump {fight};
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
         };
-        emergency_quit;
+
+        #EVENT {SESSION DISCONNECTED} {
+            buffer_dump {fight_low_hp};
+            #UNTICKER {ticker_quit};
+        };
+
+        quit;
+        #ticker {ticker_quit} {
+            quit;
+        } {1};
     };
 
     #IF {$vitals[气血%] >= 100 && $hp_percentage >= 70 && $vitals[饮水] > 0} {
         fight_npcs;
     };
 
-    #LOCAL time {};
+
+
     #FORMAT time {%U};
 
     #LOCAL {t_total} {0};
@@ -82,16 +87,16 @@
     #LOCAL {exp_mean} {0};
     #LOCAL {qn_mean} {0};
 
-    #IF {$Fight[epoch][start] == 0} {
+    #IF {$fight_stats[epoch][start] == 0} {
         init_fight;
-        #VARIABLE {Fight[character]} {$username};
+        #VARIABLE {fight_stats[character]} {$username};
 
-        #VARIABLE {Fight[epoch]} {
+        #VARIABLE {fight_stats[epoch]} {
             {start} {$time};
             {last} {$time};
         };
 
-        #VARIABLE {Fight[经验]} {
+        #VARIABLE {fight_stats[经验]} {
             {start} {$exp};
             {last} {$exp};
             {velocity} {
@@ -99,7 +104,7 @@
                 {mean} {0};
             };
         };
-        #VARIABLE {Fight[潜能]} {
+        #VARIABLE {fight_stats[潜能]} {
             {start} {$qn};
             {last} {$qn};
             {velocity} {
@@ -109,33 +114,34 @@
         };
     };
 
-    #MATH {t_delta} {$time - $Fight[epoch][last]};
-    #MATH {t_total} {$time - $Fight[epoch][start]};
+    #MATH {t_delta} {$time - $fight_stats[epoch][last]};
+    #MATH {t_total} {$time - $fight_stats[epoch][start]};
 
-    #MATH {exp_delta} {$exp - $Fight[经验][last]};
-    #MATH {qn_delta} {$qn - $Fight[潜能][last]};
+    #MATH {exp_delta} {$exp - $fight_stats[经验][last]};
+    #MATH {qn_delta} {$qn - $fight_stats[潜能][last]};
 
     #MATH {exp_velocity} {$exp_delta * $MIN_IN_MICRO_SECOND / $t_delta};
     #MATH {qn_velocity} {$qn_delta * $MIN_IN_MICRO_SECOND / $t_delta};
 
-    #MATH {Fight[经验][velocity][mean]} {($exp - $Fight[经验][start]) * $MIN_IN_MICRO_SECOND / $t_total};
-    #MATH {Fight[潜能][velocity][mean]} {($qn - $Fight[潜能][start])  * $MIN_IN_MICRO_SECOND / $t_total};
+    #MATH {fight_stats[经验][velocity][mean]} {($exp - $fight_stats[经验][start]) * $MIN_IN_MICRO_SECOND / $t_total};
+    #MATH {fight_stats[潜能][velocity][mean]} {($qn - $fight_stats[潜能][start])  * $MIN_IN_MICRO_SECOND / $t_total};
 
-    #NOP #SHOWME {$time, $t_delta, $exp_delta, $exp_velocity, $Fight[经验][velocity][max], @Min{$Fight[经验][velocity][max];$exp_velocity}};
+    #NOP #SHOWME {$time, $t_delta, $exp_delta, $exp_velocity, $fight_stats[经验][velocity][max], @Min{$fight_stats[经验][velocity][max];$exp_velocity}};
 
-    #VARIABLE {Fight[经验][velocity][max]} {@Max{$Fight[经验][velocity][max];$exp_velocity}};
-    #VARIABLE {Fight[潜能][velocity][max]} {@Max{$Fight[潜能][velocity][max];$qn_velocity}};
+    #VARIABLE {fight_stats[经验][velocity][max]} {@Max{$fight_stats[经验][velocity][max];$exp_velocity}};
+    #VARIABLE {fight_stats[潜能][velocity][max]} {@Max{$fight_stats[潜能][velocity][max];$qn_velocity}};
 
-    #VARIABLE {Fight[epoch][last]} {$time};
-    #VARIABLE {Fight[经验][last]} {$exp};
-    #VARIABLE {Fight[潜能][last]} {$qn};
+    #VARIABLE {fight_stats[epoch][last]} {$time};
+    #VARIABLE {fight_stats[经验][last]} {$exp};
+    #VARIABLE {fight_stats[潜能][last]} {$qn};
 
     #NOP generate message;
     #LOCAL {duration_in_min} {0};
-    #MATH {duration_in_min} {$Fight[duration] / $MIN_IN_MICRO_SECOND};
+    #MATH {duration_in_min} {$fight_stats[duration] / $MIN_IN_MICRO_SECOND};
 
-    #FORMAT {exp_msg} {经验增速: %d, 最大 %d, 平均 %d} {$exp_velocity} {$Fight[经验][velocity][max]} {$Fight[经验][velocity][mean]};
-    #FORMAT {qn_msg} {潜能增速: %d, 最大 %d, 平均 %d} {$qn_velocity} {$Fight[潜能][velocity][max]} {$Fight[潜能][velocity][mean]};
+    #FORMAT {exp_msg} {经验增速: %d, 最大 %d, 平均 %d} {$exp_velocity} {$fight_stats[经验][velocity][max]} {$fight_stats[经验][velocity][mean]};
+    #FORMAT {qn_msg} {潜能增速: %d, 最大 %d, 平均 %d} {$qn_velocity} {$fight_stats[潜能][velocity][max]} {$fight_stats[潜能][velocity][mean]};
+
     Log {经验: $vitals[经验], 潜能, $vitals[潜能], $exp_msg, $qn_msg} {Info} {./log/fight_@GetDate{}_$username.log};
 
     #DELAY {0.1} {
@@ -161,7 +167,7 @@
     Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
     #CLASS safety READ {./pkg/pkg_safety.tin};
 
-    #VARIABLE {Fight[epoch][start]} {0};
+    #VARIABLE {fight_stats[epoch][start]} {0};
 
     #EVENT {VARIABLE UPDATED vitals[经验]} {
         feedback_loop;
@@ -220,6 +226,10 @@
             Cmd {hp} {1};
         };
     };
+
+    #FOREACH {$npc_list} {npc} {
+        #ECHO {npc: $npc};
+    };
 };
 
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {
@@ -240,5 +250,3 @@
 };
 
 #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
-
-#TICKER {ticker_disclaimer} {Cmd {say @CalNpcMsg{}} {1}} {60};

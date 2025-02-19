@@ -9,17 +9,11 @@
 #CLASS quit READ {./pkg/pkg_quit.tin};
 
 
-#TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
-
 #EVENT {VARIABLE UPDATED env[last_login]} {
-    FetchDownexpState;
-
-    Cmd {hp;enable} {2};
-
     #EVENT {VARIABLE UPDATED vitals[last_updated]} {
         #IF {$vitals[气血] > $vitals[气血_max] * 0.3} {
             #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
-            #IF {$vitals[经验] > $downexp[threshold_exp]} {
+            #IF {$vitals[经验] > $Downexp[threshold_exp]} {
                 enable dodge duan-steps;
                 enable move duan-steps;
                 #CLASS safety KILL;
@@ -30,7 +24,7 @@
             #ELSE {
                 #CLASS bank READ {./pkg/pkg_bank.tin};
                 #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-                    
+
                     #IF {$Travel[trip_complete]} {
                         #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
                         Cmd {check} {1};
@@ -70,8 +64,8 @@
 
 #ALIAS {death_handler} {
     #LOCAL {exp_to_erase} {0};
-    #IF {"$downexp[target_exp]" != ""} {
-        #MATH {exp_to_erase} {$vitals[经验] - $downexp[target_exp]};
+    #IF {"$Downexp[target_exp]" != ""} {
+        #MATH {exp_to_erase} {$vitals[经验] - $Downexp[target_exp]};
     };
 
     #ECHO {降 $exp_to_erase 经验};
@@ -86,10 +80,10 @@
 } {5};
 
 #EVENT {VARIABLE UPDATED vitals[hook_downexp]} {
-    FetchDownexpState;
-    
-    #IF {"$State[downexp_on]" != "1" && $vitals[经验] >= $downexp[threshold_exp]} {
-        #ECHO {当前经验 $vitals[经验], 大于 $downexp[threshold_exp]。降经验开始};
+    #NOP FetchDownexpState;
+
+    #IF {"$State[downexp_on]" != "1" && $vitals[经验] >= $Downexp[threshold_exp]} {
+        #ECHO {当前经验 $vitals[经验], 大于 $Downexp[threshold_exp]。降经验开始};
         UpdateDownexpState 1;
         quit;
     };
@@ -110,7 +104,7 @@
                     #CASE {" southdown 和 northup"} {Cmd {nu} {1}};
                     #CASE {" northeast 和 southdown"} {Cmd {climb mountain} {1}};
                     #CASE {" north 和 southdown"} {Cmd {climb mountain} {1}};
-                };                
+                };
             };
             #CASE {"山顶"} {
                 #UNEVENT {VARIABLE UPDATED env[room_updated]};
@@ -126,12 +120,12 @@
                             Cmd {drink tong} {1};
                             move_back_to_fight_room_handler;
                         };
-                    };                    
+                    };
                 };
                 #delay {0.2} {
                     Cmd {jump down} {1};
                 };
-            };                        
+            };
         };
     };
     Cmd {nu;wu} {2};
@@ -140,7 +134,7 @@
 
 #ALIAS {start_stuck_check} {
     #VARIABLE env[maxSecondsAllowedRemainInTheSameRoom] {30};
-    
+
     #REGEXP {%1} {\d+} {
         #VARIABLE env[maxSecondsAllowedRemainInTheSameRoom] {%1};
     };
@@ -150,9 +144,10 @@
     #TICKER {ticker_stuck_check} {
         #LOCAL duration_remained_in_room {};
         #MATH duration_remained_in_room {@GetEpoch{} - $env[room_updated]};
-    
+
         #ECHO {在当前房间时间: $duration_remained_in_room 秒。};
         #IF {$duration_remained_in_room > $env[maxSecondsAllowedRemainInTheSameRoom]} {
+            UpdateDownexpState 0;
             quit;
         };
     } {12};
@@ -166,7 +161,4 @@
 #ALIAS UpdateDownexpState {
     #gts #VARIABLE {State[downexp_on]} {%1};
     #VARIABLE {State[downexp_on]} {%1};
-}
-
-#ALIAS FetchDownexpState {
 }

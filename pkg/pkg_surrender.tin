@@ -1,0 +1,45 @@
+#NOP surrender module
+
+#CLASS command READ {./pkg/pkg_command.tin};
+
+#ALIAS AwaitSurrender {
+    #VARIABLE {Surrender[callback]} {%1};
+    Cmd {surrender} {1};
+    #TICKER {ticker_surrender} {
+        Cmd {dazuo 1} {1};
+    } {1};
+    #DELAY 10 {
+        #UNTICKER {ticker_surrender};
+        #IF {"$Surrender[callback]" != ""} {
+            Cmd {$Surrender[callback]};
+        };
+    };
+};
+
+#EVENT {VARIABLE UPDATED State[is_fight]} {
+    #IF {"$State[is_fight]" == "0"} {
+        #UNTICKER {ticker_surrender};
+        Cmd {$Surrender[callback]};
+        #UNVARIABLE {Surrender[callback]};
+    };
+}
+
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "0"} {
+        #VARIABLE {State[is_fight]} {0};
+    };
+};
+
+#ACTION {^战斗中不能练内功，会走火入魔。} {
+    #VARIABLE {State[is_fight]} {1};
+} {1};
+
+#ACTION {^你最少要花 10 点「气」才能练功。$} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {0};
+} {5};
+
+#ACTION {^你必须先用 enable 选择你要用的内功心法。$} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {0};
+} {5};
