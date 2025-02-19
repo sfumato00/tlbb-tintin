@@ -1,4 +1,4 @@
-#NOP 
+#NOP
 
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS cn_num READ {./pkg/pkg_cn_num.tin};
@@ -88,27 +88,45 @@
     #NOP #ECHO {<acf>before: $text};
     #REPLACE {text} {{((一|二|三|四|五|六|七|八|九|十|百|千|万)+(个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口|块|粒){1}){1}}} {};
     #NOP #ECHO {<acf>after: $text};
-    #RETURN $text;
+    #RETURN {$text};
+};
+
+#FUNCTION ExtractCnNum {
+    #LOCAL text {%1};
+    #LOCAL cn_num {};
+    #REPLACE {text} {{((个|把|柄|只|枚|颗|包|滴|本|盒|朵|条|双|件|副|些|根|碗|张|支|口|块|粒){1}(.*)+$){1}}} {};
+    #CLASS cn_num READ {./pkg/pkg_cn_num.tin};
+    #LOCAL ret @CnToInt{$text};
+    #CLASS cn_num KILL;
+    #RETURN {$ret};
 };
 
 #ACTION {^  %S(%+)} {
     #LOCAL cn {%1};
     #LOCAL en_id {%2};
     #FORMAT en_id {%l} {$en_id};
-    
+
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
     #LOCAL key {$cn_name-$en_id};
 
+    #LOCAL quantity @ExtractCnNum{$cn};
+
     #IF {"$IS_VALUABLES[$key]" != ""} {
-        #MATH {valuable[$en_id]} {$valuable[$en_id] + 1};
+        #IF {"$valuable[$en_id]" == ""} {
+            #VARIABLE {valuable[$en_id]} {0};
+        };
+        #MATH {valuable[$en_id]} {$valuable[$en_id] + $quantity};
     };
-    
+
     #IF {"$IS_SELLABLE[$key]" != "" } {
-        #MATH {sellable[$en_id]} {$sellable[$en_id] + 1};
+        #IF {"$sellable[$en_id]" == ""} {
+            #VARIABLE {sellable[$en_id]} {0};
+        };
+        #MATH {sellable[$en_id]} {$sellable[$en_id] + $quantity};
     };
 
     #IF {$IS_MONEY[$en_id] > 0} {
-        #VARIABLE {money[$en_id]} {1};
+        #VARIABLE {money[$en_id]} {$quantity};
     };
 
     #MATH {Items[cnt]} {$Items[cnt] + 1};
@@ -118,25 +136,22 @@
     #LOCAL cn {%1};
     #LOCAL en_id {%2};
     #FORMAT en_id {%l} {$en_id};
-    
+
     #LOCAL cn_name {@RemoveChineseQuantifier{$cn}};
     #LOCAL key {$cn_name-$en_id};
 
-    #IF {"$IS_VALUABLES[$key]" != ""} {
-        get $en_id;
-    };
+    #LOCAL n @ExtractCnNum{$cn};
 
-    #IF {"$IS_SELLABLE[$key]" != "" } {
-        get $en_id;
+    #IF {"$IS_VALUABLES[$key]" != "" || "$IS_SELLABLE[$key]" != ""} {
+        #LOOP 1 $n _ {Cmd {get $en_id} {1}};
     };
-
-    #IF {$IS_MONEY[$en_id] > 0} {
+    #ELSEIF {$IS_MONEY[$en_id] > 0} {
         get $en_id;
     };
 };
 
 
-#ALIAS {update_items} {
+#ALIAS {UpdateInventory} {
     #VARIABLE {money} {};
     #VARIABLE {sellable} {};
     #VARIABLE {valuable} {};
@@ -146,7 +161,7 @@
 
 #ALIAS sell_all {
     #FOREACH {*sellable[%*]} {x} {
-        
+
         #LOCAL n $sellable[$x];
         #LOOP 1 $n _ {
             Cmd {sell $x} {1};
@@ -161,7 +176,7 @@
         #LOOP 1 $n _ {
             Cmd {give $o $x} {1};
         };
-        
+
     };
     #FOREACH {*valuable[%*]} {x} {
         #LOCAL n $sellable[$x];
@@ -176,4 +191,3 @@
         };
     };
 }
-
