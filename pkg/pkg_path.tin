@@ -7,7 +7,7 @@
 
 #ALIAS ez {
     go;
-    goto {二祖庵庵门 south 和 east};
+    goto {二祖庵庵门 north、south 和 east};
 }
 
 #ALIAS xx {

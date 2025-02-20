@@ -4,9 +4,9 @@
 #CLASS cn_num READ {./pkg/pkg_cn_num.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 
-#action {^你的名气增加了：%1点。$} {
-
+#action {^你的名气} {
     Cmd {ask master about 名气} {1};
+    tell erzuer iku;
 };
 
 #ACTION {^%u重新连线回到这个世界。} {
