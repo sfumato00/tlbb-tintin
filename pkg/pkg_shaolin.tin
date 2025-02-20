@@ -6,14 +6,30 @@
 
 #action {^你的名气} {
     Cmd {ask master about 名气} {1};
-    tell erzuer iku;
+    Cmd {tell erzuer logout} {1};
 };
 
-#ACTION {^%u重新连线回到这个世界。} {
+#ACTION {重新连线回到这个世界。$} {
     Cmd {ask master about 任务} {1};
+    #DELAY 1 {
+        tell erzuer iku;
+        #DELAY 1 {
+            Cmd {ask master about 任务} {1};
+        };
+    };
 } {5};
 
-#TICKER {ticker_shaolin} {Cmd {ask master about 任务} {1}} {10};
+#ACTION {^%*连线进入这个世界。$} {
+    Cmd {ask master about 任务} {1};
+    #DELAY 1 {
+        tell erzuer iku;
+        #DELAY 1 {
+            Cmd {ask master about 任务} {1};
+        };
+    };
+}
+
+#TICKER {ticker_shaolin} {Cmd {ask master about 任务} {1};} {10};
 
 #ACTION {^你向玄生打听有关『名气』的消息。} {
     #ACTION {^玄生说道：你现在的名气是%u点。} {
@@ -23,9 +39,7 @@
         LogLine {Info} {./log/fame_$username.log};
         #UNACTION {^玄生说道：你现在的名气是%u点。};
         #IF {$fame > 20000} {
-            #CLASS shaolin KILL arg;
+            #CLASS shaolin KILL;
         };
     };
 }
-
-
