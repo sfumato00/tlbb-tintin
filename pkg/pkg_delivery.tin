@@ -5,7 +5,8 @@
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS map_functions READ {./pkg/pkg_map_functions.tin};
-#CLASS safety READ {./pkg/pkg_safety.tin};
+#CLASS quit READ {./pkg/pkg_quit.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 
 #ALIAS {go_deliver} {
     #EVENT {VARIABLE UPDATED env[travel_callback_hook]} {
@@ -22,7 +23,7 @@
 
     #LOCAL {cn_name} {%2};
     #VARIABLE {Delivery[npc]} {$NPC_NAME_CN_EN[$cn_name]};
-    Log {%0} {Info} {./log/delivery_$username.log}; 
+    Log {%0} {Info} {./log/delivery_$username.log};
     #IF {"$Delivery[npc]" == ""} {
         #LOCAL msg {无法识别的NPC: $cn_name};
         Log {$msg} {DEBUG} {./log/delivery_$username.log};
@@ -46,6 +47,7 @@
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
         };
     };
+    delivery_timeout;
     送快递;
 } {5};
 
@@ -53,24 +55,24 @@
     y;
 } {5};
 
-#ACTION {^你必须连线十秒后才能离开游戏。$} {#DELAY {1} {quit}};
-
 #ACTION {%*慢慢睁开眼睛，清醒了过来。} {
-    Log {%0} {Info} {./log/delivery_$username.log}; 
+    Log {%0} {Info} {./log/delivery_$username.log};
     Cmd {quit} {1};
 };
 
 #ACTION {^$Delivery[next_guy_cn]走了过来。$} {
-    give $Delivery[next_guy] $Delivery[npc];
+    Cmd {
+        give $Delivery[next_guy] $Delivery[npc];
+    } {2};
 };
 
 #ACTION {^你身上没有这样东西。$} {
-    quit;
+    Cmd {quit} {1};
 };
 
 #ACTION {^你给%*一位%*。} {
-    Log {%0} {Info} {./log/delivery_$username.log}; 
-    quit;
+    Log {%0} {Info} {./log/delivery_$username.log};
+    Cmd {quit} {1};
 };
 
 #ACTION {^这个方向没有出路。} {
@@ -80,16 +82,34 @@
     };
 };
 
-
 #ACTION {^这里没有这个人。$} {
-    quit;
+    Cmd {quit} {1};
 };
+
+#ALIAS delivery_timeout {
+    #DELAY 25 {
+        #TICKER {ticker_timeout} {quit} {1};
+    };
+};
+
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "1"} {
+        #DELAY 1 {
+            Cmd {
+                give $Delivery[next_guy] $Delivery[npc];
+                quit;
+            } {2};
+        };
+    };
+}
+
+
 
 #EVENT {VARIABLE UPDATED env[room_updated]} {
     #IF {"$env[room]" == "城隍庙"} {
         buffer_dump {delivery};
         #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
-        quit;
+        Cmd {quit} {1};
     };
 
     #IF {"$env[room]" == "鬼门关"} {
@@ -102,9 +122,5 @@
 };
 
 
-#TICKER {发呆} {i;} {120};
 
-
-#ALIAS {ttt} {
-    #SHOW {守卫给你一位守卫。};
-} {5};
+#TICKER {ticker_stay} {l} {300};

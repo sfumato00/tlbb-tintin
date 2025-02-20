@@ -28,6 +28,11 @@
     #VARIABLE {Busy[busy]} {1};
 };
 
+#ACTION {^请不要一次输入太多的指令。} {
+    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
+    #VARIABLE {Busy[busy]} {1};
+}
+
 #ACTION {^你现在忙得很，不能移动。$} {
     #VARIABLE {Busy[last_check]} {@GetEpoch{}};
     #VARIABLE {Busy[busy]} {1};
