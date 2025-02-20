@@ -33,3 +33,8 @@
 #ACTION {^由於你的勤学苦读，你的悟性提高了。$} {
     Cmd {score} {1};
 };
+
+
+#EVENT {VARIABLE UPDATED enables[force]} {
+    #MATH {xunhuan[min_restore]} {$enables[force] / 10 + 10};
+}
