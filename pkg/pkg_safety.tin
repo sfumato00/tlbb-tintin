@@ -3,6 +3,7 @@
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS logging READ {./pkg/pkg_logging.tin};
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS quit READ {./pkg/pkg_quit.tin};
 
 #ACTION {^你死了。$} {
     buffer_dump {death};
@@ -15,10 +16,7 @@
         buffer_dump {kill};
         #UNTICKER {ticker_quit};
     };
-    quit;
-    #ticker {ticker_quit} {
-        quit;
-    } {1};
+    emergency_quit;
 };
 
 
@@ -33,3 +31,30 @@
         };
     };
 }
+
+#ALIAS {emergency_quit} {
+    #EVENT {SESSION DISCONNECTED} {
+        buffer_dump {emergency_quit};
+        #END;
+    };
+    #IF {"$env[last_login]" == "" && "$env[last_reconnect]" == ""} {
+        #VARIABLE attemp_quit_after {0};
+    };
+    #ELSEIF {"$env[last_reconnect]" == ""} {
+        #MATH attemp_quit_after {$env[last_login] + 9};
+    };
+    #ELSEIF {"$env[last_login]" == ""} {
+        #MATH attemp_quit_after {$env[last_reconnect] + 9};
+    };
+    #ELSE {
+        #VARIABLE attemp_quit_after {@Max{$env[last_reconnect];$env[last_login]} + 9};
+    };
+    #TICKER {ticker_quit} {
+        #IF {@GetEpoch{} >= $attemp_quit_after} {
+            Cmd {quit} {1};
+        };
+    } {0.2};
+    #IF {@GetEpoch{} >= $attemp_quit_after} {
+        Cmd {quit} {1};
+    };
+} {5};

@@ -13,17 +13,7 @@
     #VARIABLE {Busy[busy]} {0};
 } {1};
 
-#ACTION {^战斗中不能练内功，会走火入魔。} {
-    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
-    #VARIABLE {Busy[busy]} {0};
-} {1};
-
 #ACTION {^你上一个动作还没有完成} {
-    #VARIABLE {Busy[last_check]} {@GetEpoch{}};
-    #VARIABLE {Busy[busy]} {1};
-};
-
-#ACTION {^( 你上一个动作还没有完成，不能施用内功。)$} {
     #VARIABLE {Busy[last_check]} {@GetEpoch{}};
     #VARIABLE {Busy[busy]} {1};
 } {5};

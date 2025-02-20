@@ -7,9 +7,9 @@
 #CLASS quit READ {./pkg/pkg_quit.tin};
 #CLASS remote_control READ {./pkg/pkg_remote_control.tin};
 #CLASS const READ {./const.tin};
-#CLASS utils READ {./pkg/pkg_utils.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS gag READ {./pkg/pkg_gag.tin};
+#CLASS math READ {./pkg/pkg_math.tin};
 
 #IF {"$Fight[downexp]" == "1"} {
     #CLASS Downexp READ {./pkg/pkg_downexp.tin};
@@ -33,8 +33,9 @@
 #ALIAS do_eat_drink_callback {
     #LOCAL m {};
     #LOCAL n {};
-    #MATH m {($vitals[食物_max] - vitals[食物])/100};
-    #MATH n {($vitals[饮水_max] - vitals[饮水])/10};
+    #MATH m {(($vitals[食物_max] - $vitals[食物])/100) + 1};
+    #MATH n {(($vitals[饮水_max] - $vitals[饮水])/30) + 1};
+
     #LOOP 1 $m _ {Cmd {eat pig} {$m}};
     #LOOP 1 $n _ {Cmd {drink tong} {$n}};
     #CLASS surrender KILL;
@@ -42,11 +43,6 @@
 };
 
 #ALIAS {feedback_loop} {
-
-    #IF {$vitals[饮水] < 10} {
-        do_eat_drink;
-        #RETURN {};
-    };
 
     #LOCAL {hp_percentage} {0};
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
@@ -83,7 +79,7 @@
     #LOCAL {qn_mean} {0};
 
     #IF {$Fight[epoch][start] == 0} {
-        init_fight;
+        do_eat_drink_callback;
         #VARIABLE {Fight[character]} {$username};
 
         #VARIABLE {Fight[epoch]} {
@@ -107,6 +103,11 @@
                 {mean} {0};
             };
         };
+    };
+
+    #IF {$vitals[饮水] < 20} {
+        do_eat_drink;
+        #RETURN {};
     };
 
     #MATH {t_delta} {$time - $Fight[epoch][last]};
@@ -160,9 +161,6 @@
     #ECHO {开始练功};
     Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
     #CLASS safety READ {./pkg/pkg_safety.tin};
-
-    #VARIABLE {Fight[epoch][start]} {0};
-
     #EVENT {VARIABLE UPDATED vitals[经验]} {
         feedback_loop;
     };
@@ -176,7 +174,6 @@
         set mute2;
         enable dodge none;
         enable move none;
-        hp;
     } {8};
 };
 

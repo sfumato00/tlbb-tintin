@@ -1,0 +1,15 @@
+#NOP Math functions
+
+#FUNCTION Ceiling {
+    #IF {%}
+}
+
+#FUNCTION Max {
+    #IF {%1 < %2} {#RETURN {%2};} {#RETURN {%1};};
+};
+
+#FUNCTION Min {
+    #IF {%1 > %2} {#RETURN {%2};} {#RETURN {%1};};
+};
+
+#FUNCTION {Rnd} {#math {result} {1 d (%2 - %1 + 1) + %1 - 1}};

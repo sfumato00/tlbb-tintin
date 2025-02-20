@@ -1,17 +1,18 @@
 #nop {login}
 
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
 #ACTION {^重新连线完毕。$} {
-    #FORMAT {env[last_reconnect]} {%T};
+    #VARIABLE {env[last_reconnect]} {@GetEpoch{}};
 } {1};
 
 #ACTION {^目前权限：} {
-    #FORMAT {env[last_login]} {%T};
-} {1};          
+    #VARIABLE {env[last_login]} {@GetEpoch{}};
+} {1};
 
 #ACTION {^Please input gb or big5:} {
     #UNDELAY {delay_connection_timeout};
-    #VARIABLE {env[conn_update]} {};
-    #FORMAT {env[conn_update]} {%T};
+    #VARIABLE {env[conn_update]} {@GetEpoch{}};
     gb;$username;$password;
 } {4};
 
@@ -20,7 +21,7 @@
     #gts #DELAY {delay_connection_timeout} {
         #IF {"$env[conn_update]" == ""} {
             #ECHO {Cannot establish connection. Abort.};
-            #zap;
+            #ZAP;
         }
     } {10};
 } {1};

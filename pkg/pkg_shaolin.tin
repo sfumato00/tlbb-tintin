@@ -1,8 +1,11 @@
 #NOP 少林 模块
 
 #CLASS logging READ {./pkg/pkg_logging.tin};
+#CLASS cn_num READ {./pkg/pkg_cn_num.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #action {^你的名气增加了：%1点。$} {
+
     Cmd {ask master about 名气} {1};
 };
 
@@ -14,7 +17,15 @@
 
 #ACTION {^你向玄生打听有关『名气』的消息。} {
     #ACTION {^玄生说道：你现在的名气是%u点。} {
+        #LOCAL fame @CnToInt{%1};
+        Info {名气: $fame};
+
         LogLine {Info} {./log/fame_$username.log};
         #UNACTION {^玄生说道：你现在的名气是%u点。};
+        #IF {$fame > 20000} {
+            #CLASS shaolin KILL arg;
+        };
     };
 }
+
+
