@@ -170,15 +170,45 @@
             {path} {#2 s}
             {dist} {2}
         }
+        {禅房 north、east、southeast、northeast、west、southwest 和 northwest} {
+            {path} {e}
+            {dist} {1}
+        }
+    }
+    {禅房 north、east、southeast、northeast、west、southwest 和 northwest} {
+        {回廊 south、north 和 east} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+        {法堂 south、east 和 west} {
+            {path} {w}
+            {dist} {1}
+        }
+    }
+    {回廊 south、north 和 east} {
         {菩提院 north 和 south} {
-            {path} {e;#2 n;e;n}
-            {dist} {5}
+            {path} {e;n}
+            {dist} {2}
+        }
+        {禅房 north、east、southeast、northeast、west、southwest 和 northwest} {
+            {path} {#2 s}
+            {dist} {2}
+        }
+        {初祖庵 north 和 southdown} {
+            {path} {#2 n;w;#4 n;nw;nu;wd;wu;#2 nu}
+            {dist} {13}
         }
     }
     {菩提院 north 和 south} {
-        {法堂 south、east 和 west} {
-            {path} {s;w;#2 s;w}
-            {dist} {5}
+        {回廊 south、north 和 east} {
+            {path} {s;w}
+            {dist} {2}
+        }
+    }
+    {初祖庵 north 和 southdown} {
+        {回廊 south、north 和 east} {
+            {path} {#2 sd;ed;eu;sd;se;#4 s;e;#2 s}
+            {dist} {13}
         }
     }
     {二祖庵庵门 south 和 east} {
