@@ -423,6 +423,26 @@
             {path} {#5 w}
             {dist} {5}
         }
+        {点苍山 northdown、southwest 和 southup} {
+            {path} {#6 s}
+            {dist} {6}
+        }
+    }
+    {点苍山 northdown、southwest 和 southup} {
+        {十字广场 north、south、east、west 和 up} {
+            {path} {#6 n}
+            {dist} {6}
+        }
+        {天龙殿 north、east、west 和 southup} {
+            {path} {su;#2 s;su;#2 s}
+            {dist} {6}
+        }
+    }
+    {天龙殿 north、east、west 和 southup} {
+        {点苍山 northdown、southwest 和 southup} {
+            {path} {#2 n;nd;#2 n;nd}
+            {dist} {6}
+        }
     }
     {西城门 east 和 northwest} {
         {十字广场 north、south、east、west 和 up} {
@@ -596,7 +616,7 @@
         }
         {青海草原 north、south、east 和 west} {
             {path} {wd;w}
-            {dist} {3}
+            {dist} {2}
         }
     }
     {青海草原 north、south、east 和 west} {

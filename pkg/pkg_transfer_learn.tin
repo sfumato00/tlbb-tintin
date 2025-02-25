@@ -28,7 +28,7 @@
         Cmd {xiqi $xiqi} {1};
     };
     
-    learn_from_master {$vitals[精神_max]} {1};
+    learn_master;
 }
 
 #TICKER {ticker_feedback_loop} {

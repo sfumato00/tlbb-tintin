@@ -10,6 +10,7 @@
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS gag READ {./pkg/pkg_gag.tin};
 #CLASS math READ {./pkg/pkg_math.tin};
+#CLASS food_drink READ {./pkg/pkg_food_drink.tin};
 
 #IF {"$Fight[downexp]" == "1"} {
     #CLASS Downexp READ {./pkg/pkg_downexp.tin};
@@ -24,23 +25,18 @@
 #VARIABLE {MIN_IN_SECOND} {60};
 #VARIABLE {MIN_IN_MICRO_SECOND} {60M};
 
-#ALIAS do_eat_drink {
-    Cmd {stop} {1};
+#ALIAS nosh {
     #CLASS surrender READ {./pkg/pkg_surrender.tin};
-    AwaitSurrender {do_eat_drink_callback};
+    AwaitSurrender {nosh_callback};
 };
 
-#ALIAS do_eat_drink_callback {
-    #LOCAL m {};
-    #LOCAL n {};
-    #MATH m {(($vitals[食物_max] - $vitals[食物])/100) + 1};
-    #MATH n {(($vitals[饮水_max] - $vitals[饮水])/30) + 1};
-
-    #LOOP 1 $m _ {Cmd {eat pig} {$m}};
-    #LOOP 1 $n _ {Cmd {drink tong} {$n}};
+#ALIAS nosh_callback {
     #CLASS surrender KILL;
+    _drink_tong {$vitals[饮水]} {$vitals[饮水_max]};
+    _eat_pig {$vitals[食物]} {$vitals[食物_max]};
     init_fight;
 };
+
 
 #ALIAS {feedback_loop} {
 
@@ -54,10 +50,6 @@
             #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
         };
         emergency_quit;
-    };
-
-    #IF {$vitals[气血%] >= 100 && $hp_percentage >= 70 && $vitals[饮水] > 0} {
-        fight_npcs;
     };
 
     #LOCAL time {};
@@ -78,8 +70,8 @@
     #LOCAL {exp_mean} {0};
     #LOCAL {qn_mean} {0};
 
-    #IF {$Fight[epoch][start] == 0} {
-        do_eat_drink_callback;
+    #IF {"$Fight[epoch][start]" == "0"} {
+        Warn {I am here 1};
         #VARIABLE {Fight[character]} {$username};
 
         #VARIABLE {Fight[epoch]} {
@@ -103,11 +95,17 @@
                 {mean} {0};
             };
         };
+        Warn {I am here};
+        #var env;
+        snack;
+    };
+    #ELSEIF {$vitals[饮水] < 30} {
+        nosh;
+        #RETURN {};
     };
 
-    #IF {$vitals[饮水] < 20} {
-        do_eat_drink;
-        #RETURN {};
+    #IF {$vitals[气血%] >= 100 && $hp_percentage >= 70 && $vitals[饮水] > 0} {
+        fight_npcs;
     };
 
     #MATH {t_delta} {$time - $Fight[epoch][last]};
@@ -158,23 +156,16 @@
 } {5};
 
 #ALIAS {init_fight} {
-    #ECHO {开始练功};
+    Info {开始练功};
     Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
     #CLASS safety READ {./pkg/pkg_safety.tin};
-    #EVENT {VARIABLE UPDATED vitals[经验]} {
+    #EVENT {VARIABLE UPDATED vitals[last_updated]} {
         feedback_loop;
     };
-
+    #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
     Cmd {
-        remove cloth;
-        drop cloth;
-        wear cloth;
-        set no_give 1;
-        set no_msg 1;
-        set mute2;
-        enable dodge none;
-        enable move none;
-    } {8};
+        hp;
+    } {1};
 };
 
 #ALIAS {stop} {
@@ -220,8 +211,21 @@
 };
 
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {
-    Cmd {enable;score;hp;look} {4};
-    #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
+    Cmd {
+        hp;
+        look;
+        score;
+        remove cloth;
+        drop cloth;
+        wear cloth;
+        set no_give 1;
+        set no_msg 1;
+        set mute2;
+        enable dodge none;
+        enable move none;
+        enable;
+    } {11};
+    
     init_fight;
 } {5};
 

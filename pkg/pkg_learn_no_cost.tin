@@ -1,0 +1,105 @@
+#NOP Learn Module
+
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS learn_function READ {./pkg/pkg_learn_function.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
+#class checkbusy READ {./pkg/pkg_checkbusy.tin};
+
+
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+    feedback_loop_learn;
+}
+
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "0"} {
+        Cmd {skills;hp} {2};
+    };
+};
+
+#TICKER {ticker_checkbusy} {
+    #IF {@GetEpoch{} >= $Busy[next_check] && @GetCommandCnt{} < 46} {
+        Cmd {dazuo 1} {1};
+    };
+} {1};
+
+#ALIAS {stop} {
+    #ECHO {关闭 无研究零消耗学习 模块};
+    feedback_loop_idle;
+    #CLASS learn KILL;
+} {5};
+
+#ALIAS {feedback_loop_learn} {
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
+
+    Info {sk: $sk, target lv: $target_lv};
+
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #IF {$sk_curr_lv >= $target_lv} {
+        Info;
+        stop;
+        #RETURN {};
+    };
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    #MATH m {$qn_before_level / 50};
+    #MATH n {$qn_before_level % 50};
+
+    #WHILE {$m > 0 && @GetCommandCnt{} < 50} {
+        Cmd {learn $sk from $Learn[master] with 50} {1};
+        #MATH m {$m - 1};
+    };
+
+    #IF {@GetCommandCnt{} == 50} {
+        #RETURN {};
+    };
+
+    #IF {@GetCommandCnt{} < 50 && $n > 0 && $sk_curr_lv + 1 == $target_lv} {
+        Cmd {learn $sk from $xunhuan[qn_per_res] with $n} {1};
+    };
+
+    #LOCAL {n} {0};
+    #LOCAL {m} {0};
+
+    #MATH m {48 - @GetCommandCnt{}};
+
+    #IF {$sk_curr >= 100 && $sk_curr_lv + 1 == $target_lv} {
+        #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+        #MATH m {$qn_before_level / 50};
+        #MATH n {$qn_before_level % 50};
+    };
+
+    #IF {"$m" == "0" && "$n" == "0"} {
+        Cmd {learn $sk from $Learn[master] with 1} {1};
+        #MATH Busy[next_check] {@GetEpoch{} + 2};
+        #RETURN {};
+    };
+    #ELSEIF {"$m" == "0"} {
+        Cmd {learn $sk from $Learn[master] with $n} {1};
+        #MATH Busy[next_check] {@GetEpoch{} + 2};
+        #RETURN {};
+    };
+    
+    #$m {Cmd {learn $sk from $Learn[master] with 50} {1}};
+    #IF {@GetCommandCnt{} < 49 && "$n" != "0"} {
+        Cmd {learn $sk from $Learn[master] with $n} {1};
+    };
+    #MATH Busy[next_check] {@GetEpoch{} + 6};
+    #RETURN {};
+} {5};
+
+#VARIABLE {Busy[next_check]} {0};
+#VARIABLE {Busy[busy]} {0};
+
+Info {开启 无研究零消耗学习 模块};
+Cmd {skills;score} {3};

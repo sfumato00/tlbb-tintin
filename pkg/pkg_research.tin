@@ -9,21 +9,16 @@
 
 #CLASS learn_function READ {./pkg/pkg_learn_function.tin};
 
-#IF {"$xunhuan[min_restore]" == "$xunhuan[min_restore]"} {
-    Error {请初始化 "$xunhuan[min_restore]" };
-};
-
 #VARIABLE {Busy[next_check]} {0};
 
 #EVENT {VARIABLE UPDATED vitals[last_updated]} {
-
-    #IF {"$Busy[busy]" == "0"} {
-        feedback_loop_research;
-    };
+    feedback_loop_research;
 }
 
-#EVENT {VARIABLE UPDATED busy[updated]} {
-    Cmd {skills;hp} {2};
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "0"} {
+        Cmd {skills;hp} {2};
+    };
 };
 
 
@@ -81,6 +76,7 @@
     
     #LOCAL min_qn_before_level {@GetMinQnToLevel{$skills[$sk][lv];$skills[$sk][prof];$score[悟性]}};
     #ECHO {DEBUG: ================> m: $m, max_qn_to_spend: $max_qn_to_spend, min_qn_before_level: $min_qn_before_level};
+
     
     #IF {$min_qn_before_level > $m} {
         Cmd {research $sk $max_qn_to_spend} {1};
@@ -99,4 +95,4 @@
 } {5};
 
 
-Cmd {score} {1};
+Cmd {score;enable;skills;hp} {1};

@@ -10,6 +10,11 @@
     goto {二祖庵庵门 north、south 和 east};
 }
 
+#ALIAS {daxiong} {
+    go;
+    goto {大雄宝殿 north、east、southdown 和 west};
+} {5};
+
 #ALIAS xx {
     go;
     goto {中心广场 north、south、east 和 west};
@@ -23,4 +28,9 @@
 #ALIAS dl {
     go;
     goto {十字广场 north、south、east、west 和 up};
+}
+
+#ALIAS mr {
+    go;
+    goto {望燕亭 north 和 west};
 }

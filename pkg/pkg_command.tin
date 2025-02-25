@@ -54,3 +54,10 @@
     };
     #RETURN $total_cnt;
 };
+
+
+#FUNCTION Peek {
+    PurgeHistory;
+    #LOCAL top $Command[history][q][1];
+    #RETURN {$top};
+}

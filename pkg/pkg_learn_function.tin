@@ -1,6 +1,7 @@
 #NOP functions used by learn
 #CLASS stats read {./pkg/pkg_stats.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
 
 #ALIAS learn_from_master {
     Warn {debug};
@@ -77,6 +78,64 @@
 }
 
 
+#ALIAS {learn_master} {
+    #LOCAL qn {1};
+    #LOCAL js_p_qn {$Learn[js_per_qn]};
+    #LOCAL sk_target_lv @GetSkillToLearn{};
+    #LOCAL sk {*sk_target_lv[+1]};
+    #LOCAL target_lv {$sk_target_lv[+1]};
+
+    Info {sk: $sk, target lv: $target_lv};
+
+    #LOCAL sk_curr $skills[$sk];
+    #LOCAL sk_curr_lv $sk_curr[lv];
+    #LOCAL sk_curr_prof $sk_curr[prof];
+
+    #IF {$sk_curr_lv >= $target_lv} {
+        Info {达到目标等级。停止学习模块};
+        stop;
+        #RETURN {};
+    };
+    #LOCAL neili $vitals[内力];
+    #LOCAL full_xiqi {@RestoreFull{$vitals[精神];$vitals[精神_max];$xunhuan[min_restore]}};
+    #LOCAL xq {@Restore{0;400;$xunhuan[min_restore]}};
+    #IF {$full_xiqi > 0} {
+        Cmd {xiqi $full_xiqi} {1};
+        #MATH {neili} {$neili -$full_xiqi};
+    };
+
+    #LOCAL qn_before_level @GetMinQnBeforeLevel{$sk_curr_lv;$sk_curr_prof;$score[悟性]};
+    #MATH m {$qn_before_level / 50};
+    #MATH n {$qn_before_level % 50};
+
+    Warn {m: $m, n: $n};
+
+    #IF {$sk_curr_lv >= 100 && "$Learn[res]" == "1" && "$m" == "0" && "$n" == "0"} {
+        Cmd {research $sk $xunhuan[qn_per_res]} {1};
+        #RETURN {};
+    };
+    #ELSEIF {$sk_curr_lv < 100 || "$Learn[res]" == "0"} {
+        Cmd {learn $sk from $Learn[master] with 1} {1};
+        #RETURN {};
+    };
+
+    #WHILE {@GetCommandCnt{} < 48 && $m > 0 && $neili >= $xq} {
+        Cmd {learn $sk from $Learn[master] with 50;xiqi $xq} {2};
+        #MATH {neili} {$neili -$xq};
+        #MATH m {$m - 1};
+    };
+
+    #IF {@GetCommandCnt{} < 48 && $n > 0} {
+        Cmd {
+            learn $sk from $Learn[master] with $n;
+        } {1};
+    };
+
+    #VARIABLE {peek} {@Peek{}};
+    #MATH Busy[next_check] {$peek[epoch] + 12};
+} {5};
+
+
 #FUNCTION GetMinQnBeforeLevel {
     #LOCAL level %1;
     #LOCAL prof %2;
@@ -109,3 +168,4 @@
     };
     #RETURN {};
 };
+

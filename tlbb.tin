@@ -126,6 +126,10 @@
     #CLASS learn READ {./pkg/pkg_new_learn.tin};
 };
 
+#alias learn_no_cost {
+    #CLASS learn READ {./pkg/pkg_learn_no_cost.tin};
+}
+
 
 #ALIAS {do_res} {
 
@@ -162,6 +166,8 @@
             Cmd {
                 hp;
                 score;
+                skills;
+                enable;
             } {2};
         };
     };
@@ -345,5 +351,10 @@
 
 #ACTION {^你目前至少要用 %1 点潜能。$} {
     #VARIABLE {xunhuan[qn_per_res]} {@ParseFlakyNumber{%1}};
+    #IF {$xunhuan[qn_per_res] > 5} {
+        #VARIABLE {Learn[res]} {1};
+    } {
+        #VARIABLE {Learn[res]} {0};
+    };
 } {5};
 

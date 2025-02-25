@@ -1,0 +1,44 @@
+#NOP food & drink
+
+#CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+
+#ALIAS _drink_tong {
+    #IF {"$env[room_tong]" == "1"} {
+        #LOCAL curr {%1};
+        #LOCAL max {%2};
+        #LOCAL count @GetCommandCnt{};
+        #LOCAL n {};
+        #MATH n {($max - $curr)/30.0};
+
+        #WHILE {$n > 0 && $count < 23} {
+            Cmd {drink tong} {1};
+            #MATH n {$n - 1};
+            #MATH count {$count + 1};
+        };
+    };
+}
+
+#ALIAS _eat_pig {
+    #IF {"$env[room_pig]" == "1"} {
+        #LOCAL curr {%1};
+        #LOCAL max {%2};
+        #LOCAL count @GetCommandCnt{};
+        #LOCAL n {};
+        #MATH n {($max - $curr)/100.0};
+
+        #WHILE {$n > 0 && $count < 23} {
+            Cmd {eat pig} {1};
+            #MATH n {$n - 1};
+            #MATH count {$count + 1};
+        };
+    };
+}
+
+#ACTION {^    %u只水桶(Tong)} {
+    #VARIABLE {env[room_tong]} {1};
+}
+
+#ACTION {^    %u只烤乳猪(Pig)} {
+    #VARIABLE {env[room_pig]} {1};
+}

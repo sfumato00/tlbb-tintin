@@ -13,7 +13,7 @@
     #EVENT {VARIABLE UPDATED vitals[last_updated]} {
         #IF {$vitals[气血] > $vitals[气血_max] * 0.3} {
             #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
-            #IF {$vitals[经验] > $Downexp[threshold_exp]} {
+            #IF {$vitals[经验] >= $Downexp[threshold_exp]} {
                 enable dodge duan-steps;
                 enable move duan-steps;
                 #CLASS safety KILL;
@@ -23,6 +23,7 @@
             };
             #ELSE {
                 #CLASS bank READ {./pkg/pkg_bank.tin};
+                #CLASS graph READ {./pkg/pkg_map_graph.tin};
                 #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
 
                     #IF {$Travel[trip_complete]} {
@@ -38,6 +39,7 @@
             };
         };
     };
+    Cmd {set mute2;hp} {2};
 } {1};
 
 #ALIAS {move_back_to_fight_room_handler} {

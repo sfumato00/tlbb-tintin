@@ -2,8 +2,11 @@
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 
+
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};
+    #VARIABLE {env[room_tong]} {0};
+    #VARIABLE {env[room_pig]} {0};
 } {2};
 
 #ACTION {    这里%u的出口是%*。} {
