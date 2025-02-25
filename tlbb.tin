@@ -315,6 +315,17 @@
     };
 }
 
+#ALIAS {fuben} {
+    #IF {"%1" == ""} {
+        Info {开启副本模块};
+        #CLASS fuben READ {./pkg/pkg_fuben.tin};
+    };
+    #ELSEIF {"%1" == "off"} {
+        Info {关闭副本模块};
+        #CLASS fuben KILL;
+    };
+} {5};
+
 #ALIAS {dazuo_max} {
     #IF {$vitals[内力] == $vitals[内力_max] * 2} {#RETURN {};};
     #LOCAL yunqi {@RestoreFull{$vitals[气血];$vitals[气血_max];$xunhuan[min_restore]}};

@@ -1,0 +1,12 @@
+#NOP 
+
+#CLASS commands READ {./pkg/pkg_command.tin};
+
+#ALIAS {enable_none} {
+    Cmd {
+        enable parry none;
+        enable unarmed none;
+        enable dodge none;
+    } {5};
+} {5};
+
