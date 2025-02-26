@@ -22,7 +22,11 @@
             Cmd {yunqi $yunqi} {1};
         };
         #IF {$vitals[内力] > $vitals[内力_max]} {
-            Cmd {#6 exert transfer $Transfer[target]} {6};
+            Cmd {
+                #6 exert transfer $Transfer[target];
+            } {6};
+            
+
             Cmd {dazuo $vitals[气血_max]} {1};
             #VARIABLE {Busy[busy]} {1};
             #MATH Busy[next_check] {@GetEpoch{} + 8};
@@ -69,3 +73,8 @@
     #RETURN {$v};
 }
 
+#ALIAS {stop} {
+    Info {关闭传功模块};
+    #UNTICKER {ticker_checkbusy};
+    #CLASS transfer KILL;
+} {5};

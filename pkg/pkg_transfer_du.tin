@@ -5,6 +5,7 @@
 #CLASS utils READ {./pkg/pkg_utils.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
+#CLASS du READ {./pkg/pkg_du.tin};
 
 
 #EVENT {VARIABLE UPDATED Busy[busy]} {
@@ -27,22 +28,23 @@
     #LOCAL neili {$vitals[内力]};
     #MATH neili {$neili - $xiqi};
 
-    #LOCAL js {$vitals[精神_max]};
-    #MATH js {$js / $Du[min_js] * $Du[min_js]};
-
     #LOCAL count @GetCommandCnt{};
     Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
     
-    #WHILE {$count < 48 && $neili > $xiqi_full + $js * 5} {
+    #WHILE {$count < 48 && $neili > ($vitals[内力_max] * 1.5)} {
         Cmd {tuna $vitals[精神_max];xiqi $xiqi_full} {2};
         #MATH neili {$neili - $xiqi_full};
         #MATH count {$count + 2};
     };
     
-    Cmd {du $Du[book] $js} {2};
-    #VARIABLE {Busy[busy]} {1};
-    #MATH Busy[next_check] {@GetEpoch{} + 2};
+    do_du {$Du[book]} {$Du[min_js]} {$Du[skill]};
 }
+
+#ALIAS {stop} {
+    Info {关闭传功读书模块};
+    #UNTICKER {ticker_checkbusy};
+    #CLASS transfer_du KILL;
+} {5};
 
 #TICKER {ticker_checkbusy} {
     #IF {@GetEpoch{} >= $Busy[next_check]} {

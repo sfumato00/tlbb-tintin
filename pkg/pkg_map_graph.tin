@@ -79,7 +79,6 @@
             #ELSE {
                 $MAP[$u][$v][path];
             };            
-            Warn {Commands in rate limiting window: $Command[history][cnt]};
             #LIST Travel[stops] DELETE 1 1;
         };
     };

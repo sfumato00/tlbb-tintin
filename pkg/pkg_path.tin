@@ -15,9 +15,19 @@
     goto {大雄宝殿 north、east、southdown 和 west};
 } {5};
 
+#alias {goto_oldmonk} {
+    go;
+    goto {初祖庵 north 和 southdown};
+};
+
 #ALIAS xx {
     go;
     goto {中心广场 north、south、east 和 west};
+}
+
+#ALIAS kf {
+    go;
+    goto {汴梁城中心 north、south、east、west 和 up};
 }
 
 #ALIAS ly {

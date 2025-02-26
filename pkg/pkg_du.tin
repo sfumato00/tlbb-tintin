@@ -1,0 +1,59 @@
+#NOP Du Module
+
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS stats read {./pkg/pkg_stats.tin};
+
+#ALIAS {do_du} {
+    #LOCAL {book} {%1};
+    #LOCAL {js_per_read} {%2};
+    #LOCAL {sk} {%3};
+
+    #LOCAL js {0};
+    #MATH js {$js_per_read * @GetNumberOfReadNeeded{$sk}};
+
+    #IF {$js > $vitals[精神_max]} {
+        #MATH js {$vitals[精神_max] / $js_per_read * $js_per_read};
+    };
+
+    Cmd {du $book $js} {1};
+    #VARIABLE {Busy[busy]} {1};
+    #MATH Busy[next_check] {@GetEpoch{} + 2};
+} {5};
+
+#FUNCTION GetProfPerRead {
+    #LOCAL prof_per_read {0};
+
+    #MATH prof_per_read {1 + $skills[literate][lv] / 20 + $enables[literate] / 20};
+    Warn {GetProfPerRead: prof_per_read: $prof_per_read};
+    #RETURN {$prof_per_read};
+};
+
+#FUNCTION GetNumberOfReadNeeded {
+    #LOCAL sk {%1};
+    #LOCAL curr_prof {0};
+    #IF {"$sk" != ""} {
+        #LOCAL curr_prof {$skills[$sk][prof]};
+    };
+    #LOCAL sk_level $skills[literate][lv];
+    #LOCAL sk_prof_max {0};
+    #MATH sk_prof_max {$sk_level + 1};
+    #MATH sk_prof_max {$sk_prof_max * $sk_prof_max + 1 - $curr_prof};
+
+    #LOCAL n {0};
+    #LOCAL prof_per_read @GetProfPerRead{};
+    #MATH n {$sk_prof_max / $prof_per_read};
+    #MATH r {$sk_prof_max % $prof_per_read};
+    #IF {"$r" != "0"} {
+        #MATH n {$n + 1};
+    };
+    Warn {GetNumberOfReadNeeded: n: $n};
+    #RETURN {$n};
+};
+
+
+Cmd {
+    skills;
+    enable;
+} {2};

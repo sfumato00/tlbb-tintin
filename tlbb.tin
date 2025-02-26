@@ -152,7 +152,7 @@
     #SWITCH {"%1"} {
 
         #CASE {"off"} {
-            #ECHO {关闭传功模块};
+            Info {关闭传功模块};
             #CLASS transfer kill;
         };
 
@@ -161,6 +161,7 @@
         };
 
         #DEFAULT {
+            Info {开启传功模块};
             #CLASS transfer READ {./pkg/pkg_transfer.tin};
             #VARIABLE {Transfer[target]} {%1};
             Cmd {
@@ -263,6 +264,7 @@
 
         #DEFAULT {
             Info {开启传功吐纳模块};
+            #CLASS profile read {$env[profile]};
             #CLASS transfer_learn READ {./pkg/pkg_transfer_learn.tin};
         };
     };
@@ -278,6 +280,7 @@
 
         #DEFAULT {
             Info {开启传功读书模块};
+            #CLASS profile read {$env[profile]};
             #CLASS transfer_du READ {./pkg/pkg_transfer_du.tin};
         };
     };
