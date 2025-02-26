@@ -10,12 +10,38 @@
     #LOCAL {js_per_read} {%2};
     #LOCAL {sk} {%3};
 
-    #LOCAL js {0};
-    #MATH js {$js_per_read * @GetNumberOfReadNeeded{$sk}};
+    #LOCAL {prof_per_read} @GetProfPerRead{};
 
+    #LOCAL sk_lv $skills[$sk][lv];
+    #LOCAL sk_prof $skills[$sk][prof];
+
+    Warn {sk_lv: $sk_lv, sk_prof: $sk_prof};
+
+    #LOCAL read_before_next_level {0};
+    #LOCAL max_read_allowed_by_js {0};
+
+    #LOCAL proficiency {0};
+    #MATH proficiency {($sk_lv + 1) * ($sk_lv + 1) - $sk_prof + 1};
+
+    #LOCAL n {0};
+    #LOCAL m {0};
+
+    #MATH n {$proficiency / $prof_per_read};
+    #MATH rem {$proficiency % $prof_per_read};
+
+    
+    Warn {n: $n, rem: $rem};
+
+    #IF {"$rem" != "0"} {
+        #MATH n {$n + 1};
+    };
+
+    #LOCAL js {0};
+    #MATH js {$n * $js_per_read};
     #IF {$js > $vitals[精神_max]} {
         #MATH js {$vitals[精神_max] / $js_per_read * $js_per_read};
     };
+    Warn {js: $js};
 
     Cmd {du $book $js} {1};
     #VARIABLE {Busy[busy]} {1};

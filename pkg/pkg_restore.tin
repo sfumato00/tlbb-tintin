@@ -1,0 +1,60 @@
+#NOP Restore
+
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+
+#FUNCTION GetNeiliNeededForRestoreFull {
+    #LOCAL amount {%1};
+
+    #IF {"$amount" == ""} {
+        Error {Restore amount must be specified!};
+        #RETURN {-1};
+    };
+
+    #IF {"$amount" == "0"} {
+        #RETURN 0;
+    };
+
+    #LOCAL n {0};
+    #LOCAL rem {0};
+
+    #MATH n {$amount / $Restore[coeff]};
+    #MATH rem {$amount % $Restore[coeff]};
+    #IF {"$rem" != "0"} {
+        #MATH n {$n + 1};
+    };
+    #MATH result {$n * 20};
+}
+
+#NOP 返回所需要的内力值
+#FUNCTION GetNeiliNeededForRestore {
+    #LOCAL amount {%1};
+
+    #IF {"$amount" == ""} {
+        Error {Restore amount must be specified!};
+        #RETURN {-1};
+    };
+
+    #IF {"$amount" == "0"} {
+        #RETURN 0;
+    };
+
+    #MATH result {$amount / $Restore[coeff] * 20};
+}
+
+#FUNCTION GetRestoreCoefficient {
+    #LOCAL force_eff {%1};
+    #MATH result {10 + $force_eff / 10};
+};
+
+
+#EVENT {VARIABLE UPDATED enables[force]} {
+    #VARIABLE {Restore[coeff]} {@GetRestoreCoefficient{$enables[force]}};
+};
+
+#VARIABLE {Restore[force_enabled]} {$enables[force]};
+
+#IF {"$Restore[force_enabled]" == ""} {
+    Cmd {enable} {1};
+};
+

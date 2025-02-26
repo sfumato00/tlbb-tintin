@@ -163,7 +163,8 @@
         #DEFAULT {
             Info {开启传功模块};
             #CLASS transfer READ {./pkg/pkg_transfer.tin};
-            #VARIABLE {Transfer[target]} {%1};
+            #VARIABLE {Transfer[t1]} {%1};
+            #VARIABLE {Transfer[t2]} {%2};
             Cmd {
                 hp;
                 score;

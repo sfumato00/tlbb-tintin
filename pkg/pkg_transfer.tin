@@ -23,7 +23,9 @@
         };
         #IF {$vitals[内力] > $vitals[内力_max]} {
             Cmd {
-                #6 exert transfer $Transfer[target];
+                #6 {
+                    exert transfer $Transfer[t1];
+                };
             } {6};
             
 

@@ -3,6 +3,8 @@
 #CLASS commands READ {./pkg/pkg_command.tin};
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
 
+#CLASS items READ {./pkg/pkg_items.tin};
+
 #ALIAS _drink_tong {
     #IF {"$env[room_tong]" == "1"} {
         #LOCAL curr {%1};
