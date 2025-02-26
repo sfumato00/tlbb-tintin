@@ -2,7 +2,7 @@
 
 #CLASS commands READ {./pkg/pkg_command.tin};
 
-#ALIAS {enable_none} {
+#ALIAS {none} {
     Cmd {
         enable parry none;
         enable unarmed none;
@@ -10,3 +10,25 @@
     } {5};
 } {5};
 
+#ALIAS {all} {
+    Cmd {
+        wield blade;
+        enable blade ranmu-blade;
+        enable parry ranmu-blade;
+        enable dodge duan-steps;
+    } {5};
+} {5};
+
+#ALIAS show_fubenmap {
+    #substitute {  } { };
+    #ACTION {^└─┴─┴─┴─┴─┴─┴─┴─┘$} {
+        #unsubstitute {  };
+    };
+    Cmd {fubenmap} {1};
+}
+
+#ALIAS {end} {
+    Cmd {
+        s;#3 w;s;#4 w;n;w
+    } {12};
+} {5};
