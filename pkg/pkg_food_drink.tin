@@ -47,8 +47,9 @@
 #ALIAS food_drink_init {
     #VARIABLE {FoodDrink[tong]} {0};
     #VARIABLE {FoodDrink[pig]} {0};
-
-    #ACTION {^>%s$} {
+    idhere_scan_room;
+    #DELAY 2 {
+        #VARIABLE {IdHere};
         #UNACTION {^>%s$};
         #IF {"$IdHere[水桶-tong]" != ""} {
             #VARIABLE {FoodDrink[tong]} {1};
@@ -57,7 +58,5 @@
         #IF {"$IdHere[烤乳猪-pig]" != ""} {
             #VARIABLE {FoodDrink[pig]} {1};
         };
-    } {1};
-
-    idhere_scan_room;
+    };
 }

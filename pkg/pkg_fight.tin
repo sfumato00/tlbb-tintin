@@ -12,12 +12,12 @@
 #CLASS math READ {./pkg/pkg_math.tin};
 #CLASS food_drink READ {./pkg/pkg_food_drink.tin};
 
-#IF {"$Fight[downexp]" == "1"} {
-    #CLASS Downexp READ {./pkg/pkg_downexp.tin};
-};
-
 #IF {"$Fight[jiuyang]" == "1"} {
     #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
+};
+
+#IF {"$Fight[downexp]" == "1"} {
+    #CLASS downexp READ {./pkg/pkg_fight_downexp.tin};
 };
 
 #VARIABLE {Fight[epoch][start]} {0};
@@ -32,9 +32,8 @@
 
 #ALIAS nosh_callback {
     #CLASS surrender KILL;
-    _drink_tong {$vitals[饮水]} {$vitals[饮水_max]};
-    _eat_pig {$vitals[食物]} {$vitals[食物_max]};
-    init_fight;
+    _drink;
+    _eat;
 };
 
 
@@ -62,7 +61,6 @@
     #LOCAL {qn_mean} {0};
 
     #IF {"$Fight[epoch][start]" == "0"} {
-        Warn {I am here 1};
         #VARIABLE {Fight[character]} {$username};
 
         #VARIABLE {Fight[epoch]} {
@@ -86,10 +84,8 @@
                 {mean} {0};
             };
         };
-        Warn {I am here};
-        #var env;
-        snack;
     };
+
     #ELSEIF {$vitals[饮水] < 30} {
         nosh;
         #RETURN {};
@@ -146,14 +142,12 @@
     };
 } {5};
 
+
 #ALIAS {init_fight} {
-    
-    #CLASS safety READ {./pkg/pkg_safety.tin};
-    #EVENT {VARIABLE UPDATED vitals[last_updated]} {
-        feedback_loop;
-    };
-    #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
+    #VARIABLE {Fight[epoch][start]} {0};
     Cmd {
+        hp;
+        food_drink_init;
         enable dodge none;
         enable move none;
     } {3};
@@ -163,10 +157,21 @@
     Info {开始练功};
     Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
 
-    food_drink_init;
-    Cmd {hp} {1};
     
     init_fight;
+    #CLASS safety READ {./pkg/pkg_safety.tin};
+
+    #DELAY 2 {
+        _drink;
+        _eat;
+        #DELAY 3 {
+            #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
+            #EVENT {VARIABLE UPDATED vitals[last_updated]} {
+                feedback_loop;
+            };
+            Cmd {hp} {1};
+        };
+    };
 }
 
 #ALIAS {stop} {
@@ -175,7 +180,6 @@
     #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {60};
     Cmd {surrender} {1};
     unset no_give;
-    #CLASS fight KILL;
 } {5};
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
@@ -213,19 +217,7 @@
 };
 
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {
-    Cmd {
-        hp;
-        look;
-        score;
-        remove cloth;
-        drop cloth;
-        wear cloth;
-        set no_give 1;
-        set no_msg 1;
-        set mute2;
-    } {11};
-    
-    fight_start;
+    do_fight;
 } {5};
 
 #FUNCTION CalNpcMsg {

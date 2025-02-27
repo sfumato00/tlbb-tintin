@@ -9,11 +9,17 @@
         {profile} {./profiles/%1.tin}
     };
     #CLASS profile read {$env[profile]};
-
     #CLASS fight read {./pkg/pkg_fight.tin};
     #gts #SESSION {$username} {103.10.85.133} {8888};
     #$username;
 };
+
+#ALIAS {do_fight} {
+    #CLASS profile read {$env[profile]};
+    #CLASS fight read {./pkg/pkg_fight.tin};
+    fight_start;
+} {5};
+
 
 #EVENT {SESSION DISCONNECTED} {
     #gts #DELAY 3 {

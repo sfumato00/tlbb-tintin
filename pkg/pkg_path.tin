@@ -5,6 +5,11 @@
     goto {神憩小舍 east、southdown、northwest 和 up};
 }
 
+#ALIAS {yongdao} {
+    go;
+    goto {甬道 south};
+} {5};
+
 #ALIAS ez {
     go;
     goto {二祖庵庵门 north、south 和 east};

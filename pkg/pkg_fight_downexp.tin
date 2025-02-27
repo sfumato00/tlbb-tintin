@@ -55,7 +55,7 @@
                 #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
                 stop_stuck_check;
                 #CLASS graph KILL;
-                init_fight;
+                fight_start;
             };
             start_stuck_check;
             goto {$Fight[room]};
