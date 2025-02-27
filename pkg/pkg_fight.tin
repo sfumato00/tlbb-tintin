@@ -43,15 +43,6 @@
     #LOCAL {hp_percentage} {0};
     #MATH {hp_percentage} {$vitals[气血] * 100 / $vitals[气血_max]};
 
-    #IF {$vitals[气血%] < 50} {
-
-        #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
-            buffer_dump {fight};
-            #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};
-        };
-        emergency_quit;
-    };
-
     #LOCAL time {};
     #FORMAT time {%U};
 
@@ -156,8 +147,7 @@
 } {5};
 
 #ALIAS {init_fight} {
-    Info {开始练功};
-    Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
+    
     #CLASS safety READ {./pkg/pkg_safety.tin};
     #EVENT {VARIABLE UPDATED vitals[last_updated]} {
         feedback_loop;
@@ -166,16 +156,26 @@
     Cmd {
         enable dodge none;
         enable move none;
-        hp;
     } {3};
 };
 
+#ALIAS {fight_start} {
+    Info {开始练功};
+    Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
+
+    food_drink_init;
+    Cmd {hp} {1};
+    
+    init_fight;
+}
+
 #ALIAS {stop} {
     #ECHO {暂停练功};
-    #UNEVENT {VARIABLE UPDATED vitals[经验]};
+    #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
     #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {60};
     Cmd {surrender} {1};
     unset no_give;
+    #CLASS fight KILL;
 } {5};
 
 #ACTION {您要将另一个连线中的相同人物赶出去，取而代之吗？} {
@@ -223,12 +223,9 @@
         set no_give 1;
         set no_msg 1;
         set mute2;
-        enable dodge none;
-        enable move none;
-        enable;
     } {11};
     
-    init_fight;
+    fight_start;
 } {5};
 
 #FUNCTION CalNpcMsg {

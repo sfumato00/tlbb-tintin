@@ -84,6 +84,16 @@
             {path} {#9 s}
             {dist} {9}
         }
+        {甬道 south} {
+            {path} {w;n}
+            {dist} {2}
+        }
+    }
+    {甬道 south} {
+        {天贶殿 north、south、east 和 west} {
+            {path} {s;e}
+            {dist} {2}
+        }
     }
     {神憩小舍 east、southdown、northwest 和 up} {
         {天贶殿 north、south、east 和 west} {

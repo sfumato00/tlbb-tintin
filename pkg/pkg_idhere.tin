@@ -1,0 +1,23 @@
+#NOP idhere
+
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+
+#ALIAS {idhere_scan_room} {
+    #VARIABLE {IdHere} {};
+    Cmd {id here} {1};
+} {5};
+
+
+#ACTION {^%S%s= %*$} {
+    #LOCAL cn_name %1;
+    #LOCAL id %3;
+    #LOCAL key {$cn_name-$id};
+    #IF {"$IdHere[$key]" == ""} {
+        #VARIABLE IdHere[$key] {0};
+    };
+
+    #MATH IdHere[$key] {$IdHere[$key] + 1};
+} {1};
+
+#UNVARIABLE {IdHere};

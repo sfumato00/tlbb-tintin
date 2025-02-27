@@ -19,16 +19,39 @@
     } {5};
 } {5};
 
-#ALIAS show_fubenmap {
-    #substitute {  } { };
-    #ACTION {^└─┴─┴─┴─┴─┴─┴─┴─┘$} {
-        #unsubstitute {  };
-    };
-    Cmd {fubenmap} {1};
-}
-
 #ALIAS {end} {
     Cmd {
         s;#3 w;s;#4 w;n;w
     } {12};
 } {5};
+
+
+#ACTION {^┌─┬─┬─┬─┬─┬─┬─┬─┐$} {
+    #VARIABLE {Fuben[r]} {0};
+    #substitute {  } { };
+    #ACTION {^└─┴─┴─┴─┴─┴─┴─┴─┘$} {
+        #unsubstitute {  };
+        #UNACTION {^└─┴─┴─┴─┴─┴─┴─┴─┘$};
+    };
+
+    
+}
+
+#ACTION {^│%*│$} {
+    #MATH {Fuben[r]} {$Fuben[r] + 1};
+    #LOCAL line {%1};
+    #REPLACE {line} {  } { };
+    #VARIABLE {Fuben[$Fuben[r]]} {$line};
+    
+    #LIST {line} {EXPLODE} {};
+    #LOCAL line;
+};
+
+#ACTION {^├%*┤$} {
+    #MATH {Fuben[r]} {$Fuben[r] + 1};
+    #LOCAL line {%1};
+    #REPLACE {line} {  } { };
+    #VARIABLE {Fuben[$Fuben[r]]} {$line};
+};
+
+Cmd {fubenmap} {1};

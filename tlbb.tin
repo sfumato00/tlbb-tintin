@@ -346,7 +346,6 @@
 } {5};
 
 
-
 #ALIAS {feedback_loop_idle} {
     #TICKER {ticker_feedback_loop} {Cmd {hp}} {15};
 };
