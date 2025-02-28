@@ -49,8 +49,6 @@
     #VARIABLE {FoodDrink[pig]} {0};
     idhere_scan_room;
     #DELAY 2 {
-        #VARIABLE {IdHere};
-        #UNACTION {^>%s$};
         #IF {"$IdHere[水桶-tong]" != ""} {
             #VARIABLE {FoodDrink[tong]} {1};
         };
