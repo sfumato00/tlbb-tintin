@@ -116,12 +116,12 @@
 
     Warn {m: $m, n: $n, neili_allowed_m: $neili_allowed_m};
 
-    #IF {$sk_curr_lv >= 100 && "$Learn[res]" == "1" && "$m" == "0" && "$n" == "0"} {
-        Cmd {research $sk $xunhuan[qn_per_res]} {1};
-        #RETURN {};
-    };
-    #ELSEIF {$sk_curr_lv < 100 || "$Learn[res]" == "0"} {
-        Cmd {learn $sk from $Learn[master] with 1} {1};
+    #IF {$sk_curr_lv >= 100 && "$m" == "0" && "$n" == "0"} {
+        #IF {"$Learn[res]" == "1" } {
+            Cmd {research $sk $xunhuan[qn_per_res]} {1};
+        } {
+            Cmd {learn $sk from $Learn[master] with 1} {1};
+        };
         #RETURN {};
     };
 

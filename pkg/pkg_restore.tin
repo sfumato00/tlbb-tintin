@@ -2,10 +2,11 @@
 
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
 
 #FUNCTION GetNeiliNeededForRestoreFull {
     #LOCAL amount {%1};
-
+    Warn {$amount, $Restore[coeff]}
     #IF {"$amount" == ""} {
         Error {Restore amount must be specified!};
         #RETURN {-1};
@@ -52,9 +53,4 @@
     #VARIABLE {Restore[coeff]} {@GetRestoreCoefficient{$enables[force]}};
 };
 
-#VARIABLE {Restore[force_enabled]} {$enables[force]};
-
-#IF {"$Restore[force_enabled]" == ""} {
-    Cmd {enable} {1};
-};
-
+Cmd {enable} {1};

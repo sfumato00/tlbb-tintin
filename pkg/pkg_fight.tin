@@ -32,8 +32,7 @@
 
 #ALIAS nosh_callback {
     #CLASS surrender KILL;
-    _drink;
-    _eat;
+    drink_eat;
 };
 
 
@@ -86,7 +85,15 @@
         };
     };
 
+    #ELSEIF {$vitals[饮水] < 30 && "$FoodDrink[tong]" == "0"} {
+        food_drink_init;
+        #Return {};
+    };
     #ELSEIF {$vitals[饮水] < 30} {
+        nosh;
+        #RETURN {};
+    };
+    #ELSEIF {"$FoodDrink[pig]" == "1" && $vitals[食物] < 30} {
         nosh;
         #RETURN {};
     };
@@ -120,13 +127,21 @@
     #LOCAL {duration_in_min} {0};
     #MATH {duration_in_min} {$Fight[duration] / $MIN_IN_MICRO_SECOND};
 
-    #FORMAT {exp_msg} {经验增速: %d, 最大 %d, 平均 %d} {$exp_velocity} {$Fight[经验][velocity][max]} {$Fight[经验][velocity][mean]};
-    #FORMAT {qn_msg} {潜能增速: %d, 最大 %d, 平均 %d} {$qn_velocity} {$Fight[潜能][velocity][max]} {$Fight[潜能][velocity][mean]};
-    Log {经验: $vitals[经验], 潜能, $vitals[潜能], $exp_msg, $qn_msg} {Info} {./log/fight_@GetDate{}_$username.log};
+    #VARIABLE log_msg {经验: $vitals[经验], 潜能, $vitals[潜能]};
+    #CAT {log_msg} { 经验增速: $exp_velocity, 最大 $Fight[经验][velocity][max], 平均 $Fight[经验][velocity][mean]};
+    #CAT {log_msg} {, 潜能增速: $qn_velocity, 最大 $Fight[潜能][velocity][max], 平均 $Fight[潜能][velocity][mean]};
+    #CAT {log_msg} {, 气血: $vitals[气血]/$vitals[气血_max]};
+    #CAT {log_msg} {, 内力: $vitals[内力]/$vitals[内力_max]};
+    #CAT {log_msg} {, 食物: $vitals[食物]/$vitals[食物_max]};
+    #CAT {log_msg} {, 饮水: $vitals[饮水]/$vitals[饮水_max]};
+
+    #IF {$State[downexp_on]} {
+        #CAT {log_msg} { State[downexp_on]: On};
+    };
+    Log {$log_msg} {Info} {./log/fight_@GetDate{}_$username.log};
 
     #DELAY {0.1} {
-        #SHOWME {$exp_msg};
-        #SHOWME {$qn_msg};
+        Info {$log_msg};
     };
 
     #VARIABLE {vitals[hook_downexp]} {1};
@@ -162,8 +177,7 @@
     #CLASS safety READ {./pkg/pkg_safety.tin};
 
     #DELAY 2 {
-        _drink;
-        _eat;
+        drink_eat;
         #DELAY 3 {
             #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
             #EVENT {VARIABLE UPDATED vitals[last_updated]} {

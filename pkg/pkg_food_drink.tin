@@ -4,13 +4,10 @@
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
 #CLASS idhere READ {./pkg/pkg_idhere.tin};
 
-#ALIAS _drink {
+#ALIAS {drink_eat} {
     _drink_tong {$vitals[饮水]} {$vitals[饮水_max]};
-}
-
-#ALIAS _eat {
     _eat_pig {$vitals[食物]} {$vitals[食物_max]};
-}
+} {5};
 
 #ALIAS _drink_tong {
     #IF {"$FoodDrink[tong]" == "1"} {
