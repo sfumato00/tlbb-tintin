@@ -165,6 +165,8 @@
         food_drink_init;
         enable dodge none;
         enable move none;
+        set mute2;
+        set no_give 1;
     } {3};
 };
 
