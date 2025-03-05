@@ -3,6 +3,7 @@
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 #CLASS commands READ {./pkg/pkg_command.tin};
 #CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #CLASS map_common READ {./pkg/pkg_map_common.tin};
 

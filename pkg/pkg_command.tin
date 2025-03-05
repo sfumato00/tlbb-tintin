@@ -6,7 +6,7 @@
 #VARIABLE {Command[history][cnt]} {0};
 
 #ALIAS Cmd {
-    PurgeHistory;
+    _purgeHistory;
     #LOCAL commands {%1};
     #LOCAL cnt {%2};
     #LOCAL epoch @GetEpoch{};
@@ -26,7 +26,22 @@
     #MATH Command[history][cnt] {$Command[history][cnt] + $cnt};
 };
 
-#ALIAS PurgeHistory {
+#FUNCTION GetCommandCnt {
+    _purgeHistory;
+    #LOCAL total_cnt {0};
+    #FOREACH *Command[history][q][%*] {x} {
+        #MATH {total_cnt} {$total_cnt + $Command[history][q][$x][cnt]};
+    };
+    #RETURN $total_cnt;
+};
+
+#FUNCTION Peek {
+    _purgeHistory;
+    #LOCAL top $Command[history][q][1];
+    #RETURN {$top};
+}
+
+#ALIAS _purgeHistory {
     #LOCAL n {};
     #LOCAL head {0};
     #LOCAL next {1};
@@ -45,19 +60,3 @@
         #LIST Command[history][q] DELETE 1 $head;
     };
 };
-
-#FUNCTION GetCommandCnt {
-    PurgeHistory;
-    #LOCAL total_cnt {0};
-    #FOREACH *Command[history][q][%*] {x} {
-        #MATH {total_cnt} {$total_cnt + $Command[history][q][$x][cnt]};
-    };
-    #RETURN $total_cnt;
-};
-
-
-#FUNCTION Peek {
-    PurgeHistory;
-    #LOCAL top $Command[history][q][1];
-    #RETURN {$top};
-}

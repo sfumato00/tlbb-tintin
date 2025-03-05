@@ -2,6 +2,7 @@
 #CLASS room READ {./pkg/pkg_room.tin};
 
 #CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #CLASS map READ {./pkg/pkg_map.tin};
 #CLASS map_common READ {./pkg/pkg_map_common.tin};
@@ -47,8 +48,6 @@
 
     #EVENT {VARIABLE UPDATED env[room_update_hook]} {
         #LOCAL u {$Travel[stops][1]};
-
-        PurgeHistory;
 
         #IF {@_assertRoomExitsKey{$u}} {
             #VARIABLE {travel[started]} {0};

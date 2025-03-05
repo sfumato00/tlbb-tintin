@@ -1,6 +1,8 @@
 #NOP Mapper
 
 #CLASS command READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+
 #CLASS map_common READ {./pkg/pkg_map_common.tin};
 
 #CLASS auto_mapped_map OPEN;

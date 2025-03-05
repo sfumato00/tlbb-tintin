@@ -103,8 +103,6 @@
     };
 }
 
-
-
 #EVENT {VARIABLE UPDATED env[room_updated]} {
     #IF {"$env[room]" == "城隍庙"} {
         buffer_dump {delivery};
@@ -120,7 +118,5 @@
 #EVENT {VARIABLE UPDATED env[last_reconnect]} {
     Cmd {look} {1};
 };
-
-
 
 #TICKER {ticker_stay} {l} {300};

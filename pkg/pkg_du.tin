@@ -28,10 +28,7 @@
 
     #MATH n {$proficiency / $prof_per_read};
     #MATH rem {$proficiency % $prof_per_read};
-
     
-    Warn {n: $n, rem: $rem};
-
     #IF {"$rem" != "0"} {
         #MATH n {$n + 1};
     };
@@ -41,7 +38,6 @@
     #IF {$js > $vitals[精神_max]} {
         #MATH js {$vitals[精神_max] / $js_per_read * $js_per_read};
     };
-    Warn {js: $js};
 
     Cmd {du $book $js} {1};
     #VARIABLE {Busy[busy]} {1};

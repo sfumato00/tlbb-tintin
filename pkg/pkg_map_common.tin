@@ -1,14 +1,7 @@
 #NOP common utils for the mapping module
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
-
-#ALIAS Info {
-    #ECHO {@Timestamp{} <cfa>[Info] %1};
-}
-
-#ALIAS Warn {
-    #ECHO {@Timestamp{} <fca>[Warn] %1};
-}
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #FUNCTION _assertRoomExitsKey {
     Warn {%1};
