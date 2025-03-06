@@ -20,13 +20,13 @@
 } {1};
 
 #ACTION {^%u将%u扶了起来背在背上。} {
-    Log {%0} {Info} {./log/sidekick_$username.log}; 
+    Log {%0} {Info} {./log/sidekick_$Profile[username].log}; 
     #IF {"%1" == "你"} {
         #gts #VARIABLE {Persist[return_room]} {{$env[room]$env[exits]}};
         #VARIABLE {Sidekick[npc_id]} {$Sidekick[npc][%2][id]};
 
-        #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-            #IF {$Travel[trip_complete]} {
+        #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
+            #IF {$Events[hooks][trip_complete]} {
                 #IF {@_assertRoomExitsKey{{$Sidekick[handler][room_key]}}} {
                     Cmd {give $Sidekick[handler][id] $Sidekick[npc_id]};
                     quit;
@@ -46,10 +46,10 @@
 #ACTION {你必须连线十秒后才能离开游戏。} {#DELAY {1} {quit}};
 
 
-#EVENT {VARIABLE UPDATED env[last_login]} {
-    #IF {"$Persist[return_room]" != ""} {
-        #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-            #IF {$Travel[trip_complete]} {
+#EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
+    #IF {&Persist[return_room] && "$Persist[return_room]" != ""} {
+        #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
+            #IF {$Events[hooks][trip_complete]} {
                 #IF {@_assertRoomExitsKey{{$Persist[return_room]}}} {
                     follow mia;
                 };
@@ -65,5 +65,5 @@
 
 
 #ALIAS log {
-    Log {%0} {Info} {./log/delivery_$username.log}; 
+    Log {%0} {Info} {./log/delivery_$Profile[username].log}; 
 }

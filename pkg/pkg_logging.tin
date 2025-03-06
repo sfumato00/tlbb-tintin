@@ -21,7 +21,7 @@
 #ALIAS buffer_dump {
     #LOCAL prefix {./log/};
     #CAT prefix {%1};
-    #LIST file_name CREATE {$prefix;$username;@GetEpochAsDateTimeStr{}};
+    #LIST file_name CREATE {$prefix;$Profile[username];@GetEpochAsDateTimeStr{}};
     #LIST file_name COLLAPSE {_};
     #CAT file_name {.log};
     #ECHO {[DEBUG] Writing buffer to $file_name};
@@ -29,15 +29,15 @@
 } {1};
 
 #FUNCTION {Info} {
-    #RETURN {@Log{%1;info;$username}};
+    #RETURN {@Log{%1;info;$Profile[username]}};
 };
 
 #FUNCTION {Debug} {
-    #RETURN {@Log{%1;debug;$username}};
+    #RETURN {@Log{%1;debug;$Profile[username]}};
 };
 
 #FUNCTION {Error} {
-    #RETURN {@Log{%1;error;$username}};
+    #RETURN {@Log{%1;error;$Profile[username]}};
 };
 
 #FUNCTION _logMsg {

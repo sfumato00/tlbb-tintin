@@ -4,8 +4,8 @@
 #CLASS graph read {./pkg/pkg_map_graph.tin};
 #CLASS login READ {./pkg/pkg_login.tin};
 
-#VARIABLE {username} {testgraph};
-#VARIABLE {password} {Abcd_124};
+#VARIABLE {Profile[username]} {testgraph};
+#VARIABLE {Profile[password]} {Abcd_124};
 
 #ALIAS Dijkstra_Test {
     #CLASS graph read {./pkg/pkg_map_graph.tin};
@@ -72,7 +72,7 @@
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {汴梁城中心 north、south、east、west 和 up};
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {洛阳中心 south、north、east、west 和 up};
 
-#EVENT {VARIABLE UPDATED env[last_login]} {
+#EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
     #EVENT {VARIABLE UPDATED env[room_updated]} {
         #IF {@_assertRoomExitsKey{洛阳中心 south、north、east、west 和 up}} {
             #UNEVENT {VARIABLE UPDATED env[room_updated]};

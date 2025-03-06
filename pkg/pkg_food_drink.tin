@@ -46,11 +46,11 @@
     #VARIABLE {FoodDrink[pig]} {0};
     idhere_scan_room;
     #DELAY 2 {
-        #IF {"$IdHere[水桶-tong]" != ""} {
+        #IF {&IdHere[水桶-tong]} {
             #VARIABLE {FoodDrink[tong]} {1};
         };
 
-        #IF {"$IdHere[烤乳猪-pig]" != ""} {
+        #IF {&IdHere[烤乳猪-pig]} {
             #VARIABLE {FoodDrink[pig]} {1};
         };
     };

@@ -1,27 +1,30 @@
-#nop {login}
+#NOP Session Connection Module.
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #ACTION {^重新连线完毕。$} {
-    #VARIABLE {env[last_reconnect]} {@GetEpoch{}};
+    #VARIABLE {Events[hooks][session][reconnect]} {@GetEpoch{}};
 } {1};
 
 #ACTION {^目前权限：} {
-    #VARIABLE {env[last_login]} {@GetEpoch{}};
+    #VARIABLE {Events[hooks][session][login]} {@GetEpoch{}};
 } {1};
 
 #ACTION {^Please input gb or big5:} {
     #UNDELAY {delay_connection_timeout};
-    #VARIABLE {env[conn_update]} {@GetEpoch{}};
-    gb;$username;$password;
+    #VARIABLE {Session[is_connected]} {1};
+    gb;$Profile[username];$Profile[password];
 } {4};
 
 #EVENT {SESSION CONNECTED} {
     #ECHO {SESSION CONNECTED};
     #gts #DELAY {delay_connection_timeout} {
-        #IF {"$env[conn_update]" == ""} {
-            #ECHO {Cannot establish connection. Abort.};
+        #IF {&Session[is_connected]} {
+            #RETURN {};
+        } {
+            #ECHO {Cannot establish connection. Abort connecting attempt.};
             #ZAP;
-        }
+        };
     } {10};
 } {1};

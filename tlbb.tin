@@ -13,7 +13,7 @@
 
 
 
-#ACTION {^ 姓名：%s%u ($username)。%s别号：%*。$} {
+#ACTION {^ 姓名：%s%u ($Profile[username])。%s别号：%*。$} {
     #VARIABLE {env[name]} {%2};
 };
 

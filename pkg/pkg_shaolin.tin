@@ -36,7 +36,7 @@
         #LOCAL fame @CnToInt{%1};
         Info {名气: $fame};
 
-        LogLine {Info} {./log/fame_$username.log};
+        LogLine {Info} {./log/fame_$Profile[username].log};
         #UNACTION {^玄生说道：你现在的名气是%u点。};
         #IF {$fame > 20000} {
             #CLASS shaolin KILL;

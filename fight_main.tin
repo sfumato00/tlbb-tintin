@@ -10,8 +10,8 @@
     };
     #CLASS profile read {$env[profile]};
     #CLASS fight read {./pkg/pkg_fight.tin};
-    #gts #SESSION {$username} {103.10.85.133} {8888};
-    #$username;
+    #gts #SESSION {$Profile[username]} {103.10.85.133} {8888};
+    #$Profile[username];
 };
 
 #ALIAS {do_fight} {
@@ -23,10 +23,10 @@
 
 #EVENT {SESSION DISCONNECTED} {
     #gts #DELAY 3 {
-        conn $username;
+        conn $Profile[username];
     };
 }
 
 #EVENT {SESSION TIMED OUT} {
-    #gts conn $username;
+    #gts conn $Profile[username];
 };

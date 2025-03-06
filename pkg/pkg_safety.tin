@@ -37,17 +37,17 @@
         buffer_dump {emergency_quit};
         #END;
     };
-    #IF {"$env[last_login]" == "" && "$env[last_reconnect]" == ""} {
+    #IF {"$Events[hooks][session][login]" == "" && "$Events[hooks][session][reconnect]" == ""} {
         #VARIABLE attemp_quit_after {0};
     };
-    #ELSEIF {"$env[last_reconnect]" == ""} {
-        #MATH attemp_quit_after {$env[last_login] + 9};
+    #ELSEIF {"$Events[hooks][session][reconnect]" == ""} {
+        #MATH attemp_quit_after {$Events[hooks][session][login] + 9};
     };
-    #ELSEIF {"$env[last_login]" == ""} {
-        #MATH attemp_quit_after {$env[last_reconnect] + 9};
+    #ELSEIF {"$Events[hooks][session][login]" == ""} {
+        #MATH attemp_quit_after {$Events[hooks][session][reconnect] + 9};
     };
     #ELSE {
-        #VARIABLE attemp_quit_after {@Max{$env[last_reconnect];$env[last_login]} + 9};
+        #VARIABLE attemp_quit_after {@Max{$Events[hooks][session][reconnect];$Events[hooks][session][login]} + 9};
     };
     #TICKER {ticker_quit} {
         #IF {@GetEpoch{} >= $attemp_quit_after} {

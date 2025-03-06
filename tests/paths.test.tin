@@ -5,8 +5,8 @@
 
 #CLASS setup OPEN;
 
-#VARIABLE {username} {testpaths};
-#VARIABLE {password} {Abcd1234};
+#VARIABLE {Profile[username]} {testpaths};
+#VARIABLE {Profile[password]} {Abcd1234};
 
 
 
@@ -25,7 +25,7 @@
     #VARIABLE {test[name]} {测试};
     #VARIABLE {test[expected_room]} {洛阳中心};
     #VARIABLE {test[delay]} {5};
-    #EVENT {VARIABLE UPDATED env[last_login]} {
+    #EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
         set brief 1;
         e;#2 n;
         #delay $test[delay] {
@@ -39,7 +39,7 @@
     #VARIABLE {test[name]} {测试};
     #VARIABLE {test[expected_room]} {中心广场};
     #VARIABLE {test[delay]} {5};
-    #EVENT {VARIABLE UPDATED env[last_login]} {
+    #EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
         set brief 1;
         e;#2 n;
 
@@ -57,7 +57,7 @@
     #VARIABLE {test[name]} {西夏-洛阳中心};
     #VARIABLE {test[expected_room]} {洛阳中心};
 
-    #EVENT {VARIABLE UPDATED env[last_login]} {
+    #EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
         set brief 1;
         #FUNCTION Callback {
             #IF {"$env[room]" === "洛阳中心"} {
@@ -73,7 +73,7 @@
     #VARIABLE {test[name]} {西夏-小山坡};
     #VARIABLE {test[expected_room]} {小山坡};
 
-    #EVENT {VARIABLE UPDATED env[last_login]} {
+    #EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
         set brief 1;
         #FUNCTION Callback {
             #IF {"$env[room]" === "小山坡"} {

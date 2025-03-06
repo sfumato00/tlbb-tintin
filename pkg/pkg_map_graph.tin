@@ -46,7 +46,7 @@
     #VARIABLE Travel[stops] {$conn[stops]};
     #LIST Travel[stops] explode {;};
 
-    #EVENT {VARIABLE UPDATED env[room_update_hook]} {
+    #EVENT {VARIABLE UPDATED Events[hooks][room_update]} {
         #LOCAL u {$Travel[stops][1]};
 
         #IF {@_assertRoomExitsKey{$u}} {
@@ -54,8 +54,8 @@
 
             #IF {"$u" == "$Travel[dest]"} {
                 Info {Arrived Final Destination: $Travel[dest]};
-                #UNEVENT {VARIABLE UPDATED env[room_update_hook]};
-                #VARIABLE {Travel[trip_complete]} {1};
+                #UNEVENT {VARIABLE UPDATED Events[hooks][room_update]};
+                #VARIABLE {Events[hooks][trip_complete]} {1};
                 #RETURN {};
             };
 
@@ -66,7 +66,7 @@
                 #IF {"$MAP[$u][$v][function]" == "1" && $Command[history][cnt] > $Travel[THROTTLE]
                     || $Command[history][cnt] + $MAP[$u][$v][dist] > $Travel[THROTTLE]} {
                     #DELAY 2 {
-                        #VARIABLE {env[room_update_hook]} {1};
+                        #VARIABLE {Events[hooks][room_update]} {1};
                     };
                     #RETURN {};
                 };
@@ -84,7 +84,7 @@
     #IF {"$env[room]" == ""} {
         Cmd {look} {1};
     };
-    #ELSE {#VARIABLE env[room_update_hook] {1}};    
+    #ELSE {#VARIABLE Events[hooks][room_update] {1}};    
 };
 
 

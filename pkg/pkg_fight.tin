@@ -20,6 +20,7 @@
     #CLASS downexp READ {./pkg/pkg_fight_downexp.tin};
 };
 
+#VARIABLE {FoodDrink[tong]} {1};
 #VARIABLE {Fight[epoch][start]} {0};
 
 #VARIABLE {MIN_IN_SECOND} {60};
@@ -60,7 +61,7 @@
     #LOCAL {qn_mean} {0};
 
     #IF {"$Fight[epoch][start]" == "0"} {
-        #VARIABLE {Fight[character]} {$username};
+        #VARIABLE {Fight[character]} {$Profile[username]};
 
         #VARIABLE {Fight[epoch]} {
             {start} {$time};
@@ -83,11 +84,6 @@
                 {mean} {0};
             };
         };
-    };
-
-    #ELSEIF {$vitals[饮水] < 30 && "$FoodDrink[tong]" == "0"} {
-        food_drink_init;
-        #Return {};
     };
     #ELSEIF {$vitals[饮水] < 30} {
         nosh;
@@ -138,13 +134,13 @@
     #IF {$State[downexp_on]} {
         #CAT {log_msg} { State[downexp_on]: On};
     };
-    Log {$log_msg} {Info} {./log/fight_@GetDate{}_$username.log};
+    Log {$log_msg} {Info} {./log/fight_@GetDate{}_$Profile[username].log};
 
     #DELAY {0.1} {
         Info {$log_msg};
     };
 
-    #VARIABLE {vitals[hook_downexp]} {1};
+    #VARIABLE {Events[hooks][downexp]} {1};
 };
 
 #ALIAS {fight_npcs} {
@@ -172,7 +168,7 @@
 
 #ALIAS {fight_start} {
     Info {开始练功};
-    Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
+    Log {开始练功} {Info} {./log/fight_@GetDate{}_$Profile[username].log};
 
     
     init_fight;
@@ -216,7 +212,7 @@
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #LOCAL npc_list {$Fight[npc_list]};#LOCAL npc_list {$Fight[npc_list]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
-        Log {%0} {LOG} {./log/npc_@GetDate{}_$username.log};
+        Log {%0} {LOG} {./log/npc_@GetDate{}_$Profile[username].log};
     };
 };
 
@@ -232,7 +228,7 @@
     };
 };
 
-#EVENT {VARIABLE UPDATED env[last_reconnect]} {
+#EVENT {VARIABLE UPDATED Events[hooks][session][reconnect]} {
     do_fight;
 } {5};
 

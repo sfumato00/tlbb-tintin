@@ -112,8 +112,8 @@
 }
 
 #ALIAS {go_learn} {
-    #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-        #UNEVENT {VARIABLE UPDATED Travel[trip_complete]};
+    #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
+        #UNEVENT {VARIABLE UPDATED Events[hooks][trip_complete]};
         learn_from_master $vitals[精神_max];
     };
     await_goto {{$Kezhan[learn][master_room_key]}};
@@ -155,8 +155,8 @@
 
 #ALIAS {go_rest} {
     
-    #EVENT {VARIABLE UPDATED Travel[trip_complete]} {
-        #IF {"$Travel[trip_complete]" == "1"} {
+    #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
+        #IF {"$Events[hooks][trip_complete]" == "1"} {
             @_get_random_room{};
         };
     };

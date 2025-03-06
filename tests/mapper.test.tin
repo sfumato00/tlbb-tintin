@@ -5,8 +5,8 @@
 #CLASS login READ {./pkg/pkg_login.tin};
 #CLASS mapper read {./pkg/pkg_mapper.tin};
 
-#VARIABLE {username} {testgraph};
-#VARIABLE {password} {Abcd_124};
+#VARIABLE {Profile[username]} {testgraph};
+#VARIABLE {Profile[password]} {Abcd_124};
 
 #ALIAS ExplodeDirection_Test {
     #VARIABLE {input} {%1};
@@ -60,7 +60,7 @@
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {汴梁城中心 north、south、east、west 和 up};
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {洛阳中心 south、north、east、west 和 up};
 
-#EVENT {VARIABLE UPDATED env[last_login]} {
+#EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
 };
 
 #VARIABLE {THROTTLE} {45};
