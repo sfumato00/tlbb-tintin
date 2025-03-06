@@ -10,7 +10,7 @@
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS gag READ {./pkg/pkg_gag.tin};
 #CLASS math READ {./pkg/pkg_math.tin};
-#CLASS food_drink READ {./pkg/pkg_food_drink.tin};
+
 
 #IF {"$Fight[jiuyang]" == "1"} {
     #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
@@ -33,7 +33,9 @@
 
 #ALIAS nosh_callback {
     #CLASS surrender KILL;
+    #CLASS food_drink READ {./pkg/pkg_food_drink.tin};
     drink_eat;
+    #CLASS food_drink KILL;
 };
 
 
@@ -156,6 +158,7 @@
 
 #ALIAS {init_fight} {
     #VARIABLE {Fight[epoch][start]} {0};
+    #CLASS food_drink READ {./pkg/pkg_food_drink.tin};
     Cmd {
         hp;
         food_drink_init;
@@ -163,6 +166,7 @@
         enable move none;
         set mute2;
         set no_give 1;
+        #CLASS food_drink KILL;
     } {3};
 };
 
