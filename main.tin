@@ -12,6 +12,7 @@
 };
 
 #EVENT {SESSION DISCONNECTED} {
+    #CLASS profile read {$env[profile]};
     conn $username;
 }
 

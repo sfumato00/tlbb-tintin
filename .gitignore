@@ -15,6 +15,7 @@ scripts/
 state/
 
 *.log
+*.ansi
 
 .idea/
 state_*

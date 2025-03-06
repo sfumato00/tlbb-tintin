@@ -12,11 +12,11 @@
 #CLASS math READ {./pkg/pkg_math.tin};
 #CLASS food_drink READ {./pkg/pkg_food_drink.tin};
 
-#IF {"$Fight[jiuyang]" == "1"} {
+#IF {&Fight[jiuyang] && "$Fight[jiuyang]" == "1"} {
     #CLASS jiuyang READ {./pkg/pkg_jiuyang.tin};
 };
 
-#IF {"$Fight[downexp]" == "1"} {
+#IF {&Fight[downexp] && "$Fight[downexp]" == "1"} {
     #CLASS downexp READ {./pkg/pkg_fight_downexp.tin};
 };
 

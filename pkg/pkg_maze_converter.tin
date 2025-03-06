@@ -1,0 +1,170 @@
+#CLASS {maze_converter} {open}
+
+#VAR {maze_matrix} {}
+#VAR {row_index} {0}
+#VAR {maze_width} {0}
+#VAR {maze_height} {0}
+#VAR {maze_start_x} {0}
+#VAR {maze_start_y} {0}
+#VAR {maze_exit_x} {0}
+#VAR {maze_exit_y} {0}
+#VAR {current_pos_x} {0}
+#VAR {current_pos_y} {0}
+#VAR {maze_capture_active} {0}
+
+/* Function to initialize variables before maze processing */
+#FUNCTION {init_maze_converter} {
+    #VAR {maze_matrix} {};
+    #VAR {row_index} {0};
+    #VAR {maze_width} {0};
+    #VAR {maze_height} {0};
+    #VAR {maze_start_x} {0};
+    #VAR {maze_start_y} {0};
+    #VAR {maze_exit_x} {0};
+    #VAR {maze_exit_y} {0};
+    #VAR {current_pos_x} {0};
+    #VAR {current_pos_y} {0};
+    #VAR {maze_capture_active} {1};
+    #ECHO {Maze converter initialized. Ready to capture maze data.};
+    #RETURN {1};
+}
+
+/* Function to convert a character to a matrix value (1 for wall, 0 for path) */
+#FUNCTION {char_to_matrix_value} {
+    /* Wall characters: ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼ │ ─ */
+    #IF {"$0" == "┌" || "$0" == "┐" || "$0" == "└" || "$0" == "┘" || 
+         "$0" == "├" || "$0" == "┤" || "$0" == "┬" || "$0" == "┴" || 
+         "$0" == "┼" || "$0" == "│" || "$0" == "─"} {
+        #RETURN {1};
+    };
+    
+    /* Path characters: spaces or star or colored blocks (for entrance/exit) */
+    #RETURN {0};
+}
+
+/* Process a line of the maze and add it to the matrix */
+#FUNCTION {process_maze_line} {
+    #LOCAL {clean_line} {};
+    #LOCAL {matrix_row} {};
+    #LOCAL {char} {};
+    
+    /* Strip timestamp and ANSI codes */
+    #LOCAL {clean_line} {%0};
+    #REPLACE {clean_line} {^\[0m\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \[0m} {};
+    #REPLACE {clean_line} {\[(\d+;)*\d*m} {};
+    
+    /* Skip non-maze lines */
+    #IF {"%clean_line" == "> "} {
+        #RETURN {0};
+    };
+    #REGEXP {%clean_line} {^迷宫地图} {
+        #RETURN {0};
+    };
+    #REGEXP {%clean_line} {表示迷宫入口} {
+        #RETURN {0};
+    };
+    
+    /* Only process lines that look like maze components */
+    #REGEXP {%clean_line} {[┌┐└┘├┤┬┴┼│─]} {
+        /* This is a maze line, process it */
+        
+        /* Record maze height */
+        #MATH {maze_height} {$maze_height + 1};
+        
+        /* Create a new row in the matrix */
+        #VAR {maze_matrix[$row_index]} {};
+        
+        /* Process each character in the line */
+        #FOREACH {$clean_line} {char} {
+            /* Determine if the character is a wall or path */
+            #LOCAL {matrix_value} {@char_to_matrix_value{$char}};
+            
+            /* Check for special maze elements */
+            #IF {"$char" == "★"} {
+                /* Current position marker */
+                #VAR {current_pos_x} {$maze_matrix[$row_index][]}; 
+                #VAR {current_pos_y} {$row_index};
+            };
+            #IF {"$char" == " " && "$clean_line" =~ " 41;1m "} {
+                /* Exit (red square) */
+                #VAR {maze_exit_x} {$maze_matrix[$row_index][]};
+                #VAR {maze_exit_y} {$row_index};
+            };
+            #IF {"$char" == " " && "$clean_line" =~ " 47;1m "} {
+                /* Entrance (white square) */
+                #VAR {maze_start_x} {$maze_matrix[$row_index][]};
+                #VAR {maze_start_y} {$row_index};
+            };
+            
+            /* Add the value to the current row */
+            #VAR {maze_matrix[$row_index][$maze_matrix[$row_index][]]} {$matrix_value};
+        };
+        
+        /* Update maze width if this row is longer */
+        #IF {$maze_matrix[$row_index][] > $maze_width} {
+            #VAR {maze_width} {$maze_matrix[$row_index][]};
+        };
+        
+        /* Increment row index */
+        #MATH {row_index} {$row_index + 1};
+    };
+    
+    #RETURN {1};
+}
+
+/* Function to display the maze matrix */
+#FUNCTION {display_maze_matrix} {
+    #ECHO {Maze dimensions: ${maze_width}x${maze_height}};
+    #ECHO {Entrance: ($maze_start_x,$maze_start_y) | Exit: ($maze_exit_x,$maze_exit_y) | Current: ($current_pos_x,$current_pos_y)};
+    
+    #LOCAL {y} {0};
+    #WHILE {$y < $maze_height} {
+        #LOCAL {row_str} {};
+        
+        #LOCAL {x} {0};
+        #WHILE {$x < $maze_width} {
+            #IF {$maze_matrix[$y][$x] == 1} {
+                #VAR {row_str} {$row_str#};
+            } {
+                #VAR {row_str} {$row_str.};
+            };
+            #MATH {x} {$x + 1};
+        };
+        
+        #ECHO {$row_str};
+        #MATH {y} {$y + 1};
+    };
+    
+    #RETURN {1};
+}
+
+/* Set up action triggers to capture maze lines */
+#ACTION {^%*$} {
+    #IF {$maze_capture_active == 1} {
+        @process_maze_line{%0};
+    };
+} {5}
+
+/* Command to start maze capture */
+#ALIAS {maze_capture_start} {
+    @init_maze_converter{};
+}
+
+/* Command to end maze capture and display the matrix */
+#ALIAS {maze_capture_end} {
+    #VAR {maze_capture_active} {0};
+    @display_maze_matrix{};
+    #ECHO {Maze capture completed.};
+}
+
+/* Command to debug display the raw matrix */
+#ALIAS {maze_debug} {
+    #SHOWME {$maze_matrix};
+}
+
+/* Export the maze matrix and info to a variable that can be used by other functions */
+#FUNCTION {export_maze_data} {
+    #RETURN {{matrix}{$maze_matrix}{width}{$maze_width}{height}{$maze_height}{start_x}{$maze_start_x}{start_y}{$maze_start_y}{exit_x}{$maze_exit_x}{exit_y}{$maze_exit_y}};
+}
+
+#CLASS {maze_converter} {close}

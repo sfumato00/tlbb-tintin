@@ -1,0 +1,83 @@
+#NOP
+#CLASS queue READ {./pkg/pkg_queue.tin};
+
+#VARIABLE {queue} {};
+
+#FUNCTION {enqueue} {
+    #IF {"%1" == ""} {
+        #RETURN {0};
+    };
+    #LIST {queue} {add} {%1};
+    #RETURN {1};
+};
+
+#FUNCTION {dequeue} {
+    #LOCAL size {0};
+    #LIST {queue} {size} {size};
+    #IF {$size == 0} {
+        #RETURN {""};
+    };
+    #LOCAL item {};
+    #LIST {queue} {get} {0} {item};
+    #LIST {queue} {delete} {0} {1};
+    #RETURN {$item};
+};
+
+#FUNCTION {queue_size} {
+    #LOCAL size {0};
+    #LIST {queue} {size} {size};
+    #RETURN {$size};
+};
+
+#FUNCTION {queue_clear} {
+    #LIST {queue} {clear};
+    #RETURN {1};
+};
+
+#FUNCTION {queue_peek} {
+    #LOCAL size {0};
+    #LIST {queue} {size} {size};
+    #IF {$size == 0} {
+        #RETURN {""};
+    };
+    #LOCAL item {};
+    #LIST {queue} {get} {0} {item};
+    #RETURN {$item};
+};
+
+#ALIAS {queue_add} {
+    #IF {"%1" == ""} {
+        #ECHO {Usage: queue_add <item>};
+        #RETURN;
+    };
+    #LOCAL result {@enqueue{%1}};
+    #IF {$result} {
+        #ECHO {Added "%1" to queue};
+    } {
+        #ECHO {Failed to add item to queue};
+    };
+};
+
+#ALIAS {queue_remove} {
+    #LOCAL item {@dequeue{}};
+    #IF {$item != ""} {
+        #ECHO {Removed "%1" from queue};
+    } {
+        #ECHO {Queue is empty};
+    };
+};
+
+#ALIAS {queue_show} {
+    #LOCAL size {@queue_size{}};
+    #IF {$size == 0} {
+        #ECHO {Queue is empty};
+        #RETURN;
+    };
+    #ECHO {Queue contents (size: $size):};
+    #LOCAL i {0};
+    #LOOP {0} {$size} {i} {
+        #LOCAL item {};
+        #LIST {queue} {get} {$i} {item};
+        #ECHO {$i + 1}. $item;
+    };
+}; 

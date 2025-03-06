@@ -1,6 +1,7 @@
 #NOP 
 
 #CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #ALIAS {none} {
     Cmd {
@@ -26,32 +27,80 @@
 } {5};
 
 
-#ACTION {^┌─┬─┬─┬─┬─┬─┬─┬─┐$} {
-    #VARIABLE {Fuben[r]} {0};
-    #substitute {  } { };
-    #ACTION {^└─┴─┴─┴─┴─┴─┴─┴─┘$} {
-        #unsubstitute {  };
-        #UNACTION {^└─┴─┴─┴─┴─┴─┴─┴─┘$};
-    };
+#VARIABLE {r} {0};
+#VARIABLE Fuben[maze] {};
 
+#VARIABLE {DIR} {
+    {1} {}
+};
+
+#ACTION {~^[0m[1;32m%*$} {
     
+    #LOCAL line {@_process_ansi_line{%0}};
+    #VARIABLE Fuben[maze][$r] {$line};
+    #LOCAL c {0};
+    #PARSE {$line} {ch} {
+        #VARIABLE {Maze[$r][$c]} {@_char_to_matrix_value{$ch}};
+        #IF {$Maze[$r][$c] == 2} {
+            #VARIABLE Fuben[entrance] {
+                {r} {$r}
+                {c} {$c}
+            };
+        };
+        #ELSEIF {$Maze[$r][$c] == 3} {
+            #VARIABLE Fuben[exit] {
+                {r} {$r}
+                {c} {$c}
+            };
+        };
+        #MATH {c} {$c + 1};
+    };
+    #MATH {r} {$r + 1};
 }
 
-#ACTION {^│%*│$} {
-    #MATH {Fuben[r]} {$Fuben[r] + 1};
+#ALIAS {print_maze} {
+    #FOREACH {$Fuben[maze]} {row} {
+        #ECHO {$Fuben[maze][$row]};
+    };
+    #LOCAL row {0};
+    #LOCAL col {0};
+
+    #LOOP {0} {16} {row}  {
+        #LOCAL line {};
+        #LOOP {0} {16} {col} {
+            #CAT {line} { $Maze[$row][$col],};
+        };
+        #ECHO {$line};
+    };
+}
+
+#FUNCTION _process_ansi_line {
     #LOCAL line {%1};
+    #REPLACE {line} {[41;1m  } {x};
+    #REPLACE {line} {[47;1m[1;34m★} {*};
+    #REPLACE {line} {[0m} {};
+    #REPLACE {line} {[1;32m} {};
+    #REPLACE {line} {[2;37;0m} {};
+    #REPLACE {line} {[31m} {};
+    #REPLACE {line} {[34m} {};
+    #REPLACE {line} {[41;1m} {};
     #REPLACE {line} {  } { };
-    #VARIABLE {Fuben[$Fuben[r]]} {$line};
-    
-    #LIST {line} {EXPLODE} {};
-    #LOCAL line;
+    #RETURN {$line};
 };
 
-#ACTION {^├%*┤$} {
-    #MATH {Fuben[r]} {$Fuben[r] + 1};
-    #LOCAL line {%1};
-    #REPLACE {line} {  } { };
-    #VARIABLE {Fuben[$Fuben[r]]} {$line};
-};
+#FUNCTION _char_to_matrix_value {
+    #IF {"%1" == "┌" || "%1" == "┐" || "%1" == "└" || "%1" == "┘" || 
+         "%1" == "├" || "%1" == "┤" || "%1" == "┬" || "%1" == "┴" || 
+         "%1" == "┼" || "%1" == "│" || "%1" == "─"} {
+        #RETURN {1};
+    };
+    #IF {"%1" == "*"} {
+        #RETURN {2};
+    };
+    #IF {"%1" == "x"} {
+        #RETURN {3};
+    };
+    #RETURN {0};
+}
 
 Cmd {fubenmap} {1};
