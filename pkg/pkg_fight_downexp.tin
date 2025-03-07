@@ -50,7 +50,7 @@
         #IF {$vitals[气血] > $vitals[气血_max] * 0.8} {
             #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
 
-            #CLASS graph read {./pkg/pkg_map_graph.tin};
+            #CLASS graph READ {./pkg/pkg_map_graph.tin};
             #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
                 #UNEVENT {VARIABLE UPDATED Events[hooks][trip_complete]};
                 stop_stuck_check;

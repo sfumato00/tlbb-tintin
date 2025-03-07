@@ -10,7 +10,7 @@
 
 #EVENT {VARIABLE UPDATED Hooks[travel][room_updated]} {
     #IF {@IsRoomEqualToCurrentRoom{$Travel[next]}} {
-        #VARIABLE Events[travel][next_room_arrived] {1};
+        #VARIABLE {Events[travel][next_room_arrived]} {1};
     };
 };
 
@@ -39,7 +39,7 @@
     #LOCAL count @GetCommandCnt{};
 
     Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
-    #IF {$count + $e[dist] > $Travel[THROTTLE]} {
+    #IF {$count + $e[dist] > $Command[throttle]} {
         #DELAY 1 {
             #NOP Throttled, try again later;
             Info {移动速度过快，暂缓移动};

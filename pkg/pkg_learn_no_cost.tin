@@ -7,7 +7,7 @@
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS learn_function READ {./pkg/pkg_learn_function.tin};
 #CLASS stats READ {./pkg/pkg_stats.tin};
-#class checkbusy READ {./pkg/pkg_checkbusy.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 
 
 #EVENT {VARIABLE UPDATED vitals[last_updated]} {

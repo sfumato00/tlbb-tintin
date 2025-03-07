@@ -1,5 +1,7 @@
 #NOP Travel Module
 
+Travel[THROTTLE]
+
 #ALIAS goto {
 
     #CLASS travel_functions READ {./pkg/pkg_travel_functions.tin};

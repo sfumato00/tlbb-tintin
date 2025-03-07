@@ -3,7 +3,7 @@
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
-#CLASS stats read {./pkg/pkg_stats.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
 
 #ALIAS {do_du} {
     #LOCAL {book} {%1};

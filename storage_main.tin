@@ -1,15 +1,15 @@
 #NOP Fight 
 
 #CLASS config READ {./config.tin};
-#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS login READ {./pkg/pkg_session.tin};
 
 #ALIAS {conn} {
     #VARIABLE {env} {
         {profile} {./profiles/storage/%1.tin}
     };
-    #CLASS profile read {$env[profile]};
+    #CLASS profile READ {$env[profile]};
     
-    #CLASS storage read {./pkg/pkg_storage.tin};
+    #CLASS storage READ {./pkg/pkg_storage.tin};
     #SESSION {$Profile[username]} {103.10.85.133} {8888};
 };
 

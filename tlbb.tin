@@ -1,15 +1,15 @@
 #NOP TLBB main module
 
 
-#CLASS login read {./pkg/pkg_login.tin};
+#CLASS login READ {./pkg/pkg_session.tin};
 
-#CLASS room read {./pkg/pkg_room.tin};
+#CLASS room READ {./pkg/pkg_room.tin};
 #CLASS command READ {./pkg/pkg_command.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 
-#CLASS utils read {./pkg/pkg_utils.tin};
-#CLASS vitals read {./pkg/pkg_vitals.tin};
-#CLASS stats read {./pkg/pkg_stats.tin};
+#CLASS utils READ {./pkg/pkg_utils.tin};
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
 
 #CLASS hooks READ {./extensions/hooks.tin};
 
@@ -39,7 +39,7 @@
 
             #VARIABLE {xunhuan[xfer_target]} {%2};
             #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg/pkg_xunhuan.tin};
+            #CLASS xunhuan READ {./pkg/pkg_xunhuan.tin};
 
             #ALIAS {feedback_loop} {
                 feedback_loop_master;
@@ -61,7 +61,7 @@
 
             #VARIABLE {xunhuan[xfer_target]} {%2};
             #CLASS xunhuan kill;
-            #CLASS xunhuan read {./pkg/pkg_xunhuan.tin};
+            #CLASS xunhuan READ {./pkg/pkg_xunhuan.tin};
 
             #TICKER {ticker_feedback_loop} {feedback_loop_xfer} {1};
             Cmd {hp};
@@ -78,7 +78,7 @@
     #DELAY {init} {
         #TICKER {ticker_feedback_loop} {check_busy} {1.2};
         #CLASS tuna kill;
-        #CLASS tuna read {./pkg/pkg_tuna.tin};
+        #CLASS tuna READ {./pkg/pkg_tuna.tin};
     } {3};
 }
 
@@ -90,7 +90,7 @@
     #DELAY {init} {
         #TICKER {ticker_feedback_loop} {check_busy} {2};
         #CLASS read kill;
-        #CLASS read read {./pkg/pkg_read.tin};
+        #CLASS read READ {./pkg/pkg_read.tin};
     } {3};
 }
 
@@ -103,7 +103,7 @@
         #CASE {"on"} {
             #ECHO {开启北冥模块};
             #CLASS beiming kill;
-            #CLASS beiming read {./pkg/pkg_beiming.tin};
+            #CLASS beiming READ {./pkg/pkg_beiming.tin};
         };
 
         #CASE {"off"} {
@@ -143,7 +143,7 @@
 
         #DEFAULT {
             Info {开启 研究 模块};
-            #CLASS research read {./pkg/pkg_research.tin};
+            #CLASS research READ {./pkg/pkg_research.tin};
         };
     };
 } {5};
@@ -263,7 +263,7 @@
 
         #DEFAULT {
             Info {开启传功吐纳模块};
-            #CLASS profile read {$env[profile]};
+            #CLASS profile READ {$env[profile]};
             #CLASS transfer_learn READ {./pkg/pkg_transfer_learn.tin};
         };
     };
@@ -279,7 +279,7 @@
 
         #DEFAULT {
             Info {开启传功读书模块};
-            #CLASS profile read {$env[profile]};
+            #CLASS profile READ {$env[profile]};
             #CLASS transfer_du READ {./pkg/pkg_transfer_du.tin};
         };
     };
@@ -304,7 +304,7 @@
 #alias zhua {
     #IF {"%1" == ""} {
         Info {开启抓NPC模块};
-        #class zhua READ {./pkg/pkg_zhua.tin};
+        #CLASS zhua READ {./pkg/pkg_zhua.tin};
     };
     #ELSEIF {"%1" == "off"} {
         Info {关闭抓NPC模块};

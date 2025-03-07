@@ -2,14 +2,14 @@
 #ECHO {====================================================};
 
 #CLASS tlbb kill;
-#CLASS tlbb read {./tlbb.tin};
+#CLASS tlbb READ {./tlbb.tin};
 
 #CLASS experiment open;
 
-#CLASS room read {./pkg/pkg_room.tin};
+#CLASS room READ {./pkg/pkg_room.tin};
 
 #ALIAS test {
-    #CLASS zhua read {./pkg/pkg_zhua.tin};
+    #CLASS zhua READ {./pkg/pkg_zhua.tin};
     go;
 };
 

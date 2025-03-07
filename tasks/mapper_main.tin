@@ -1,7 +1,7 @@
 #NOP 
 
 #CLASS config READ {./config.tin};
-#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS login READ {./pkg/pkg_session.tin};
 
 
 #ALIAS {conn} {
@@ -9,8 +9,8 @@
         {profile} {./profiles/mapper_%1.tin}
     };
 
-    #CLASS mapper read {./pkg/pkg_mapper.tin};
-    #CLASS profile read {$env[profile]};
+    #CLASS mapper READ {./pkg/pkg_mapper.tin};
+    #CLASS profile READ {$env[profile]};
     
     #SESSION {$Profile[username]} {103.10.85.133} {8888};
 };

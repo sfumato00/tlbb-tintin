@@ -34,7 +34,7 @@
 
 #ACTION {^你要服用哪种药？$} {
     Warn {药用完了。停手。};
-    #class beiming KILL;
+    #CLASS beiming KILL;
 } {5};
 
 #ACTION {^金衣剑客转身走了进去。$} {

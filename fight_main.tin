@@ -1,22 +1,22 @@
 #NOP Fight 
 
 #CLASS config READ {./config.tin};
-#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS login READ {./pkg/pkg_session.tin};
 
 
 #ALIAS {conn} {
     #VARIABLE {env} {
         {profile} {./profiles/%1.tin}
     };
-    #CLASS profile read {$env[profile]};
-    #CLASS fight read {./pkg/pkg_fight.tin};
+    #CLASS profile READ {$env[profile]};
+    #CLASS fight READ {./pkg/pkg_fight.tin};
     #gts #SESSION {$Profile[username]} {103.10.85.133} {8888};
     #$Profile[username];
 };
 
 #ALIAS {do_fight} {
-    #CLASS profile read {$env[profile]};
-    #CLASS fight read {./pkg/pkg_fight.tin};
+    #CLASS profile READ {$env[profile]};
+    #CLASS fight READ {./pkg/pkg_fight.tin};
     fight_start;
 } {5};
 

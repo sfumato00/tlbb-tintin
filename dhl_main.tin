@@ -1,7 +1,7 @@
 #NOP 
 
 #CLASS config READ {./config.tin};
-#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS login READ {./pkg/pkg_session.tin};
 
 
 #ALIAS {conn} {
@@ -9,8 +9,8 @@
         {profile} {./profiles/dhl/%1.tin}
     };
 
-    #CLASS delivery read {./pkg/pkg_delivery.tin};
-    #CLASS profile read {$env[profile]};
+    #CLASS delivery READ {./pkg/pkg_delivery.tin};
+    #CLASS profile READ {$env[profile]};
     
     #SESSION {$Profile[username]} {103.10.85.133} {8888};
 };

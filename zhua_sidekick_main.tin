@@ -1,5 +1,5 @@
 #CLASS config READ {./config.tin};
-#CLASS login READ {./pkg/pkg_login.tin};
+#CLASS login READ {./pkg/pkg_session.tin};
 
 #CLASS graph READ {./pkg/pkg_map_graph.tin};
 #CLASS const READ {./const.tin};
@@ -10,7 +10,7 @@
     #VARIABLE {env} {
         {profile} {./profiles/%1.tin}
     };
-    #CLASS profile read {$env[profile]};
+    #CLASS profile READ {$env[profile]};
     #SESSION {$Profile[username]} {103.10.85.133} {8888};
 };
 

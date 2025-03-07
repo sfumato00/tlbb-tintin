@@ -1,12 +1,12 @@
 #NOP 
-#CLASS config read {./config.tin};
+#CLASS config READ {./config.tin};
 #CLASS tlbb READ {./tlbb.tin};
 
 #ALIAS {conn} {
     #VARIABLE {env} {
         {profile} {./profiles/%1.tin}
     };
-    #CLASS profile read {$env[profile]};
+    #CLASS profile READ {$env[profile]};
     #gts #SESSION {$Profile[username]} {103.10.85.133} {8888};
     #$Profile[username];
 };

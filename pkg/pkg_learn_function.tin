@@ -1,5 +1,5 @@
 #NOP functions used by learn
-#CLASS stats read {./pkg/pkg_stats.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 #CLASS utils READ {./pkg/pkg_utils.tin};
 
