@@ -1,0 +1,61 @@
+#NOP Travel related events & handlers
+
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS commands READ {./pkg/pkg_command.tin};
+
+#CLASS hooks READ {./extensions/hooks.tin};
+#CLASS map READ {./pkg/pkg_map.tin};
+#CLASS map_functions READ {./pkg/pkg_map_functions.tin};
+
+
+#EVENT {VARIABLE UPDATED Hooks[travel][room_updated]} {
+    #IF {@IsRoomEqualToCurrentRoom{$Travel[next]}} {
+        #VARIABLE Events[travel][next_room_arrived] {1};
+    };
+};
+
+
+#EVENT {VARIABLE UPDATED Events[travel][next_room_arrived]} {
+
+    #LIST Travel[stops] SIZE rem;
+    #IF {$rem == 1} {
+        Info {到达目的地。};
+        #UNEVENT {VARIABLE UPDATED Events[travel][next_room_arrived]};
+        #UNEVENT {VARIABLE UPDATED Hooks[travel][room_updated]};
+
+        #CLASS map KILL;
+        #CLASS travel_functions KILL;
+        #CLASS travel_events KILL;
+        #VARIABLE {Events[travel][trip_complete]} {1};
+        #RETURN {};
+    };
+
+    #LOCAL u {$Travel[stops][1]};
+    #LOCAL v {$Travel[stops][2]};
+
+    #LOCAL {e} {$MAP[$u][$v]};
+
+    Info {$env[room_key] ==> $Travel[next]: $e};
+    #LOCAL count @GetCommandCnt{};
+
+    Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
+    #IF {$count + $e[dist] > $Travel[THROTTLE]} {
+        #DELAY 1 {
+            #NOP Throttled, try again later;
+            Info {移动速度过快，暂缓移动};
+            #VARIABLE Events[travel][next_room_arrived] {1};
+        };
+        #RETURN {};
+    };
+    #VARIABLE {Travel[next]} {$v};
+    #LIST Travel[stops] DELETE 1 1;
+    #IF {$e[function]} {
+        $MAP[$u][$v][path];
+    };
+    #ELSE {
+        Cmd {$e[path]} {$e[dist]};
+    };
+};
+
+
+

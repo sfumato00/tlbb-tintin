@@ -1,0 +1,7 @@
+#NOP extended event hooks go here
+
+#EVENT {VARIABLE UPDATED Events[room][last_updated]} {
+    #VARIABLE {Hooks[room][updated]} {1};
+    #VARIABLE {Hooks[travel][room_updated]} {1};
+    #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+}

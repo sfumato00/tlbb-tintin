@@ -43,12 +43,12 @@
 #ALIAS t2 {
     Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
 
-    #EVENT {VARIABLE UPDATED travel[started]} {
-        #IF {@_assertRoomExitsKey{西夏王陵 north 和 southup}} {
-            #UNEVENT {VARIABLE UPDATED travel[started]};
-            #EVENT {VARIABLE UPDATED travel[started]} {
-                #IF {@_assertRoomExitsKey{欢迎来到天龙八部 south 和 down}} {
-                    #UNEVENT {VARIABLE UPDATED travel[started]};
+    #EVENT {VARIABLE UPDATED Travel[started]} {
+        #IF {@CurrentRoomEqualTo{西夏王陵 north 和 southup}} {
+            #UNEVENT {VARIABLE UPDATED Travel[started]};
+            #EVENT {VARIABLE UPDATED Travel[started]} {
+                #IF {@CurrentRoomEqualTo{欢迎来到天龙八部 south 和 down}} {
+                    #UNEVENT {VARIABLE UPDATED Travel[started]};
                     Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
                 };
             };
@@ -73,9 +73,9 @@
 #NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {洛阳中心 south、north、east、west 和 up};
 
 #EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
-        #IF {@_assertRoomExitsKey{洛阳中心 south、north、east、west 和 up}} {
-            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+    #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
+        #IF {@CurrentRoomEqualTo{洛阳中心 south、north、east、west 和 up}} {
+            #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
             goto {小院 south、north、east 和 west};
         };
     };

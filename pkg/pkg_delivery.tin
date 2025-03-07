@@ -10,7 +10,7 @@
 
 #ALIAS {go_deliver} {
     #EVENT {VARIABLE UPDATED Events[hooks][travel][callback]} {
-        #IF {@_assertRoomExitsKey{$Delivery[room_key]}} {
+        #IF {@CurrentRoomEqualTo{$Delivery[room_key]}} {
             #UNEVENT {VARIABLE UPDATED Events[hooks][travel][callback]};
             Cmd {give $Delivery[next_guy] $Delivery[npc]} {1};
         };
@@ -103,7 +103,7 @@
     };
 }
 
-#EVENT {VARIABLE UPDATED env[room_updated]} {
+#EVENT {VARIABLE UPDATED Events[room][last_updated]} {
     #IF {"$env[room]" == "城隍庙"} {
         buffer_dump {delivery};
         #VARIABLE {env[last_buffer_dump]} {@GetEpoch{}};

@@ -10,7 +10,7 @@
 };
 
 #ALIAS {assert} {
-    #IF {@_assertRoomExitsKey{$test[expected_room]}} {
+    #IF {@CurrentRoomEqualTo{$test[expected_room]}} {
         #ECHO {<cfa> Test: >> $test[name] << SUCCEEDED};
     };
     #ELSE {
@@ -46,7 +46,7 @@
 #ALIAS {start_test} {
     
     #FUNCTION Callback {
-        #IF {_assertRoomExitsKey{$test[expected_room]}} {
+        #IF {CurrentRoomEqualTo{$test[expected_room]}} {
             #VARIABLE {test[complete]} {1};
         };
     };

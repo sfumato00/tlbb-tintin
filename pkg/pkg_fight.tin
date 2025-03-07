@@ -166,8 +166,8 @@
         enable move none;
         set mute2;
         set no_give 1;
-        #CLASS food_drink KILL;
-    } {3};
+    } {6};
+    #CLASS food_drink KILL;
 };
 
 #ALIAS {fight_start} {

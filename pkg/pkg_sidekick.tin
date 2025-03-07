@@ -27,7 +27,7 @@
 
         #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
             #IF {$Events[hooks][trip_complete]} {
-                #IF {@_assertRoomExitsKey{{$Sidekick[handler][room_key]}}} {
+                #IF {@CurrentRoomEqualTo{{$Sidekick[handler][room_key]}}} {
                     Cmd {give $Sidekick[handler][id] $Sidekick[npc_id]};
                     quit;
                 };
@@ -50,7 +50,7 @@
     #IF {&Persist[return_room] && "$Persist[return_room]" != ""} {
         #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
             #IF {$Events[hooks][trip_complete]} {
-                #IF {@_assertRoomExitsKey{{$Persist[return_room]}}} {
+                #IF {@CurrentRoomEqualTo{{$Persist[return_room]}}} {
                     follow mia;
                 };
             };

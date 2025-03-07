@@ -1,5 +1,7 @@
 #NOP path aliases
 
+#CLASS travel READ {./pkg/pkg_travel.tin};
+
 #ALIAS sx {
     go;
     goto {神憩小舍 east、southdown、northwest 和 up};
@@ -49,3 +51,8 @@
     go;
     goto {望燕亭 north 和 west};
 }
+
+#ALIAS {ht} {
+    go;
+    goto {黄土大道 southeast 和 west};
+} {5};

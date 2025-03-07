@@ -13,3 +13,7 @@
 #ALIAS Error {
     #ECHO {@Timestamp{} <faa>[Error] %1};
 }
+
+#ALIAS Debug {
+    #ECHO {@Timestamp{} <ded>[Debug] %1};
+}

@@ -5,28 +5,42 @@
 
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};
-    #VARIABLE {env[room_tong]} {0};
-    #VARIABLE {env[room_pig]} {0};
 } {2};
 
 #ACTION {    这里%u的出口是%*。} {
     #VARIABLE {env[exits]} {%2};
-    #VARIABLE {env[room_updated]} {@GetEpoch{}};
-    #VARIABLE {Events[hooks][room_update]} {1};
-    #VARIABLE {Events[hooks][travel][callback]} {1};
+    _update_room;
 } {2};
 
 #ACTION {    这里没有明显的出口。} {
     #VARIABLE {env[exits]} {};
-    #VARIABLE {env[room_updated]} {@GetEpoch{}};
-    #VARIABLE {Events[hooks][room_update]} {1};
-    #VARIABLE {Events[hooks][travel][callback]} {1};
+    _update_room;
 } {2};
 
-
+#NOP ugly hack to make sure the room is updated when looking at it;
 #ACTION {呼叫来自：/cmds/std/look.c 的 main() 第 85 行，物件： /cmds/std/look} {
+    #VARIABLE {env[room]} {甬道};
+    #VARIABLE {env[exits]} { south};
+    _room_update;
+} {2};
+
+
+#ALIAS {_update_room} {
+    #VARIABLE {env[room_key]} {$env[room]$env[exits]};
+    #VARIABLE {Events[room][last_updated]} {@GetEpoch{}};
     #VARIABLE {Events[hooks][room_update]} {1};
     #VARIABLE {Events[hooks][travel][callback]} {1};
-    #VARIABLE {env[room_tong]} {1};
-    #VARIABLE {env[room_pig]} {1};
 } {2};
+
+
+#FUNCTION IsRoomEqualToCurrentRoom {
+    #IF {!&env[room] || !&env[exits]} {
+        #RETURN 0;
+    };
+
+    #LOCAL {dest_room} {%1};
+    #LOCAL {current_room} {$env[room]$env[exits]};
+
+    #RETURN {"$dest_room" == "$current_room"};
+}
+

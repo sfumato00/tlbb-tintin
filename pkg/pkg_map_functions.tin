@@ -5,195 +5,176 @@
 #CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
 #CLASS print READ {./pkg/pkg_print.tin};
 
-#CLASS map_common READ {./pkg/pkg_map_common.tin};
-
 #ALIAS {东安门-黄土大道} {
-    #IF {@_assertRoomExitsKey{东安门 east 和 west}} {
-        #VARIABLE {travel[started]} {1};
+    #IF {@IsRoomEqualToCurrentRoom{东安门 east 和 west}} {
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
-                #VARIABLE {env[room_updated]} {@GetEpoch{}};
+                #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
             };
         };
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF @_assertRoomExitsKey{黄土大道 southeast 和 west} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            Warn {[东安门-黄土大道] Hooks[travel][map_function][room_updated]};
+            #IF @IsRoomEqualToCurrentRoom{黄土大道 southeast 和 west} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
                 #UNACTION {^请不要一次输入太多的指令。$};
-                #VARIABLE {travel[started]} {0};
             };
             #ELSE {
-                Cmd {e} {1};
+                _safe_cmd {e} {1};
             };
         };
-        Cmd {e} {1};
     };
 };
 
 #ALIAS {黄土大道-southeast-west-东安门} {
-    #IF {@_assertRoomExitsKey{黄土大道 southeast 和 west}} {
-        #VARIABLE {travel[started]} {1};
+    #IF {@IsRoomEqualToCurrentRoom{黄土大道 southeast 和 west}} {
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
-                #VARIABLE {env[room_updated]} {@GetEpoch{}};
+                #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
             };
         };
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF @_assertRoomExitsKey{东安门 east 和 west} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            Warn {[黄土大道-southeast-west-东安门] Hooks[travel][map_function][room_updated]};
+            #IF @IsRoomEqualToCurrentRoom{东安门 east 和 west} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
                 #UNACTION {^请不要一次输入太多的指令。$};
-                #VARIABLE {travel[started]} {0};
             };
             #ELSE {
-                Cmd {w} {1};
+                _safe_cmd {w} {1};
             };
         };
-        Cmd {w} {1};
     };
 }
 
 #ALIAS {小山坡-天水关} {
-    #IF {@_assertRoomExitsKey{小山坡 westdown、southdown 和 eastdown}} {
-        #VARIABLE {travel[started]} {1};
+    #IF {@IsRoomEqualToCurrentRoom{小山坡 westdown、southdown 和 eastdown}} {
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
-                #VARIABLE {env[room_updated]} {@GetEpoch{}};
+                #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
             };
         };
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF @_assertRoomExitsKey{天水关 north、east 和 west} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF @IsRoomEqualToCurrentRoom{天水关 north、east 和 west} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
                 #UNACTION {^请不要一次输入太多的指令。$};
-                #VARIABLE {travel[started]} {0};
             };
-            #ELSE {
-                Cmd {e} {1};
+            #ELSEIF {!@Cmd{{w};1}} {
+                #DELAY 1 {
+                    #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+                };
             };
         };
-        Cmd {ed} {1};
     };
 } {5};
 
 #ALIAS {登封县北街-少室山山脚} {
-    #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
-        #VARIABLE {travel[started]} {1};
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{登封县北街 north、south、east 和 northwest}} {
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{少室山山脚 south 和 northwest}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
             #ELSE {
                 #regexp {$env[exits]} {northwest} {Cmd {nw} {1}} {Cmd {n} {1}};
             };
         };
-        Cmd {nw} {1};
+        #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
     };
 }
 
 #ALIAS {少室山山脚-登封县北街} {
-    #IF {@_assertRoomExitsKey{少室山山脚 south 和 northwest}} {
-        #VARIABLE {travel[started]} {1};
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{登封县北街 north、south、east 和 northwest}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{少室山山脚 south 和 northwest}} {
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{登封县北街 north、south、east 和 northwest}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
             #ELSE {
                 #regexp {$env[exits]} {southeast} {Cmd {se} {1}} {Cmd {s} {1}};
             };
         };
-        Cmd {s} {1};
+        #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
     };
 }
 
 #ALIAS {黑沼泽-n-sw-黑沼泽-s-n-se} {
-    #IF {@_assertRoomExitsKey{黑沼泽 north 和 southwest}} {
-        #VARIABLE {travel[started]} {1};
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{黑沼泽 north 和 southwest}} {
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{黑沼泽 south、north 和 west}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
             #ELSE {
-                Cmd {n} {1};
+                _safe_cmd {n} {1};
             };
         };
-        Cmd {n} {1};
     };
 } {5};
 
 #ALIAS {黑沼泽-大道} {
-    #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
-        #VARIABLE {travel[started]} {1};
-        #VARIABLE {travel[odd]} {1};
-        
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{大道 north、east 和 northeast}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
-                #UNVARIABLE {travel[odd]};
+    #IF {@IsRoomEqualToCurrentRoom{黑沼泽 south、north 和 west}} {
+        #VARIABLE {Travel[odd]} {0};
+        #VARIABLE {Travel[dir]} {
+            {0} {w}
+            {1} {s}
+        };
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{大道 north、east 和 northeast}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNVARIABLE {Travel[odd]};
+                #UNVARIABLE {Travel[dir]};
             };
-            #ELSEIF {$travel[odd] == 1} {
-                Cmd {s} {1};
-                #MATH travel[odd] {1 - $travel[odd]};
+            #ELSEIF {@Cmd{{$Travel[dir][$Travel[odd]]};1}} {
+                #MATH Travel[odd] {1 - $Travel[odd]};
             };
             #ELSE {
-                Cmd {w} {1};
-                #MATH travel[odd] {1 - $travel[odd]};
+                _safe_cmd {$Travel[dir][$Travel[odd]]} {1};
             };
         };
-        Cmd {w} {1};
+        #NOP #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
     };
 }
 
 #ALIAS {大道-黑沼泽} {
-    #IF {@_assertRoomExitsKey{大道 north、east 和 northeast}} {
-        #VARIABLE {travel[started]} {1};
-        #VARIABLE {travel[odd]} {1};
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{黑沼泽 south、north 和 west}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
-                #UNVARIABLE {travel[odd]};
+    #IF {@IsRoomEqualToCurrentRoom{大道 north、east 和 northeast}} {
+        #VARIABLE {Travel[odd]} {0};
+        #VARIABLE {Travel[dir]} {
+            {0} {e}
+            {1} {s}
+        };
+        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{黑沼泽 south、north 和 west}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNVARIABLE {Travel[odd]};
             };
-            #ELSEIF {$travel[odd] == 1} {
-                Cmd {s} {1};
-                #MATH travel[odd] {1 - $travel[odd]};
+            #ELSEIF {@Cmd{{$Travel[dir][$Travel[odd]]};1}} {
+                #MATH Travel[odd] {1 - $Travel[odd]};
             };
             #ELSE {
-                Cmd {e} {1};
-                #MATH travel[odd] {1 - $travel[odd]};
+                _safe_cmd {$Travel[dir][$Travel[odd]]} {1};
             };
         };
-        Cmd {e} {1};
     };
 }
 
 #ALIAS {虎跳溪-断魂崖} {
-    #IF {@_assertRoomExitsKey{虎跳溪 east 和 southdown}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{断魂崖 north、east、southdown 和 west}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+    #IF {@IsRoomEqualToCurrentRoom{虎跳溪 east 和 southdown}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{断魂崖 north、east、southdown 和 west}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
                 #UNACTION {^你一提丹田气，凌空拔起，可是身体一晃，掉进了小溪。$};
                 #UNACTION {^你正忙着呢，做不了任何事！};
                 #UNACTION {^请不要在公用频道上一次贴出太多的内容！};
-                #VARIABLE {travel[started]} {0};
             };
         };
         #ACTION {^你一提丹田气，凌空拔起，可是身体一晃，掉进了小溪。$} {
             CheckBusy {jump over 小溪} {1};
-        } {5};        
-        Cmd {jump over 小溪} {1};
+        } {5};
+        #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
     }
 }
 
 #ALIAS {断魂崖-屏风壁} {
-    #IF {@_assertRoomExitsKey{断魂崖 north、east、southdown 和 west}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{屏风壁 westup}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{断魂崖 north、east、southdown 和 west}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{屏风壁 westup}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         Cmd {climb down} {1};
@@ -201,12 +182,10 @@
 };
 
 #ALIAS {屏风壁-销魂台} {
-    #IF {@_assertRoomExitsKey{屏风壁 westup}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{销魂台 north 和 southdown}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{屏风壁 westup}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{销魂台 north 和 southdown}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         CheckBusy {l 石壁;climb up} {2};
@@ -214,12 +193,10 @@
 };
 
 #ALIAS {销魂台-缥缈峰半山腰} {
-    #IF {@_assertRoomExitsKey{销魂台 north 和 southdown}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{缥缈峰半山腰 southdown 和 northup}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{销魂台 north 和 southdown}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{缥缈峰半山腰 southdown 和 northup}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         CheckBusy {n;l 云雾;l 云雾;l 黑影;run to 主峰} {5};
@@ -227,19 +204,17 @@
 };
 
 #ALIAS {缥缈峰半山腰-小院} {
-    #IF {@_assertRoomExitsKey{缥缈峰半山腰 southdown 和 northup}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
+    #IF {@IsRoomEqualToCurrentRoom{缥缈峰半山腰 southdown 和 northup}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
 
-            #IF {@_assertRoomExitsKey{{ 小院 south、north、east 和 west}}} {
+            #IF {@IsRoomEqualToCurrentRoom{{ 小院 south、north、east 和 west}}} {
                 Info {Arrived  小院 south、north、east 和 west};
                 #VARIABLE env[room] {小院};
                 #UNACTION {^程青霜对你说道：你要进宫切记福无双至。$};
                 #UNACTION {^程青霜对你说道：你要进宫切记祸不单行。$};
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
-            #ELSEIF {@_assertRoomExitsKey{灵鹫宫宫门 south 和 north}} {
+            #ELSEIF {@IsRoomEqualToCurrentRoom{灵鹫宫宫门 south 和 north}} {
                 #IF {$Travel[enter]} {
                     #UNVARIABLE {Travel[enter]};
                     Cmd {n} {1};
@@ -262,12 +237,10 @@
 };
 
 #ALIAS {渔人码头-太湖边} {
-    #IF {@_assertRoomExitsKey{渔人码头 east}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{太湖边 northwest}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{渔人码头 east}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{太湖边 northwest}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         Cmd {sail} {1};
@@ -276,12 +249,10 @@
 
 
 #ALIAS {太湖边-渔人码头} {
-    #IF {@_assertRoomExitsKey{太湖边 northwest}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{渔人码头 east}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{太湖边 northwest}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{渔人码头 east}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         Cmd {sail} {1};
@@ -290,12 +261,10 @@
 
 
 #ALIAS {山路-n-sd-山路-sd-nu} {
-    #IF {@_assertRoomExitsKey{山路 north 和 southdown}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{山路 southdown 和 northup}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{山路 north 和 southdown}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{山路 southdown 和 northup}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         Cmd {climb mountain} {1};
@@ -303,12 +272,10 @@
 }
 
 #ALIAS {山路-sd-nu-山路-n-sd} {
-    #IF {@_assertRoomExitsKey{山路 southdown 和 northup}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{山路 north 和 southdown}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{山路 southdown 和 northup}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{山路 north 和 southdown}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         Cmd {climb down} {1};
@@ -316,12 +283,10 @@
 }
 
 #ALIAS {山路-山顶} {
-    #IF {@_assertRoomExitsKey{山路 southdown 和 northup}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{山顶 south、north 和 east}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{山路 southdown 和 northup}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{山顶 south、north 和 east}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         Cmd {nu;climb mountain} {1};
@@ -329,16 +294,30 @@
 }
 
 #ALIAS {渊涯绝壁-八大夫} {
+    #ALIAS access {
+        #local room_key_one {%1};
+        #local room_key_two {%2};
+        #local path {%3};
+        #local dist {%4};
+        #IF {@IsRoomEqualToCurrentRoom{$room_key_one}} {
+            #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+                #IF {@IsRoomEqualToCurrentRoom{$room_key_two}} {
+                    #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                    #UNALIAS access;
+                };
+            };
+            Cmd $path $dist;
+        };
+    };
     access {渊涯绝壁 east} {八大夫 down} {{jump down}} {1};
 } {5};
 
+
 #ALIAS {八大夫-谷底} {
-    #IF {@_assertRoomExitsKey{八大夫 down}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{谷底 south}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
+    #IF {@IsRoomEqualToCurrentRoom{八大夫 down}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{谷底 south}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
             };
         };
         #EVENT {VARIABLE UPDATED env[room]} {
@@ -351,13 +330,11 @@
 } {5};
 
 #ALIAS {洞口-江边小路} {
-    #IF {@_assertRoomExitsKey{洞口 out 和 west}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{江边小路 northup}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+    #IF {@IsRoomEqualToCurrentRoom{洞口 out 和 west}} {
+        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #IF {@IsRoomEqualToCurrentRoom{江边小路 northup}} {
+                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
                 #UNEVENT {VARIABLE UPDATED env[room]};
-                #VARIABLE {travel[started]} {0};
             };
         };
         #EVENT {VARIABLE UPDATED env[room]} {
@@ -369,20 +346,13 @@
     };
 }
 
+#ALIAS {_safe_cmd} {
+    #LOCAL cmd {%1};
+    #LOCAL dist {%2};
 
-#ALIAS access {
-    #local room_key_one {%1};
-    #local room_key_two {%2};
-    #local path {%3};
-    #local dist {%4};
-    #IF {@_assertRoomExitsKey{$room_key_one}} {
-        #VARIABLE {travel[started]} {1};
-        #Event {VARIABLE UPDATED env[room_updated]} {
-            #IF {@_assertRoomExitsKey{$room_key_two}} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
-                #VARIABLE {travel[started]} {0};
-            };
+    #IF {!@Cmd{{$cmd};1}} {
+        #DELAY 1 {
+            #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
         };
-        Cmd $path $dist;
     };
-}
+} {5};

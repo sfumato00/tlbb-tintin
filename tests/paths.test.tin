@@ -43,9 +43,9 @@
         set brief 1;
         e;#2 n;
 
-        #EVENT {VARIABLE UPDATED env[room_updated]} {
+        #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
             #IF {"$env[room]" === "洛阳中心"} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
                 洛阳-西夏;
             };
         };

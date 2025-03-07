@@ -1,0 +1,17 @@
+#NOP Travel Module
+
+#ALIAS goto {
+
+    #CLASS travel_functions READ {./pkg/pkg_travel_functions.tin};
+    #CLASS travel_events READ {./pkg/pkg_travel_events.tin};
+    #IF {&env[room_key]} {
+        _travel {$env[room_key]} {%1};
+    };
+    #ELSE {
+        #EVENT {VARIABLE UPDATED Hooks[travel][room_updated]} {
+            #UNEVENT {VARIABLE UPDATED Hooks[travel][room_updated]};
+            _travel {$env[room_key]} {%1};
+        };
+        Cmd {l} {1};
+    };
+};

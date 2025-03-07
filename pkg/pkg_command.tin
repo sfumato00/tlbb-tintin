@@ -1,15 +1,42 @@
 #NOP Command Engine
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #LIST {Command[history][q]} CREATE {};
 #VARIABLE {Command[history][cnt]} {0};
+#VARIABLE {Command[throttle]} {45};
+
+
+#FUNCTION Cmd {
+    Warn {[Cmd] 输入指令: %1 %2};
+    #LOCAL commands {%1};
+    #LOCAL cnt {%2};
+    #IF {@GetCommandCnt{} + $cnt >= $Command[throttle]} {
+        Warn {[Cmd] 指令过多，暂缓执行};
+        #RETURN {0};
+    };
+
+    Cmd {$commands} {$cnt};
+    #RETURN {1};
+};
+
+#FUNCTION GetCommandCnt {
+    _purgeHistory;
+    #RETURN {$Command[history][cnt]};
+};
+
+#FUNCTION Peek {
+    _purgeHistory;
+    #LOCAL top $Command[history][q][1];
+    #RETURN {$top};
+}
 
 #ALIAS Cmd {
-    _purgeHistory;
     #LOCAL commands {%1};
     #LOCAL cnt {%2};
     #LOCAL epoch @GetEpoch{};
+
     #FOREACH $commands _c {
         #IF {"$_c" == ""} {
             #CONTINUE;
@@ -25,21 +52,6 @@
     };
     #MATH Command[history][cnt] {$Command[history][cnt] + $cnt};
 };
-
-#FUNCTION GetCommandCnt {
-    _purgeHistory;
-    #LOCAL total_cnt {0};
-    #FOREACH *Command[history][q][%*] {x} {
-        #MATH {total_cnt} {$total_cnt + $Command[history][q][$x][cnt]};
-    };
-    #RETURN $total_cnt;
-};
-
-#FUNCTION Peek {
-    _purgeHistory;
-    #LOCAL top $Command[history][q][1];
-    #RETURN {$top};
-}
 
 #ALIAS _purgeHistory {
     #LOCAL n {};

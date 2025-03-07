@@ -1,0 +1,147 @@
+#NOP Functions related to the travel module
+#CLASS commands READ {./pkg/pkg_command.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+
+#CLASS map READ {./pkg/pkg_map.tin};
+#CLASS map_functions READ {./pkg/pkg_map_functions.tin};
+
+
+
+#ALIAS _travel {
+
+    #LOCAL src {%1};
+    #LOCAL dest {%2};
+
+    #IF {!&MAP[$src]} {
+        Error {No map entry for $src};
+        #RETURN {};
+    };
+
+    #IF {!&MAP[$dest]} {
+        Error {No map entry for $dest};
+        #RETURN {};
+    };
+
+    #IF {"$src" == "$dest"} {
+        Warn {已经在目的地。};
+        #RETURN {};
+    };
+
+    #VARIABLE {Travel[dest]} {$dest};
+    _calculate_travel_path;
+    #VARIABLE {Events[travel][next_room_arrived]} {0};
+};
+
+
+#ALIAS _calculate_travel_path {
+    #LOCAL conn {@_dijkstra{$src;$dest}};
+
+    Info {src: $src, dest: $dest};
+    Info {stops: $conn[stops]};
+    Info {path: $conn[path]};
+    Info {dist: $conn[dist]};
+    Info {has function?: $conn[function]};
+
+    #VARIABLE Travel[stops] {$conn[stops]};
+    #LIST Travel[stops] EXPLODE {;};
+};
+
+#FUNCTION _dijkstra {
+    #LOCAL src %1;
+    #LOCAL dest %2;
+
+    #IF {"$src" == "$dest"} {
+        #RETURN {
+            {path} {}
+            {dist} {0}
+            {stops} {$dest}
+        };
+    };
+
+    #IF {"$MAP[$src]" == ""} {
+        Warn {无法识别的房间: $src};
+        #RETURN {};
+    };
+
+    #IF {"$MAP[$src][$dest]" != ""} {
+        #RETURN {
+            {path} {$MAP[$src][$dest][path]}
+            {dist} {$MAP[$src][$dest][dist]}
+            {stops} {$src;$dest}
+            {function} {$MAP[$src][$dest][function]}
+        };
+    };
+
+    #LOCAL {dists} {};
+    #LOCAL {visited} {};
+    #LOCAL {_paths} {};
+    #LOCAL {stops} {};
+    #LOCAL {is_function} {};
+    #LOCAL {u} {};
+
+    #FOREACH {*MAP[%*]} {u} {
+        #LOCAL {dists[$u]} {999};
+        #LOCAL {visited[$u]} {0};
+    };
+    #LOCAL {dists[$src]} {0};
+    #LOCAL {stops[$src]} {$src};
+    #LOCAL {_paths[$src]} {};
+    
+
+    #LOCAL {u} {@_getNextNode{$dists;$visited}};
+
+    #WHILE {"$u" != ""} {
+        #LOCAL {visited[$u]} {1};
+        #LOCAL v {};
+        #FOREACH {*MAP[$u][%*]} {v} {
+            #IF {$visited[$v]} {
+                #CONTINUE;
+            };
+            #LOCAL d {};
+            #MATH d {$dists[$u] + $MAP[$u][$v][dist]};
+            
+            #IF {$d < $dists[$v]} {
+                #LOCAL {dists[$v]} {$d};
+                #MATH {is_function[$v]} {("$MAP[$u][$v][function]" == "1") || ("$is_function[$v]" == "1")};
+                #IF {"$_paths[$u]" == ""} {
+                    #LOCAL {_paths[$v]} {$MAP[$u][$v][path]};
+                } {
+                    #LOCAL {_paths[$v]} {$_paths[$u]};
+                    #CAT {_paths[$v]} {;$MAP[$u][$v][path]};
+                };
+                #LOCAL {stops[$v]} {$stops[$u];$v};
+            };
+        };
+        #LOCAL {u} {@_getNextNode{}};
+    };
+
+    #IF {!$is_function[$dest]} {
+        #VARIABLE {MAP[$src][$dest]} {
+            {path} {$_paths[$dest]}
+            {dist} {$dists[$dest]}
+        };
+    };
+
+    #RETURN {
+        {path} {$_paths[$dest]}
+        {dist} {$dists[$dest]}
+        {stops} {$stops[$dest]}
+        {function} {$is_function[$dest]}
+    };
+};
+
+
+#FUNCTION _getNextNode {
+    #LOCAL _nextNode {};
+    #LOCAL _min_dist {999};
+    #LOCAL node {};
+    #FOREACH {*dists[%*]} {node} {
+        #NOP #ECHO {[DEBUG] node: $node, dists[node]: $dists[$node], visited: $visited[$node]};
+        #IF {!$visited[$node] && $dists[$node] < $_min_dist} {
+            
+            #LOCAL {_min_dist} {$dists[$node]};
+            #LOCAL {_nextNode} {$node};
+        };
+    };
+    #RETURN $_nextNode;
+};

@@ -21,7 +21,7 @@
 
 
 
-#EVENT {VARIABLE UPDATED env[room_updated]} {
+#EVENT {VARIABLE UPDATED Events[room][last_updated]} {
     #UNDELAY delay_move_timeout;
     #CLASS auto_mapped_map WRITE {auto_mapped_map.map};
     
@@ -78,7 +78,7 @@
         #LOCAL prev @VisitStackPop{};
         #VARIABLE {env[room]} {$prev[room]};
         #VARIABLE {env[exits]} {$prev[exits]};
-        #VARIABLE {env[room_updated]} {@GetEpoch{}};
+        #VARIABLE {Events[room][last_updated]} {@GetEpoch{}};
     } {3};
 } {5};
 

@@ -11,6 +11,7 @@
 #CLASS vitals read {./pkg/pkg_vitals.tin};
 #CLASS stats read {./pkg/pkg_stats.tin};
 
+#CLASS hooks READ {./extensions/hooks.tin};
 
 
 #ACTION {^ 姓名：%s%u ($Profile[username])。%s别号：%*。$} {
@@ -123,7 +124,7 @@
         #RETURN {};
     };
     
-    #CLASS learn READ {./pkg/pkg_new_learn.tin};
+    #CLASS learn READ {./pkg/pkg_learn.tin};
 };
 
 #alias learn_no_cost {
@@ -229,14 +230,11 @@
 #ALIAS {go} {
     #IF {"%1" == ""} {
         Info {开启旅行模块};
-        #IF {"$env[room]" == ""} {
-            Cmd {l} {1};
-        };
-        #CLASS graph READ {./pkg/pkg_map_graph.tin};
+        #CLASS travel READ {./pkg/pkg_travel.tin};
     };
     #ELSEIF {"%1" == "off"} {
-        #ECHO {关闭旅行模块};
-            #CLASS graph KILL;
+        Info {关闭旅行模块};
+        #CLASS travel KILL;
     };
 }
 

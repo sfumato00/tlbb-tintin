@@ -99,7 +99,7 @@
 #ALIAS {大理-跳崖} {
     #ECHO {大理-跳崖-async};
     #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nw;wu;
-    #EVENT {VARIABLE UPDATED env[room_updated]} {
+    #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
         #SWITCH {"$env[room]"} {
             #CASE {"山路"} {
                 #SWITCH {"$env[exits]"} {
@@ -109,16 +109,16 @@
                 };
             };
             #CASE {"山顶"} {
-                #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
                 Cmd {n;e;n;n;e;e;s;s} {8};
-                #EVENT {VARIABLE UPDATED env[room_updated]} {
+                #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
                     #SWITCH {"$env[room]"} {
                         #CASE {"鬼门关"} {
                             UpdateDownexpState 0;
                             death_handler;
                         };
                         #CASE {"城隍庙"} {
-                            #UNEVENT {VARIABLE UPDATED env[room_updated]};
+                            #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
                             Cmd {drink tong} {1};
                             move_back_to_fight_room_handler;
                         };
