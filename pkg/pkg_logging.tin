@@ -1,12 +1,13 @@
 #NOP logging
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
 
 #ALIAS {Log} {
     #LOCAL msg %1;
     #LOCAL level %2;
     #LOCAL file_path %3;
-    #ECHO {@_logMsg{$file_path;$level;$msg}};
+    Info {@_logMsg{$file_path;$level;$msg}};
 };
 
 #ALIAS {LogLine} {
@@ -14,7 +15,7 @@
     #LOCAL file_path {%2};
 
     #IF {@_logLine{$file_path;$level}} {
-        #ECHO {@Timestamp{} [$file_path] Logged line.};
+        Info {@Timestamp{} [$file_path] Logged line.};
     };
 }
 
@@ -24,21 +25,9 @@
     #LIST file_name CREATE {$prefix;$Profile[username];@GetEpochAsDateTimeStr{}};
     #LIST file_name COLLAPSE {_};
     #CAT file_name {.log};
-    #ECHO {[DEBUG] Writing buffer to $file_name};
+    Info {Writing buffer to $file_name};
     #BUFFER write $file_name;
 } {1};
-
-#FUNCTION {Info} {
-    #RETURN {@Log{%1;info;$Profile[username]}};
-};
-
-#FUNCTION {Debug} {
-    #RETURN {@Log{%1;debug;$Profile[username]}};
-};
-
-#FUNCTION {Error} {
-    #RETURN {@Log{%1;error;$Profile[username]}};
-};
 
 #FUNCTION _logMsg {
     #LOCAL path {%1};

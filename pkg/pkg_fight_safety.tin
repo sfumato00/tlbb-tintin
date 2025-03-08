@@ -5,6 +5,9 @@
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
 #CLASS quit READ {./pkg/pkg_quit.tin};
 
+
+
+
 #ACTION {^你死了。$} {
     buffer_dump {death};
 } {1};
@@ -31,30 +34,3 @@
         };
     };
 }
-
-#ALIAS {emergency_quit} {
-    #EVENT {SESSION DISCONNECTED} {
-        buffer_dump {emergency_quit};
-        #END;
-    };
-    #IF {"$Events[hooks][session][login]" == "" && "$Events[hooks][session][reconnect]" == ""} {
-        #VARIABLE attemp_quit_after {0};
-    };
-    #ELSEIF {"$Events[hooks][session][reconnect]" == ""} {
-        #MATH attemp_quit_after {$Events[hooks][session][login] + 9};
-    };
-    #ELSEIF {"$Events[hooks][session][login]" == ""} {
-        #MATH attemp_quit_after {$Events[hooks][session][reconnect] + 9};
-    };
-    #ELSE {
-        #VARIABLE attemp_quit_after {@Max{$Events[hooks][session][reconnect];$Events[hooks][session][login]} + 9};
-    };
-    #TICKER {ticker_quit} {
-        #IF {@GetEpoch{} >= $attemp_quit_after} {
-            Cmd {quit} {1};
-        };
-    } {0.2};
-    #IF {@GetEpoch{} >= $attemp_quit_after} {
-        Cmd {quit} {1};
-    };
-} {5};

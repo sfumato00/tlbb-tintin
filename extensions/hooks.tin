@@ -18,3 +18,12 @@
     #VARIABLE {Hooks[vitals_updated][gun]} {1};
 };
 
+#EVENT {VARIABLE UPDATED vitals[气血%]} {
+    #VARIABLE {Hooks[vitals_updated][fight]} {1};
+};
+
+#EVENT {VARIABLE UPDATED vitals[气血]} {
+    #VARIABLE {Hooks[vitals_updated][fight]} {1};
+};
+
+

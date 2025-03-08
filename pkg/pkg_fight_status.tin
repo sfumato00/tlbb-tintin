@@ -1,0 +1,19 @@
+#NOP fight status module
+#CLASS status_db READ {./db/status_db.tin};
+
+#ACTION {^( {[^你].*} )$} {
+    #LINE GAG 1;
+};
+
+
+#ACTION {^( 你%1 )$} {
+    #LOCAL {status_msg} {%1};
+    
+    #IF {&InjuryStatus[$status_msg]} {
+        #VARIABLE {vitals[气血%]} {$InjuryStatus[$status_msg]};
+    };
+    #ELSEIF {&ExhaustionStatus[$status_msg]} {
+        #VARIABLE {vitals[气血]} {$ExhaustionStatus[$status_msg]};
+    };
+} {5};
+

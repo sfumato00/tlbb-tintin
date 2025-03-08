@@ -36,17 +36,45 @@
     }
 };
 
+#VARIABLE {modules} {
+    {fight} {./pkg/pkg_new_fight.tin}
+    {fight_npc} {./pkg/pkg_fight_npc.tin}
+    {fight_safety} {./pkg/pkg_fight_safety.tin}
+    {fight_status} {./pkg/pkg_fight_status.tin}
+};
+
 #ALIAS {reload} {
-    #CLASS fight_npc KILL;
-    #CLASS fight_npc READ {./pkg/pkg_fight_npc.tin};
-    _load_npc_name
+    #FOREACH {*modules[%*]} {module} {
+        #ECHO {MOdule: $module};
+        #CLASS {$module} KILL;
+    };
+    #FOREACH {*modules[%*]} {module} {
+        #ECHO {MOdule: $module};
+        #CLASS {$module} READ {$modules[$module]};
+    };
 } {5};
 
-reload;
+#ALIAS {test} {
+    reload;
 
-#NOP #SHOW {德邦将校尉从背上放了下来，躺在地上。};
+    #NOP #SHOW {德邦将校尉从背上放了下来，躺在地上。};
+    
+    #NOP #SHOW {校尉慢慢睁开眼睛，清醒了过来。};
+    
+    #NOP #SHOW {武士慢慢睁开眼睛，清醒了过来。};
+    #ECHO {$vitals[气血] ($vitals[气血%])};
+    #SHOW {( 你看起来充满活力，一点也不累。 )};
+    #ECHO {$vitals[气血] ($vitals[气血%])};
+    #NOP #SHOW {看起来有些疲惫，但是仍然十分有活力。};
 
-#NOP #SHOW {校尉慢慢睁开眼睛，清醒了过来。};
+    #NOP #SHOW {看起来充满活力，一点也不累。};
 
-#NOP #SHOW {武士慢慢睁开眼睛，清醒了过来。};
+    #VARIABLE Status;
 
+    #SHOW {( 你似乎有些疲惫，但是仍然十分有活力。 )};
+    #ECHO {$vitals[气血] ($vitals[气血%])};
+
+    #SHOW {( 校尉似乎有些疲惫，但是仍然十分有活力。 )};
+} {1};
+
+test;

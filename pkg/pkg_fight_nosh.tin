@@ -2,7 +2,7 @@
 
 #CLASS commands READ {./pkg/pkg_command.tin};
 #CLASS vitals READ {./pkg/pkg_vitals.tin};
-#CLASS idhere READ {./pkg/pkg_idhere.tin};
+
 
 #ALIAS {drink_eat} {
     _drink_tong {$vitals[饮水]} {$vitals[饮水_max]};
@@ -37,21 +37,6 @@
             Cmd {eat pig} {1};
             #MATH n {$n - 1};
             #MATH count {$count + 1};
-        };
-    };
-}
-
-#ALIAS food_drink_init {
-    #VARIABLE {FoodDrink[tong]} {0};
-    #VARIABLE {FoodDrink[pig]} {0};
-    idhere_scan_room;
-    #DELAY 2 {
-        #IF {&IdHere[水桶-tong]} {
-            #VARIABLE {FoodDrink[tong]} {1};
-        };
-
-        #IF {&IdHere[烤乳猪-pig]} {
-            #VARIABLE {FoodDrink[pig]} {1};
         };
     };
 }
