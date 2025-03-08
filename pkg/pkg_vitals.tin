@@ -28,5 +28,5 @@
     #VARIABLE {vitals[饮水_max]}{%5};
 
     #VARIABLE {vitals[经验]}{%8};
-    #FORMAT {vitals[last_updated]}{%T};
+    #FORMAT {vitals[last_updated]} {%T};
 } {5};

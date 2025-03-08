@@ -2,6 +2,17 @@
 
 #CLASS datetime READ {./pkg/pkg_datetime.tin};
 
+#FUNCTION IsRoomEqualToCurrentRoom {
+    #IF {!&env[room] || !&env[exits]} {
+        #RETURN 0;
+    };
+
+    #LOCAL {dest_room} {%1};
+    #LOCAL {current_room} {$env[room]$env[exits]};
+
+    #RETURN {"$dest_room" == "$current_room"};
+}
+
 
 #ACTION {^%u - $} {
     #VARIABLE env[room] {%1};
@@ -33,14 +44,5 @@
 } {2};
 
 
-#FUNCTION IsRoomEqualToCurrentRoom {
-    #IF {!&env[room] || !&env[exits]} {
-        #RETURN 0;
-    };
 
-    #LOCAL {dest_room} {%1};
-    #LOCAL {current_room} {$env[room]$env[exits]};
-
-    #RETURN {"$dest_room" == "$current_room"};
-}
 

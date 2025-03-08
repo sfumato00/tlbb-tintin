@@ -6,7 +6,7 @@
     #LOCAL msg %1;
     #LOCAL level %2;
     #LOCAL file_path %3;
-    #ECHO {@Timestamp{} [%2] $msg [$file_path]: @_logMsg{$file_path;$level;$msg} };
+    #ECHO {@_logMsg{$file_path;$level;$msg}};
 };
 
 #ALIAS {LogLine} {

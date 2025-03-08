@@ -1,0 +1,52 @@
+#NOP downexp tests;
+
+#CLASS testing READ {./tests/test_common.test.tin};
+#CLASS graph READ {./pkg/pkg_travel.tin};
+#CLASS path READ {./pkg/pkg_path.tin};
+
+
+#VARIABLE {Profile} {
+    {username} {testgraph}
+    {password} {Abcd_124}
+};
+
+#VARIABLE {Fight} {
+    {npc_list} {
+        {captain} {
+            {1} {9}
+            {2} {10}
+            {3} {11}
+            {4} {12}
+        }
+    }
+    {food_drink} {
+        {pig} {0}
+        {tong} {1}
+    }
+    {jiuyang} {1}
+    {downexp} {1}
+};
+
+#VARIABLE {Fight[npc_list]} {
+    {captain} {
+        {1} {9}
+        {2} {10}
+        {3} {11}
+        {4} {12}
+    }
+};
+
+#ALIAS {reload} {
+    #CLASS fight_npc KILL;
+    #CLASS fight_npc READ {./pkg/pkg_fight_npc.tin};
+    _load_npc_name
+} {5};
+
+reload;
+
+#NOP #SHOW {德邦将校尉从背上放了下来，躺在地上。};
+
+#NOP #SHOW {校尉慢慢睁开眼睛，清醒了过来。};
+
+#NOP #SHOW {武士慢慢睁开眼睛，清醒了过来。};
+

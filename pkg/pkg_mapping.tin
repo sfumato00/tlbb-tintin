@@ -78,7 +78,6 @@
         #LOCAL prev @VisitStackPop{};
         #VARIABLE {env[room]} {$prev[room]};
         #VARIABLE {env[exits]} {$prev[exits]};
-        #VARIABLE {Events[room][last_updated]} {@GetEpoch{}};
     } {3};
 } {5};
 

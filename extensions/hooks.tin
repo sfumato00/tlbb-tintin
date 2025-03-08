@@ -1,7 +1,20 @@
-#NOP extended event hooks go here
+#NOP extended event hooks go here;
+#NOP the pattern is: centralized place to fanout events to all the hooks, which allows for easy extension of existing behaviors without having to modify the original code.
+#NOP only Events[hooks] are allowed to be updated here;
 
-#EVENT {VARIABLE UPDATED Events[room][last_updated]} {
-    #VARIABLE {Hooks[room][updated]} {1};
-    #VARIABLE {Hooks[travel][room_updated]} {1};
-    #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
-}
+#EVENT {VARIABLE UPDATED Events[hooks][room_update]} {
+    #VARIABLE {Hooks[room_updated][travel]} {1};
+    #VARIABLE {Hooks[room_updated][map_function]} {1};
+    #VARIABLE {Hooks[room_updated][downexp]} {1};
+};
+
+#EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
+    #VARIABLE {Hooks[session_login][test]} {1};
+};
+
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+    #VARIABLE {Hooks[vitals_updated][fight]} {1};
+    #VARIABLE {Hooks[vitals_updated][beiming]} {1};
+    #VARIABLE {Hooks[vitals_updated][gun]} {1};
+};
+

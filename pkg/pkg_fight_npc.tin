@@ -1,0 +1,33 @@
+#NOP submodule of fight for NPC;
+
+#ACTION {^%u将%u从背上放了下来，躺在地上。$} {
+    #IF {&NPCs[%2]} {
+        Log {%0} {LOG} {./log/npc_@GetDate{}_$Profile[username].log};
+    };
+};
+
+#ACTION {^%u慢慢睁开眼睛，清醒了过来。$} {
+    #IF {&NPCs[%1]} {
+        #CLASS surrender READ {./pkg/pkg_surrender.tin};
+        AwaitSurrender {#ECHO {fight start}};
+    };
+};
+
+#ACTION {^%u急急忙忙的走了。$} {
+    #IF {&NPCs[%1]} {
+        #CLASS surrender READ {./pkg/pkg_surrender.tin};
+        AwaitSurrender {#ECHO {fight start}};
+    };
+};
+
+#ALIAS {_load_npc_name} {
+    #CLASS npc_db READ {./db/npc_db.tin};
+    #VARIABLE {NPCs} {};
+    #LOCAL npc_list {$Fight[npc_list]};
+    #LOCAL i {1};
+    #FOREACH {*npc_list[%*]} {npc_id} {
+        #LOCAL npc_name {$NPC_NAME_EN_CN[$npc_id]};
+        #VARIABLE {NPCs[$npc_name]} {$npc_id};
+    };
+    #CLASS npc_db KILL;
+};

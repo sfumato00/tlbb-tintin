@@ -9,13 +9,13 @@
     #IF {@IsRoomEqualToCurrentRoom{东安门 east 和 west}} {
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
-                #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+                #VARIABLE {Hooks[room_updated][map_function]} {1};
             };
         };
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
-            Warn {[东安门-黄土大道] Hooks[travel][map_function][room_updated]};
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
+            Warn {[东安门-黄土大道] Hooks[room_updated][map_function]};
             #IF @IsRoomEqualToCurrentRoom{黄土大道 southeast 和 west} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNACTION {^请不要一次输入太多的指令。$};
             };
             #ELSE {
@@ -29,13 +29,13 @@
     #IF {@IsRoomEqualToCurrentRoom{黄土大道 southeast 和 west}} {
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
-                #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+                #VARIABLE {Hooks[room_updated][map_function]} {1};
             };
         };
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
-            Warn {[黄土大道-southeast-west-东安门] Hooks[travel][map_function][room_updated]};
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
+            Warn {[黄土大道-southeast-west-东安门] Hooks[room_updated][map_function]};
             #IF @IsRoomEqualToCurrentRoom{东安门 east 和 west} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNACTION {^请不要一次输入太多的指令。$};
             };
             #ELSE {
@@ -49,17 +49,17 @@
     #IF {@IsRoomEqualToCurrentRoom{小山坡 westdown、southdown 和 eastdown}} {
         #ACTION {^请不要一次输入太多的指令。$} {
             #delay 6 {
-                #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+                #VARIABLE {Hooks[room_updated][map_function]} {1};
             };
         };
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF @IsRoomEqualToCurrentRoom{天水关 north、east 和 west} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNACTION {^请不要一次输入太多的指令。$};
             };
             #ELSEIF {!@Cmd{{w};1}} {
                 #DELAY 1 {
-                    #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+                    #VARIABLE {Hooks[room_updated][map_function]} {1};
                 };
             };
         };
@@ -68,37 +68,35 @@
 
 #ALIAS {登封县北街-少室山山脚} {
     #IF {@IsRoomEqualToCurrentRoom{登封县北街 north、south、east 和 northwest}} {
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{少室山山脚 south 和 northwest}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
             #ELSE {
                 #regexp {$env[exits]} {northwest} {Cmd {nw} {1}} {Cmd {n} {1}};
             };
         };
-        #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
     };
 }
 
 #ALIAS {少室山山脚-登封县北街} {
     #IF {@IsRoomEqualToCurrentRoom{少室山山脚 south 和 northwest}} {
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{登封县北街 north、south、east 和 northwest}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
             #ELSE {
                 #regexp {$env[exits]} {southeast} {Cmd {se} {1}} {Cmd {s} {1}};
             };
         };
-        #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
     };
 }
 
 #ALIAS {黑沼泽-n-sw-黑沼泽-s-n-se} {
     #IF {@IsRoomEqualToCurrentRoom{黑沼泽 north 和 southwest}} {
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{黑沼泽 south、north 和 west}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
             #ELSE {
                 _safe_cmd {n} {1};
@@ -114,9 +112,9 @@
             {0} {w}
             {1} {s}
         };
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{大道 north、east 和 northeast}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNVARIABLE {Travel[odd]};
                 #UNVARIABLE {Travel[dir]};
             };
@@ -127,7 +125,7 @@
                 _safe_cmd {$Travel[dir][$Travel[odd]]} {1};
             };
         };
-        #NOP #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+        #NOP #VARIABLE {Hooks[room_updated][map_function]} {1};
     };
 }
 
@@ -138,9 +136,9 @@
             {0} {e}
             {1} {s}
         };
-        #EVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{黑沼泽 south、north 和 west}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNVARIABLE {Travel[odd]};
             };
             #ELSEIF {@Cmd{{$Travel[dir][$Travel[odd]]};1}} {
@@ -155,9 +153,9 @@
 
 #ALIAS {虎跳溪-断魂崖} {
     #IF {@IsRoomEqualToCurrentRoom{虎跳溪 east 和 southdown}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{断魂崖 north、east、southdown 和 west}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNACTION {^你一提丹田气，凌空拔起，可是身体一晃，掉进了小溪。$};
                 #UNACTION {^你正忙着呢，做不了任何事！};
                 #UNACTION {^请不要在公用频道上一次贴出太多的内容！};
@@ -166,15 +164,15 @@
         #ACTION {^你一提丹田气，凌空拔起，可是身体一晃，掉进了小溪。$} {
             CheckBusy {jump over 小溪} {1};
         } {5};
-        #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+        CheckBusy {jump over 小溪} {1};
     }
 }
 
 #ALIAS {断魂崖-屏风壁} {
     #IF {@IsRoomEqualToCurrentRoom{断魂崖 north、east、southdown 和 west}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{屏风壁 westup}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         Cmd {climb down} {1};
@@ -183,9 +181,9 @@
 
 #ALIAS {屏风壁-销魂台} {
     #IF {@IsRoomEqualToCurrentRoom{屏风壁 westup}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{销魂台 north 和 southdown}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         CheckBusy {l 石壁;climb up} {2};
@@ -194,9 +192,9 @@
 
 #ALIAS {销魂台-缥缈峰半山腰} {
     #IF {@IsRoomEqualToCurrentRoom{销魂台 north 和 southdown}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{缥缈峰半山腰 southdown 和 northup}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         CheckBusy {n;l 云雾;l 云雾;l 黑影;run to 主峰} {5};
@@ -205,14 +203,14 @@
 
 #ALIAS {缥缈峰半山腰-小院} {
     #IF {@IsRoomEqualToCurrentRoom{缥缈峰半山腰 southdown 和 northup}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
 
-            #IF {@IsRoomEqualToCurrentRoom{{ 小院 south、north、east 和 west}}} {
+            #IF {@IsRoomEqualToCurrentRoom{{小院 south、north、east 和 west}}} {
                 Info {Arrived  小院 south、north、east 和 west};
                 #VARIABLE env[room] {小院};
                 #UNACTION {^程青霜对你说道：你要进宫切记福无双至。$};
                 #UNACTION {^程青霜对你说道：你要进宫切记祸不单行。$};
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
             #ELSEIF {@IsRoomEqualToCurrentRoom{灵鹫宫宫门 south 和 north}} {
                 #IF {$Travel[enter]} {
@@ -238,9 +236,9 @@
 
 #ALIAS {渔人码头-太湖边} {
     #IF {@IsRoomEqualToCurrentRoom{渔人码头 east}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{太湖边 northwest}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         Cmd {sail} {1};
@@ -250,9 +248,9 @@
 
 #ALIAS {太湖边-渔人码头} {
     #IF {@IsRoomEqualToCurrentRoom{太湖边 northwest}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{渔人码头 east}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         Cmd {sail} {1};
@@ -262,9 +260,9 @@
 
 #ALIAS {山路-n-sd-山路-sd-nu} {
     #IF {@IsRoomEqualToCurrentRoom{山路 north 和 southdown}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{山路 southdown 和 northup}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         Cmd {climb mountain} {1};
@@ -273,9 +271,9 @@
 
 #ALIAS {山路-sd-nu-山路-n-sd} {
     #IF {@IsRoomEqualToCurrentRoom{山路 southdown 和 northup}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{山路 north 和 southdown}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         Cmd {climb down} {1};
@@ -284,9 +282,9 @@
 
 #ALIAS {山路-山顶} {
     #IF {@IsRoomEqualToCurrentRoom{山路 southdown 和 northup}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{山顶 south、north 和 east}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         Cmd {nu;climb mountain} {1};
@@ -300,9 +298,9 @@
         #local path {%3};
         #local dist {%4};
         #IF {@IsRoomEqualToCurrentRoom{$room_key_one}} {
-            #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+            #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
                 #IF {@IsRoomEqualToCurrentRoom{$room_key_two}} {
-                    #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                    #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                     #UNALIAS access;
                 };
             };
@@ -315,9 +313,9 @@
 
 #ALIAS {八大夫-谷底} {
     #IF {@IsRoomEqualToCurrentRoom{八大夫 down}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{谷底 south}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
             };
         };
         #EVENT {VARIABLE UPDATED env[room]} {
@@ -331,9 +329,9 @@
 
 #ALIAS {洞口-江边小路} {
     #IF {@IsRoomEqualToCurrentRoom{洞口 out 和 west}} {
-        #Event {VARIABLE UPDATED Hooks[travel][map_function][room_updated]} {
+        #Event {VARIABLE UPDATED Hooks[room_updated][map_function]} {
             #IF {@IsRoomEqualToCurrentRoom{江边小路 northup}} {
-                #UNEVENT {VARIABLE UPDATED Hooks[travel][map_function][room_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][map_function]};
                 #UNEVENT {VARIABLE UPDATED env[room]};
             };
         };
@@ -352,7 +350,7 @@
 
     #IF {!@Cmd{{$cmd};1}} {
         #DELAY 1 {
-            #VARIABLE {Hooks[travel][map_function][room_updated]} {1};
+            #VARIABLE {Hooks[room_updated][map_function]} {1};
         };
     };
 } {5};

@@ -1,6 +1,5 @@
 #NOP Travel Module
-
-Travel[THROTTLE]
+#CLASS room READ {./pkg/pkg_room.tin};
 
 #ALIAS goto {
 
@@ -10,8 +9,8 @@ Travel[THROTTLE]
         _travel {$env[room_key]} {%1};
     };
     #ELSE {
-        #EVENT {VARIABLE UPDATED Hooks[travel][room_updated]} {
-            #UNEVENT {VARIABLE UPDATED Hooks[travel][room_updated]};
+        #EVENT {VARIABLE UPDATED Hooks[room_updated][travel]} {
+            #UNEVENT {VARIABLE UPDATED Hooks[room_updated][travel]};
             _travel {$env[room_key]} {%1};
         };
         Cmd {l} {1};

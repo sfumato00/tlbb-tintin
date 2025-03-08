@@ -1,90 +1,41 @@
 #NOP graph tests.;
 
-#CLASS testing READ {./pkg/pkg_testing.tin};
-#CLASS login READ {./pkg/pkg_session.tin};
+#CLASS testing READ {./tests/test_common.test.tin};
+#CLASS graph READ {./pkg/pkg_travel.tin};
+#CLASS path READ {./pkg/pkg_path.tin};
 
 #VARIABLE {Profile[username]} {testgraph};
 #VARIABLE {Profile[password]} {Abcd_124};
 
-#ALIAS Dijkstra_Test {
-    #CLASS travel_functions READ {./pkg/pkg_travel_functions.tin};
-    #LOCAL src {%1};
-    #LOCAL dest {%2};
-
-    #VARIABLE {test[name]} {$src-$dest};
-    #VARIABLE {test[expected_room]} {$dest};
-    #VARIABLE {res} {@_dijkstra{$src;$dest}};
-    #ECHO {Result: $res};
-}
-
-#ALIAS Travel_Test {
-    #CLASS graph READ {./pkg/pkg_map_graph.tin};
-    #LOCAL src {%1};
-    #LOCAL dest {%2};
-
-    #VARIABLE {test[name]} {$src-$dest};
-    #VARIABLE {test[expected_room]} {$dest};
-    #VARIABLE {test[timeout]} {30};
-
-    start_test;
-    travel {$src} {$dest};
-    #ECHO {\n};
-};
-
-#ALIAS t1 {
-    Travel_Test {欢迎来到天龙八部 south 和 down} {皇宫大门 south、eastup 和 westup};
-};
-
-#ALIAS t1b {
-    Travel_Test {皇宫大门 south、eastup 和 westup} {龙门客栈 west 和 up};
-}
-
-#ALIAS t2 {
-    Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
-
-    #EVENT {VARIABLE UPDATED Travel[started]} {
-        #IF {@CurrentRoomEqualTo{西夏王陵 north 和 southup}} {
-            #UNEVENT {VARIABLE UPDATED Travel[started]};
-            #EVENT {VARIABLE UPDATED Travel[started]} {
-                #IF {@CurrentRoomEqualTo{欢迎来到天龙八部 south 和 down}} {
-                    #UNEVENT {VARIABLE UPDATED Travel[started]};
-                    Travel_Test {欢迎来到天龙八部 south 和 down} {西夏王陵 north 和 southup};
-                };
-            };
-            Travel_Test {西夏王陵 north 和 southup} {龙门客栈 west 和 up};
+#ALIAS {XIXIA_DALI_TEST} {
+    #EVENT {VARIABLE UPDATED Hooks[session_login][test]} {
+        #EVENT {VARIABLE UPDATED Events[travel][trip_complete]} {
+            #UNEVENT {VARIABLE UPDATED Events[travel][trip_complete]};
+            goto {十字广场 north、south、east、west 和 up};
         };
+        goto {皇宫大门 south、eastup 和 westup};
     };
-}
-
-#ALIAS t2b {
-    Travel_Test {西夏王陵 north 和 southup} {龙门客栈 west 和 up};
-}
-
-#ALIAS t3 {
-    Dijkstra_Test {欢迎来到天龙八部 south 和 down} {大道 north、east 和 northeast};
-    Dijkstra_Test {欢迎来到天龙八部 south 和 down} {登封县北街 north、south、east 和 northwest};
-    Dijkstra_Test {城隍庙 north} {神憩小舍 east、southdown、northwest 和 up};
-    Dijkstra_Test {城隍庙 north} {天贶殿 north、south、east 和 west};
-    #END {Bye!};
-}
-
-#NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {汴梁城中心 north、south、east、west 和 up};
-#NOP Dijkstra_Test {欢迎来到天龙八部 south 和 down} {洛阳中心 south、north、east、west 和 up};
-
-#EVENT {VARIABLE UPDATED Events[hooks][session][login]} {
-    #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
-        #IF {@CurrentRoomEqualTo{洛阳中心 south、north、east、west 和 up}} {
-            #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
-            goto {小院 south、north、east 和 west};
-        };
-    };
-    e;#2 n;
+    conn travel;
 };
 
-#VARIABLE {THROTTLE} {45};
 
-conn;
+#ALIAS {SHAOLIN_DALI_TEST} {
+    #EVENT {VARIABLE UPDATED Hooks[session_login][test]} {
+        goto {少室山山脚 south 和 northwest};
+    };
+    conn travel;
+};
 
 
+#ALIAS {TRAVEL_TEST} {
+    #VARIABLE {Test[dest_room]} {%1};
+    #EVENT {VARIABLE UPDATED Hooks[session_login][test]} {
+        goto {$Test[dest_room]};
+    };
+    conn travel;
+};
 
 
+#ALIAS {name} {
+    commands
+} {5};

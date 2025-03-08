@@ -1,8 +1,8 @@
 #NOP graph tests.;
 
 #CLASS testing READ {./pkg/pkg_testing.tin};
-#CLASS graph READ {./pkg/pkg_map_graph.tin};
-#CLASS login READ {./pkg/pkg_session.tin};
+#CLASS travel READ {./pkg/pkg_travel.tin};
+#CLASS session READ {./pkg/pkg_session.tin};
 #CLASS mapper READ {./pkg/pkg_mapper.tin};
 
 #VARIABLE {Profile[username]} {testgraph};

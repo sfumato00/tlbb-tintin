@@ -1,7 +1,7 @@
 #NOP TLBB main module
 
 
-#CLASS login READ {./pkg/pkg_session.tin};
+#CLASS session READ {./pkg/pkg_session.tin};
 
 #CLASS room READ {./pkg/pkg_room.tin};
 #CLASS command READ {./pkg/pkg_command.tin};

@@ -73,7 +73,7 @@
 } {5};
 
 
-#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+#EVENT {VARIABLE UPDATED Hooks[vitals_updated][beiming]} {
     #IF {$vitals[气血%] < 100} {
         Cmd {apply xiao-xingxue} {1};
     };

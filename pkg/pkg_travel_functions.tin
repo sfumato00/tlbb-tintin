@@ -86,7 +86,6 @@
     #LOCAL {dists[$src]} {0};
     #LOCAL {stops[$src]} {$src};
     #LOCAL {_paths[$src]} {};
-    
 
     #LOCAL {u} {@_getNextNode{$dists;$visited}};
 

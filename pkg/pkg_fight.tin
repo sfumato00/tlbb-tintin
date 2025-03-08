@@ -20,7 +20,7 @@
     #CLASS downexp READ {./pkg/pkg_fight_downexp.tin};
 };
 
-#VARIABLE {FoodDrink[tong]} {1};
+
 #VARIABLE {Fight[epoch][start]} {0};
 
 #VARIABLE {MIN_IN_SECOND} {60};
@@ -182,7 +182,7 @@
         drink_eat;
         #DELAY 3 {
             #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {15};
-            #EVENT {VARIABLE UPDATED vitals[last_updated]} {
+            #EVENT {VARIABLE UPDATED Hooks[vitals_updated][fight]} {
                 feedback_loop;
             };
             Cmd {hp} {1};
@@ -192,7 +192,7 @@
 
 #ALIAS {stop} {
     #ECHO {暂停练功};
-    #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
+    #UNEVENT {VARIABLE UPDATED Hooks[vitals_updated][fight]};
     #TICKER {ticker_feedback_loop} {Cmd {hp} {1}} {60};
     Cmd {surrender} {1};
     unset no_give;

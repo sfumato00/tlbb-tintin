@@ -1,9 +1,9 @@
 #NOP Testing module
 
 #CLASS config READ {./config.tin};
-#CLASS login READ {./pkg/pkg_session.tin};
+#CLASS session READ {./pkg/pkg_session.tin};
 #CLASS utils READ {./pkg/pkg_utils.tin};
-#CLASS graph READ {./pkg/pkg_map_graph.tin};
+#CLASS travel READ {./pkg/pkg_travel.tin};
 
 #ALIAS {conn} {
     #SESSION {$Profile[username]} {103.10.85.133} {8888};

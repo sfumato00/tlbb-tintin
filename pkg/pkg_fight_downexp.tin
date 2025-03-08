@@ -23,7 +23,7 @@
             };
             #ELSE {
                 #CLASS bank READ {./pkg/pkg_bank.tin};
-                #CLASS graph READ {./pkg/pkg_map_graph.tin};
+                #CLASS travel READ {./pkg/pkg_travel.tin};
                 #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
 
                     #IF {$Events[hooks][trip_complete]} {
@@ -50,7 +50,7 @@
         #IF {$vitals[气血] > $vitals[气血_max] * 0.8} {
             #UNEVENT {VARIABLE UPDATED vitals[last_updated]};
 
-            #CLASS graph READ {./pkg/pkg_map_graph.tin};
+            #CLASS travel READ {./pkg/pkg_travel.tin};
             #EVENT {VARIABLE UPDATED Events[hooks][trip_complete]} {
                 #UNEVENT {VARIABLE UPDATED Events[hooks][trip_complete]};
                 stop_stuck_check;
@@ -99,7 +99,7 @@
 #ALIAS {大理-跳崖} {
     #ECHO {大理-跳崖-async};
     #5 w;nw;nu;nd;nw;wu;#2 n;nu;#2 w;nw;nu;nw;wu;
-    #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
+    #EVENT {VARIABLE UPDATED Hooks[room_updated][downexp]} {
         #SWITCH {"$env[room]"} {
             #CASE {"山路"} {
                 #SWITCH {"$env[exits]"} {
@@ -109,16 +109,16 @@
                 };
             };
             #CASE {"山顶"} {
-                #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
+                #UNEVENT {VARIABLE UPDATED Hooks[room_updated][downexp]};
                 Cmd {n;e;n;n;e;e;s;s} {8};
-                #EVENT {VARIABLE UPDATED Events[room][last_updated]} {
+                #EVENT {VARIABLE UPDATED Hooks[room_updated][downexp]} {
                     #SWITCH {"$env[room]"} {
                         #CASE {"鬼门关"} {
                             UpdateDownexpState 0;
                             death_handler;
                         };
                         #CASE {"城隍庙"} {
-                            #UNEVENT {VARIABLE UPDATED Events[room][last_updated]};
+                            #UNEVENT {VARIABLE UPDATED Hooks[room_updated][downexp]};
                             Cmd {drink tong} {1};
                             move_back_to_fight_room_handler;
                         };

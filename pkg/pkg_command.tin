@@ -12,11 +12,12 @@
     Warn {[Cmd] 输入指令: %1 %2};
     #LOCAL commands {%1};
     #LOCAL cnt {%2};
-    #IF {@GetCommandCnt{} + $cnt >= $Command[throttle]} {
-        Warn {[Cmd] 指令过多，暂缓执行};
+    #LOCAL cmd_count @GetCommandCnt{};
+    #IF {$cmd_count + $cnt >= $Command[throttle]} {
+        Warn {[Cmd] 指令过多，暂缓执行, cmd_count: $cmd_count, cnt: $cnt, throttle: $Command[throttle]};
+        Debug {cmd_count: $cmd_count, cnt: $cnt, throttle: $Command[throttle]};
         #RETURN {0};
     };
-
     Cmd {$commands} {$cnt};
     #RETURN {1};
 };
@@ -36,6 +37,8 @@
     #LOCAL commands {%1};
     #LOCAL cnt {%2};
     #LOCAL epoch @GetEpoch{};
+
+    _purgeHistory;
 
     #FOREACH $commands _c {
         #IF {"$_c" == ""} {

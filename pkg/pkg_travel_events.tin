@@ -8,7 +8,7 @@
 #CLASS map_functions READ {./pkg/pkg_map_functions.tin};
 
 
-#EVENT {VARIABLE UPDATED Hooks[travel][room_updated]} {
+#EVENT {VARIABLE UPDATED Hooks[room_updated][travel]} {
     #IF {@IsRoomEqualToCurrentRoom{$Travel[next]}} {
         #VARIABLE {Events[travel][next_room_arrived]} {1};
     };
@@ -21,7 +21,7 @@
     #IF {$rem == 1} {
         Info {到达目的地。};
         #UNEVENT {VARIABLE UPDATED Events[travel][next_room_arrived]};
-        #UNEVENT {VARIABLE UPDATED Hooks[travel][room_updated]};
+        #UNEVENT {VARIABLE UPDATED Hooks[room_updated][travel]};
 
         #CLASS map KILL;
         #CLASS travel_functions KILL;

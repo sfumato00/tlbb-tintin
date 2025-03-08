@@ -160,9 +160,19 @@
             {path} {sw;wu;su;sw;su;w;open door;l}
             {dist} {8}
         }
+        {山门 north 和 southdown} {
+            {path} {#2 nu}
+            {dist} {2}
+        }
+    }
+    {山门 north 和 southdown} {
+        {山道 southeast、southwest 和 northup} {
+            {path} {#2 sd}
+            {dist} {2}
+        }
         {大雄宝殿 north、east、southdown 和 west} {
-            {path} {#2 nu;#3 n;#2 nu;#2 n;#2 nu}
-            {dist} {11}
+            {path} {#3 n;#2 nu;#2 n;#2 nu}
+            {dist} {9}
         }
     }
     {大雄宝殿 north、east、southdown 和 west} {
@@ -375,6 +385,16 @@
         {古城客栈 south 和 up} {
             {path} {e;n}
             {dist} {2}
+        }
+        {驿站 east} {
+            {path} {#2 s;w}
+            {dist} {3}
+        }
+    }
+    {驿站 east} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {e;#2 n}
+            {dist} {3}
         }
     }
     {古城客栈 south 和 up} {

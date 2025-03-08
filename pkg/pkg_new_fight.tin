@@ -1,0 +1,8 @@
+#NOP fight module;
+
+#CLASS quit READ {./pkg/pkg_quit.tin};
+#CLASS remote_control READ {./pkg/pkg_remote_control.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+
+
+#CLASS fight_npc READ {./pkg/pkg_fight_npc.tin};
