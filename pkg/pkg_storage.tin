@@ -4,7 +4,7 @@
 #CLASS items READ {./pkg/pkg_items.tin};
 
 #ACTION {(%1)告诉你：(%2) (%3) (%4)} {
-    Log {%0} {Info} {./log/remote_control_@GetDate{}_$username.log};
+    Log {%0} {Info} {./log/remote_control_@GetDate{}_$Profile[username].log};
     #VARIABLE {Storage[q][player]} {%1};
     #VARIABLE {Storage[q][query]} {%4};
     #VARIABLE {Storage[q][cmd]} {%3};
@@ -23,7 +23,7 @@
     };
 
     #ELSEIF {"%2" == "$Storage[access_code]" && "$Storage[inventory][$Storage[q][query]]" != ""} {
-        #LOG APPEND {./log/tangyuan_@GetDate{}_$username.log};
+        #LOG APPEND {./log/tangyuan_@GetDate{}_$Profile[username].log};
         #LOCAL item {$Storage[inventory][$Storage[q][query]][id]};
         #LOCAL bag {$Storage[inventory][$Storage[q][query]][bag]};
         
@@ -51,7 +51,7 @@
 } {1};
 
 #ACTION {^%*给你%u。$} {
-    Log {%0} {Info} {./log/remote_control_@GetDate{}_$username.log};
+    Log {%0} {Info} {./log/remote_control_@GetDate{}_$Profile[username].log};
     #LOCAL cn {%2};
     #LOCAL item_name {@RemoveChineseQuantifier{$cn}};
 

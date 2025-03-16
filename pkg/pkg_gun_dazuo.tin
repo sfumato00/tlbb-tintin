@@ -9,9 +9,9 @@
     Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
     #IF {$count < 36 && "$Busy[busy]" == "0"} {
         Cmd {
-            shoot $username;
+            shoot $Profile[username];
             #2 drink huxiao;
-            shoot $username;
+            shoot $Profile[username];
             #1 drink huxiao;
             dazuo 269;
             #MATH Busy[next_check] {@GetEpoch{} + 2};

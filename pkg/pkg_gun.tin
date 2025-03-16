@@ -7,16 +7,16 @@
     
     Cmd {
         tuna 200;
-        shoot $username;
+        shoot $Profile[username];
         #2 drink longyin;
     } {4};
 };
 
 #ALIAS {feedback_loop_du} {
     Cmd {
-        shoot $username;
+        shoot $Profile[username];
         #2 drink longyin;
-        shoot $username;
+        shoot $Profile[username];
         #2 drink longyin;
         du @_get_book_to_read{} 388;
         skills;
@@ -57,9 +57,9 @@
     Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
     #IF {$count < 39} {
         Cmd {
-            shoot $username;
+            shoot $Profile[username];
             #2 drink longyin;
-            shoot $username;
+            shoot $Profile[username];
             #2 drink longyin;
             tuna 388;
         } {7};

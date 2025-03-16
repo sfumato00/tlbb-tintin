@@ -18,7 +18,7 @@
     #VARIABLE {score[膂力]} {%11};
     #VARIABLE {score[容貌]} {@ParseFlakyNumber{%14}};
 
-    #SHOW {角色: $env[name]($username), $env[sex], 现年: $env[age], 根骨: $score[根骨], 胆识: $score[胆识], 悟性: $score[悟性], 膂力: $score[膂力], 容貌: $score[容貌]} 1 5;
+    #SHOW {角色: $env[name]($Profile[username]), $env[sex], 现年: $env[age], 根骨: $score[根骨], 胆识: $score[胆识], 悟性: $score[悟性], 膂力: $score[膂力], 容貌: $score[容貌]} 1 5;
 } {5};
 
 

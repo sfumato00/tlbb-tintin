@@ -60,7 +60,7 @@
     #LOCAL {qn_mean} {0};
 
     #IF {"$Fight[epoch][start]" == "0"} {
-        #VARIABLE {Fight[character]} {$username};
+        #VARIABLE {Fight[character]} {$Profile[username]};
 
         #VARIABLE {Fight[epoch]} {
             {start} {$time};
@@ -172,7 +172,7 @@
 
 #ALIAS {fight_start} {
     Info {开始练功};
-    Log {开始练功} {Info} {./log/fight_@GetDate{}_$username.log};
+    Log {开始练功} {Info} {./log/fight_@GetDate{}_$Profile[username].log};
 
     
     init_fight;
@@ -216,7 +216,7 @@
     #LOCAL npc_id {$NPC_NAME_CN_EN[%1]};
     #LOCAL npc_list {$Fight[npc_list]};#LOCAL npc_list {$Fight[npc_list]};
     #IF {"*npc_list[+1]" == "$npc_id"} {
-        Log {%0} {LOG} {./log/npc_@GetDate{}_$username.log};
+        Log {%0} {LOG} {./log/npc_@GetDate{}_$Profile[username].log};
     };
 };
 

@@ -13,9 +13,9 @@
     Warn {[历史指令队列] Command[history][cnt]: $Command[history][cnt], count: $count, MAP[$u][$v][dist]: $MAP[$u][$v][dist]};
     #IF {$count < 39} {
         Cmd {
-            shoot $username;
+            shoot $Profile[username];
             #2 drink longyin;
-            shoot $username;
+            shoot $Profile[username];
             #2 drink longyin;
             learn_with_research 388;
         } {7};

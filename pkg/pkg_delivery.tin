@@ -23,10 +23,10 @@
 
     #LOCAL {cn_name} {%2};
     #VARIABLE {Delivery[npc]} {$NPC_NAME_CN_EN[$cn_name]};
-    Log {%0} {Info} {./log/delivery_$username.log};
+    Log {%0} {Info} {./log/delivery_$Profile[username].log};
     #IF {"$Delivery[npc]" == ""} {
         #LOCAL msg {无法识别的NPC: $cn_name};
-        Log {$msg} {DEBUG} {./log/delivery_$username.log};
+        Log {$msg} {DEBUG} {./log/delivery_$Profile[username].log};
         #ECHO {msg};
         #IF {"$env[last_buffer_dump]" == "" || @GetEpoch{} - $env[last_buffer_dump]  > 60} {
             buffer_dump {delivery_unknown_npc};
@@ -56,7 +56,7 @@
 } {5};
 
 #ACTION {%*慢慢睁开眼睛，清醒了过来。} {
-    Log {%0} {Info} {./log/delivery_$username.log};
+    Log {%0} {Info} {./log/delivery_$Profile[username].log};
     Cmd {quit} {1};
 };
 
@@ -71,7 +71,7 @@
 };
 
 #ACTION {^你给%*一位%*。} {
-    Log {%0} {Info} {./log/delivery_$username.log};
+    Log {%0} {Info} {./log/delivery_$Profile[username].log};
     Cmd {quit} {1};
 };
 
@@ -111,7 +111,7 @@
     };
 
     #IF {"$env[room]" == "鬼门关"} {
-        Cmd {#2 n;w;ask $username about 回家} {4};
+        Cmd {#2 n;w;ask $Profile[username] about 回家} {4};
     };
 };
 

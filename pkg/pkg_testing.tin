@@ -6,7 +6,7 @@
 #CLASS graph read {./pkg/pkg_map_graph.tin};
 
 #ALIAS {conn} {
-    #SESSION {$username} {103.10.85.133} {8888};
+    #SESSION {$Profile[username]} {103.10.85.133} {8888};
 };
 
 #ALIAS {assert} {

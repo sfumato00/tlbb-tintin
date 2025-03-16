@@ -10,17 +10,17 @@
     #CLASS profile read {$env[profile]};
     
     #CLASS storage read {./pkg/pkg_storage.tin};
-    #SESSION {$username} {103.10.85.133} {8888};
+    #SESSION {$Profile[username]} {103.10.85.133} {8888};
 };
 
 #EVENT {SESSION DISCONNECTED} {
     #gts #DELAY 3 {
-        conn $username;
+        conn $Profile[username];
     };    
 }
 
 #EVENT {SESSION TIMED OUT} {
-    conn $username;
+    conn $Profile[username];
 };
 
 #EVENT {VARIABLE UPDATED env[last_login]} {

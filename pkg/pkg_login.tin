@@ -13,7 +13,7 @@
 #ACTION {^Please input gb or big5:} {
     #UNDELAY {delay_connection_timeout};
     #VARIABLE {env[conn_update]} {@GetEpoch{}};
-    gb;$username;$password;
+    gb;$Profile[username];$Profile[password];
 } {4};
 
 #EVENT {SESSION CONNECTED} {

@@ -20,7 +20,7 @@
 } {1};
 
 #ACTION {^%u将%u扶了起来背在背上。} {
-    Log {%0} {Info} {./log/sidekick_$username.log}; 
+    Log {%0} {Info} {./log/sidekick_$Profile[username].log}; 
     #IF {"%1" == "你"} {
         #gts #VARIABLE {Persist[return_room]} {{$env[room]$env[exits]}};
         #VARIABLE {Sidekick[npc_id]} {$Sidekick[npc][%2][id]};
@@ -65,5 +65,5 @@
 
 
 #ALIAS log {
-    Log {%0} {Info} {./log/delivery_$username.log}; 
+    Log {%0} {Info} {./log/delivery_$Profile[username].log}; 
 }

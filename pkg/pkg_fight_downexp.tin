@@ -78,7 +78,7 @@
         tell qian $exp_to_erase;
         y;
         #2 w;
-        ask $username about 回家;
+        ask $Profile[username] about 回家;
     } {5};
 } {5};
 
@@ -94,7 +94,7 @@
 
 #ACTION {^钱掌柜告诉你：你阳世间的存款不够。} {
     #ECHO {<faa> %0};
-    Log {%0} {Warn} {./log/need_money_$username.log};
+    Log {%0} {Warn} {./log/need_money_$Profile[username].log};
 }
 
 #ALIAS {大理-跳崖} {
