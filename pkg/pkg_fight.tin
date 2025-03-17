@@ -138,7 +138,7 @@
     #IF {$State[downexp_on]} {
         #CAT {log_msg} { State[downexp_on]: On};
     };
-    Log {$log_msg} {Info} {./log/fight_@GetDate{}_$username.log};
+    Log {$log_msg} {Info} {./log/fight_@GetDate{}_$Profile[username].log};
 
     #DELAY {0.1} {
         Info {$log_msg};

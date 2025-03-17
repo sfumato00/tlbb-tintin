@@ -32,7 +32,7 @@
         skills
     } {1};
 
-    #IF {"$Busy[busy]" == "1"} {
+    CheckBusy {
         Cmd {research literate 1} {1};
     };
 }
