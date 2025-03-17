@@ -71,15 +71,7 @@
 
 
 
-#ALIAS {吐纳} {
-    #ECHO {开启 吐纳 模块};
-    
-    #DELAY {init} {
-        #TICKER {ticker_feedback_loop} {check_busy} {1.2};
-        #CLASS tuna kill;
-        #CLASS tuna read {./pkg/pkg_tuna.tin};
-    } {3};
-}
+
 
 #ALIAS {读书} {
     #ECHO {开启 读书 模块};
@@ -146,6 +138,22 @@
         };
     };
 } {5};
+
+
+#ALIAS {do_tuna} {
+    #SWITCH {"%1"} {
+
+        #CASE {"off"} {
+            Info {关闭 吐纳 模块};
+            #CLASS tuna KILL;
+        };
+
+        #DEFAULT {
+            Info {开启 吐纳 模块};
+            #CLASS tuna READ {./pkg/pkg_tuna.tin};
+        };
+    };
+}
 
 
 #ALIAS {xfer} {
