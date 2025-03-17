@@ -2,7 +2,37 @@
 
 #CLASS tuna OPEN;
 
-#VARIABLE THROTTLE {8};
+#CLASS vitals READ {./pkg/pkg_vitals.tin};
+#CLASS stats READ {./pkg/pkg_stats.tin};
+#CLASS print READ {./pkg/pkg_print.tin};
+#CLASS command READ {./pkg/pkg_command.tin};
+#CLASS checkbusy READ {./pkg/pkg_checkbusy.tin};
+#CLASS datetime READ {./pkg/pkg_datetime.tin};
+
+#VARIABLE {Busy[next_check]} {0};
+
+#EVENT {VARIABLE UPDATED vitals[last_updated]} {
+    feedback_loop_tuna;
+}
+
+#EVENT {VARIABLE UPDATED Busy[busy]} {
+    #IF {"$Busy[busy]" == "0"} {
+        Cmd {skills;hp} {2};
+    };
+};
+
+#TICKER {ticker_checkbusy} {
+    #IF {@GetEpoch{} >= $Busy[next_check]} {
+        Cmd {dazuo 1} {1};
+    };
+} {1};
+
+#ALIAS {stop} {
+    #ECHO {关闭 吐纳 模块};
+    feedback_loop_idle;
+    #CLASS tuna kill;
+} {5};
+
 
 #ALIAS {feedback_loop_tuna} {
     #LOCAL time {};
@@ -50,30 +80,6 @@
             #MATH {n_cmd} {$n_cmd + 2};
         };
     };
-} {5};
-
-#EVENT {VARIABLE UPDATED vitals[经验]} {
-    #NOP #ECHO {#EVENT {VARIABLE UPDATED vitals[内力]}: feedback_loop;};
-
-    #IF {$skills[literate][lv] > 0} {
-        #MATH {tuna[潜力_max]} {$skills[literate][lv] * 10};
-    };
-
-    #IF {$enables[literate] > 0} {
-        #MATH {tuna[潜力_max]} {$tuna[潜力_max] + $enables[literate] * 2};
-    };
-
-    feedback_loop_tuna;
-};
-
-#EVENT {VARIABLE UPDATED busy[updated]} {
-    cmd {hp};
-};
-
-#ALIAS {stop} {
-    #ECHO {关闭 吐纳 模块};
-    feedback_loop_idle;
-    #CLASS tuna kill;
 } {5};
 
 #CLASS tuna CLOSE;
