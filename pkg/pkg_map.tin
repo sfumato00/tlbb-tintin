@@ -316,6 +316,46 @@
             {path} {se}
             {dist} {1}
         }
+        {城南大街 north、south、east 和 west} {
+            {path} {n;w;#2 n}
+            {dist} {4}
+        }
+    }
+    {城南大街 north、south、east 和 west} {
+        {城中心 south、north、east、west 和 up} {
+            {path} {n}
+            {dist} {1}
+        }
+        {鼋头渚 north、southeast 和 southwest} {
+            {path} {#2 s;e;s}
+            {dist} {4}
+        }
+    }
+    {城中心 south、north、east、west 和 up} {
+        {城南大街 north、south、east 和 west} {
+            {path} {s}
+            {dist} {1}
+        }
+        {无锡北门 south} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+    }
+    {无锡北门 south} {
+        {城中心 south、north、east、west 和 up} {
+            {path} {#2 s}
+            {dist} {2}
+        }
+        {npc房间 south} {
+            {path} {enter door}
+            {dist} {1}
+        }
+    }
+    {npc房间 south} {
+        {无锡北门 south} {
+            {path} {s}
+            {dist} {1}
+        }
     }
     {太湖边 northwest} {
         {鼋头渚 north、southeast 和 southwest} {
@@ -364,10 +404,7 @@
             {path} {#8 w}
             {dist} {8}
         }
-        {大路 south、north 和 southeast} {
-            {path} {#6 s}
-            {dist} {6}
-        }
+        
         {松鹤楼 east 和 up} {
             {path} {n;w}
             {dist} {2}
@@ -375,6 +412,30 @@
         {古城客栈 south 和 up} {
             {path} {e;n}
             {dist} {2}
+        }
+        {洛阳南街2 south、north、east 和 west} {
+            {path} {#2 s}
+            {dist} {2}
+        }
+    }
+    {洛阳南街2 south、north、east 和 west} {
+        {洛阳中心 south、north、east、west 和 up} {
+            {path} {#2 n}
+            {dist} {2}
+        }
+        {驿站 east} {
+            {path} {w}
+            {dist} {1}
+        }
+        {大路 south、north 和 southeast} {
+            {path} {#4 s}
+            {dist} {4}
+        }
+    }
+    {驿站 east} {
+        {洛阳南街2 south、north、east 和 west} {
+            {path} {e}
+            {dist} {1}
         }
     }
     {古城客栈 south 和 up} {

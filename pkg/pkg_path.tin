@@ -1,5 +1,7 @@
 #NOP path aliases
 
+#CLASS graph READ {./pkg/pkg_map_graph.tin};
+
 #ALIAS sx {
     go;
     goto {神憩小舍 east、southdown、northwest 和 up};
@@ -48,4 +50,9 @@
 #ALIAS mr {
     go;
     goto {望燕亭 north 和 west};
+}
+
+#ALIAS wx {
+    go;
+    goto {城中心 south、north、east、west 和 up};
 }
