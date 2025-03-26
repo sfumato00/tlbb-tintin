@@ -713,6 +713,16 @@
             {path} {nw}
             {dist} {1}
         }
+        {庄院西侧 north、south、east 和 west} {
+            {path} {w;n;w}
+            {dist} {3}
+        }
+    }
+    {庄院西侧 north、south、east 和 west} {
+        {青海草原 north、south、east、west 和 northwest} {
+            {path} {e;s}
+            {dist} {2}
+        }
     }
     {山脚 southeast、northeast 和 northup} {
         {虎跳溪 east 和 southdown} {

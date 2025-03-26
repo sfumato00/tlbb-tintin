@@ -8,7 +8,7 @@
 
 #ALIAS {conn} {
     #VARIABLE {env} {
-        {profile} {./profiles/%1.tin}
+        {profile} {./profiles/sidekick/%1.tin}
     };
     #CLASS profile read {$env[profile]};
     #SESSION {$Profile[username]} {103.10.85.133} {8888};
