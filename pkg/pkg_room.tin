@@ -30,3 +30,13 @@
     #VARIABLE {env[room_tong]} {1};
     #VARIABLE {env[room_pig]} {1};
 } {2};
+
+
+#ACTION {^董胖子说道：这位%*气不小，这么高的山，愣是爬上来了，请进请进。} {
+    #VARIABLE env[room] {神憩小舍};
+    #VARIABLE env[exits] { east、southdown、northwest 和 up};
+    #VARIABLE {env[room_tong]} {1};
+    #VARIABLE {env[room_updated]} {@GetEpoch{}};
+    #VARIABLE {env[room_update_hook]} {1};
+    #VARIABLE {env[travel_callback_hook]} {1};
+}

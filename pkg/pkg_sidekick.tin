@@ -68,4 +68,3 @@
     Log {%0} {Info} {./log/delivery_$Profile[username].log}; 
 }
 
-{西夏王陵 north 和 southup}
