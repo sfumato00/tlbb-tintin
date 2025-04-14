@@ -17,6 +17,7 @@
     {鸠摩智} {jiumozhi}
     {云中鹤} {yun}
     {南海鳄神} {yue}
+    {天山童姥} {tonglao}
 };
 
 
@@ -37,6 +38,7 @@
     {jiumozhi} {鸠摩智}
     {yue} {南海鳄神}
     {yun} {云中鹤}
+    {tonglao} {天山童姥}
 };
 
 #VARIABLE {NPC_WEAPON} {
