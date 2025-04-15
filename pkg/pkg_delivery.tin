@@ -120,4 +120,8 @@
     Cmd {look} {1};
 };
 
+#ACTION {^一股阴冷的浓雾突然出现，很快地包围了你。} {
+    Cmd {quit} {1};
+};
+
 #TICKER {ticker_stay} {l} {300};
